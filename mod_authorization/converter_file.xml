@@ -1,0 +1,15 @@
+<?xml version='1.0'?>
+<PermissionConverter>
+	<LocationMatch>
+		<regex>.*/git/(.*)/git-receive-pack</regex>
+		<perm>r</perm>
+	</LocationMatch>
+	<LocationMatch>
+		<regex>.*/git/(.*)/git-upload-pack</regex>
+		<perm>rw</perm>
+	</LocationMatch>
+	<LocationMatch>
+		<regex>.*/git/(.*)/info/refs/.*</regex>
+		<perm>*</perm>
+	</LocationMatch>
+</PermissionConverter>
