@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2FE0E103-3481-4DD8-A8BA-9BDF6EECA5AC}</ProjectGuid>
+    <ProjectGuid>{95893F3B-2F88-46F5-A814-45535DEB25FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SVN</RootNamespace>
-    <AssemblyName>SVN</AssemblyName>
+    <RootNamespace>Trac</RootNamespace>
+    <AssemblyName>Trac</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,14 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>..\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpSvn">
-      <HintPath>..\..\..\SharpSvn\SharpSvn.dll</HintPath>
+      <HintPath>..\..\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,14 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SVNAdmin.cs" />
-    <Compile Include="SVNAuthorization.cs" />
+    <Compile Include="TracEnvironmentManager.cs" />
+    <Compile Include="TracPermissionManager.cs" />
+    <Compile Include="TracPrivileges.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SVN.test.cs" />
-    <Compile Include="SVNRepositoryManager.cs" />
+    <Compile Include="TracAdmin.cs" />
+    <Compile Include="Trac.test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

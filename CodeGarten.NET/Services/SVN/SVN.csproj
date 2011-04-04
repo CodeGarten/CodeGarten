@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{95893F3B-2F88-46F5-A814-45535DEB25FC}</ProjectGuid>
+    <ProjectGuid>{2FE0E103-3481-4DD8-A8BA-9BDF6EECA5AC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Trac</RootNamespace>
-    <AssemblyName>Trac</AssemblyName>
+    <RootNamespace>SVN</RootNamespace>
+    <AssemblyName>SVN</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,15 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,18 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TracEnvironmentManager.cs" />
-    <Compile Include="TracPermissionManager.cs" />
-    <Compile Include="TracPrivileges.cs" />
+    <Compile Include="SVNAdmin.cs" />
+    <Compile Include="SVNAuthorization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TracAdmin.cs" />
-    <Compile Include="Trac.test.cs" />
+    <Compile Include="SVN.test.cs" />
+    <Compile Include="SVNRepositoryManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
