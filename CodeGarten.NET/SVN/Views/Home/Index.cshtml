@@ -1,0 +1,6 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+
+<div id="main">
+    <h1>Svn Service</h1>
+    <input type="text" readonly = "true" value=@(String.Format("http://codegarten.adeetc.e.ipl.pt:8080/Svn/{0}{1}{2}", ViewBag.structureId, ViewBag.containerId, ViewBag.workspaceTypeName)) />
+</div>

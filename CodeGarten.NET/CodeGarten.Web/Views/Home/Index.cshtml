@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Structured collaborative development";
+}
+@using CodeGarten.Data.Model
+<fieldset>
+    <h2>
+        Welcome to CodeGarten</h2>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <p>
+            Don't know what CodeGarten is? @Html.ActionLink("Find out.", "Index", "Help")</p> 
+    }
+    else
+    {
+        <table width="100%">
+            <tr>
+                <td width="50%">
+                    <h5>
+                        Most popular structures</h5>
+                    @Html.Partial("_StructureTable", @ViewBag.TopStructures as IEnumerable<Structure>)
+                </td>
+                <td width="50%">
+                    <h5>
+                        Most recent structures</h5>
+                    @Html.Partial("_StructureTable", @ViewBag.RecentStructures as IEnumerable<Structure>)
+                </td>
+            </tr>
+        </table>
+        @Html.ActionLink("More structures", "Search", "Structure")
+    }
+</fieldset>

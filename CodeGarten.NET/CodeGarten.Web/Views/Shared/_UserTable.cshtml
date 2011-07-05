@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CodeGarten.Data.Model.User>
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>
+                @if (user.Name == User.Identity.Name)
+                {
+                    @Html.ActionLink(@user.Name as string, "Index", "User");
+                }
+                else
+                {
+                    @Html.ActionLink(@user.Name as string, "Info", "User", new { name = user.Name }, null);
+                }
+            </td>
+            <td>
+                @user.Email
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,54 @@
+﻿@model CodeGarten.Data.Model.WorkSpaceType
+@using CodeGarten.Data.Model
+@{
+    ViewBag.Title = Model.Name;
+}
+<fieldset>
+    <h2>@Html.ActionLink(Model.Structure.Name, "Index", "Structure", new { id = Model.StructureId }, null) > @if (ViewBag.CPname != null) { @Html.ActionLink(ViewBag.CPname as string, "Index", "ContainerPrototype", new { structureId = Model.StructureId, name = ViewBag.CPname }, null); <text> > </text>} 
+        @Model.Name</h2>
+    @if (@ViewBag.CPname == null)
+    {
+        <h3>
+            Services</h3>
+        <table>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+            @foreach (var item in @ViewBag.Services)
+            {
+                <tr>
+                    <td>
+                        @if (Model.Services.Contains(item))
+                        {
+                            @Html.ActionLink("Remove", "RemoveService", "WorkSpaceType", new { structureId = Model.StructureId, serviceName = item.Name, workspaceName = Model.Name }, null)
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Add", "AddService", "WorkSpaceType", new { structureId = Model.StructureId, serviceName = item.Name, workspaceName = Model.Name }, null)
+                        }
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h3>
+            Roles ( @Html.ActionLink("Create New", "Create", "Role", new { structureId = Model.StructureId, wsName = Model.Name, cpName = @ViewBag.CPname }, null)
+            )</h3>
+        @Html.Partial("_RoleTable", @ViewBag.Roles as IEnumerable<Role>)
+    }
+</fieldset>

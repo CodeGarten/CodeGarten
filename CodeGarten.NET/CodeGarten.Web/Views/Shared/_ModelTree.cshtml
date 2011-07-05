@@ -1,0 +1,16 @@
+﻿@model CodeGarten.Data.Model.Container
+@{
+    var owner = Model.ContainerPrototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+}
+<ul>
+    <li class="container">
+        <p>@Html.ActionLink(Model.Name, "Index", "Container", new { id = Model.Id }, null)
+           @if (owner) { <text> | </text> @Html.ActionLink("Delete", "Delete", "Container", new { id = Model.Id, structureId = Model.ContainerPrototype.StructureId }, null) } 
+        </p>
+        @foreach (var child in Model.Childs)
+        {
+            @Html.Partial("_ModelTree", child)
+        }
+        @if (owner && Model.ContainerPrototype.Childs.Count > 0) { @Html.ActionLink("AddChild", "Create", "Container", new { structureId = Model.ContainerPrototype.StructureId, parent = Model.Id }, null); }
+    </li>
+</ul>

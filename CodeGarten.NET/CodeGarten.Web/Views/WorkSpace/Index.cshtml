@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<fieldset>
+    <ul>
+        @foreach (var service in ViewBag.services)
+        {
+            <li>
+                @Ajax.ActionLink(service.Name as string, "Index", "Service/" + service.Name as string, new { structureId = ViewBag.structureId, containerId = ViewBag.containerId, workspaceTypeName = ViewBag.workspaceTypeName as string}, new AjaxOptions { UpdateTargetId = "service" })
+            </li>
+        }
+    </ul>
+
+    <div id="service">
+    
+    </div>
+</fieldset>
+

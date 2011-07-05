@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{94BADD45-89F4-4D17-B970-A70C16BE768C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeGarten.Data</RootNamespace>
+    <AssemblyName>CodeGarten.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Access\AuthenticationManager.cs" />
+    <Compile Include="Access\AuthorizationManager.cs" />
+    <Compile Include="Access\ContainerManager.cs" />
+    <Compile Include="Access\ContainerPrototypeManager.cs" />
+    <Compile Include="Access\DataBaseManager.cs" />
+    <Compile Include="Access\RoleManager.cs" />
+    <Compile Include="Access\RoleTypeManager.cs" />
+    <Compile Include="Access\RuleManager.cs" />
+    <Compile Include="Access\ServiceManager.cs" />
+    <Compile Include="Access\StructureManager.cs" />
+    <Compile Include="Access\UserManager.cs" />
+    <Compile Include="Access\WorkSpaceTypeManager.cs" />
+    <Compile Include="CodeGartenInitializer.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="CustomAttributes\UniqueEmailAttribute.cs" />
+    <Compile Include="Interfaces\IAuthentication.cs" />
+    <Compile Include="Interfaces\IAuthorization.cs" />
+    <Compile Include="ModelView\ContainerView.cs" />
+    <Compile Include="ModelView\EnrollView.cs" />
+    <Compile Include="ModelView\RoleView.cs" />
+    <Compile Include="ModelView\ServiceView.cs" />
+    <Compile Include="ModelView\StructureView.cs" />
+    <Compile Include="ModelView\UserView.cs" />
+    <Compile Include="ModelView\WorkSpaceView.cs" />
+    <Compile Include="Model\Container.cs" />
+    <Compile Include="Model\Enroll.cs" />
+    <Compile Include="Model\Role.cs" />
+    <Compile Include="Model\Service.cs" />
+    <Compile Include="Model\Structure.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\WorkSpace.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

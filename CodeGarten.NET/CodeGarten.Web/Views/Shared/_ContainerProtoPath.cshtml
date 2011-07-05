@@ -1,0 +1,36 @@
+﻿@model CodeGarten.Data.Model.ContainerPrototype
+@using CodeGarten.Data.Model
+@{
+    var aux = Model;
+    var path = new LinkedList<ContainerPrototype>();
+    path.AddFirst(aux);
+    
+    while(aux.Parent != null)
+    {
+        path.AddFirst(aux.Parent);
+        aux = aux.Parent;
+    }
+    
+    @Html.ActionLink(Model.Structure.Name, "Index", "Structure", new { id = Model.StructureId }, null);
+    <text>></text>
+    for (int i = 0; i < path.Count-1; ++i )
+    {
+        var parent = path.ElementAt(i);
+        @Html.ActionLink(parent.Name, "Index", "ContainerPrototype", new { structureId = parent.StructureId, name = parent.Name }, null)
+        <text>></text>
+    }
+    
+    @path.Last.Value.Name;
+}
+
+@*@if (Model.ParentContainer != null)
+{
+     @Html.Partial("_ContainerPath", Model.ParentContainer);
+}
+else
+{
+   @Html.ActionLink(Model.ContainerPrototype.Structure.Name, "Index", "Structure", new { id = Model.ContainerPrototype.StructureId }, null);  
+   <text>></text>                                                                                                                                        
+}
+@Html.ActionLink(Model.Name, "Index", "Container", new { id = Model.Id }, null)
+>*@

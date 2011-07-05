@@ -1,0 +1,52 @@
+﻿@model CodeGarten.Data.Model.Rule
+@{
+    ViewBag.Title = Model.Name;
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<fieldset>
+<h2>@Html.ActionLink(Model.Structure.Name, "Index", "Structure", new { id = Model.StructureId }, null)
+        > @Model.Name</h2>
+    <h3>
+        Service permissions</h3>
+        @if (@ViewBag.Services != null)
+        {
+    <table>
+        <tr>
+            <th>
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Permission
+            </th>
+        </tr>
+        @foreach (var service in @ViewBag.Services)
+        {
+            foreach (var permission in service.Permissions)
+            {
+            <tr>
+                <td>
+                    @if (Model.Permissions.Contains(permission))
+                    {
+                        @Html.ActionLink("Remove", "RemovePermission", "Rule", new { structureId = Model.StructureId, serviceName = service.Name, permissionName = permission.Name, ruleName = Model.Name }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Add", "AddPermission", "Rule", new { structureId = Model.StructureId, serviceName = service.Name, permissionName = permission.Name, ruleName = Model.Name }, null)
+                    }
+                </td>
+                <td>
+                    @service.Name
+                </td>
+                <td>
+                    @permission.Name
+                </td>
+            </tr>
+            }
+        }
+    </table>
+        }
+</fieldset>

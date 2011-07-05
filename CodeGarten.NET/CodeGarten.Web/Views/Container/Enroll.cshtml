@@ -1,0 +1,19 @@
+﻿@model CodeGarten.Data.ModelView.EnrollView
+@{
+    ViewBag.Title = "Enroll";
+}
+<fieldset>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <h2>
+            Enroll - Choose a role type</h2>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.RoleType)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("roleTypeName", ViewBag.RoleTypes as IEnumerable<SelectListItem>)
+        </div>
+        <input type="submit" value="Enroll" />
+    }
+</fieldset>

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CodeGarten.Data.Model.RoleType>
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Times used
+        </th>
+    </tr>
+    @foreach (var role in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(@role.Name as string, "Index", "Role", new { structureId = role.StructureId, name = role.Name }, null)
+            </td>
+            <td>
+                @role.Enrolls.Count
+            </td>
+        </tr>
+    }
+</table>

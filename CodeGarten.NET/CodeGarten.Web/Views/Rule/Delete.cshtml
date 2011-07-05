@@ -1,0 +1,19 @@
+﻿@model CodeGarten.Data.ModelView.RuleView
+@{
+    ViewBag.Title = "Delete rule";
+}
+<h3>
+    Are you sure you want to delete this?</h3>
+<fieldset>
+    <h2>
+        Delete rule</h2>
+    <div class="display-label">
+        Name</div>
+    <div class="display-field">@Model.Name</div>
+    @using (Html.BeginForm())
+    {
+        <p>
+            <input type="submit" value="Delete" />
+        </p>
+    }
+</fieldset>

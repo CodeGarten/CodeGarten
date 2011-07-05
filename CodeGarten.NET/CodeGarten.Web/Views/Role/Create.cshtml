@@ -1,0 +1,23 @@
+﻿@model CodeGarten.Data.ModelView.RoleView
+@{
+    ViewBag.Title = "Create Role";
+}
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <h2>
+            Create role</h2>
+        <h4>@Context.Request.Params["cpName"] (@Context.Request.Params["wsName"])</h4>
+        <div>
+            @Html.Label("Role:")
+            @Html.DropDownList("roleTypeName", ViewBag.RoleTypes as IEnumerable<SelectListItem>)
+        </div>
+        <div>
+            @Html.Label("Rule:")
+            @Html.DropDownList("ruleName", ViewBag.Rules as IEnumerable<SelectListItem>)
+        </div>
+        <p>
+            <input type="submit" value="Add" />
+        </p>
+    </fieldset>
+}

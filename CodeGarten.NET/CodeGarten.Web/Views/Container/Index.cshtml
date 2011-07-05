@@ -1,0 +1,27 @@
+﻿@model CodeGarten.Data.Model.Container
+@{
+    ViewBag.Title = Model.Name;
+}
+<fieldset>
+    <h2>
+        @Html.Partial("_ContainerPath", Model)
+    </h2>
+
+    <ul>
+        @foreach (var workspace in Model.ContainerPrototype.WorkSpaceTypes)
+        {
+            <li>
+                @Html.ActionLink(workspace.Name, "Index", "WorkSpace", new { structureId =Model.ContainerPrototype.StructureId, containerId = Model.Id, workspaceTypeName = workspace.Name }, null)
+            </li>
+        }
+    </ul>
+
+    @if (@ViewBag.Enroll != null)
+    {
+        @Html.ActionLink("Leave this project", "Leave", "Container", new { structureId = Model.ContainerPrototype.StructureId, containerId = Model.Id, roleTypeName = @ViewBag.Enroll.RoleTypeName }, null);
+    }
+    else
+    {
+        @Html.ActionLink("Enroll in this project", "Enroll", "Container", new { structureId = Model.ContainerPrototype.StructureId, containerId = Model.Id }, null);
+    }
+</fieldset>

@@ -1,0 +1,9 @@
+*.dll
+*.cache
+*.pdb
+*.exe
+*.dll.config
+_ReSharper.CodeGarten.NET/
+CodeGarten.NET.5.1.ReSharper.user
+obj/
+bin/
