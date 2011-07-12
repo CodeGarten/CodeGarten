@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
-namespace CodeGarten.Web.Model
+namespace CodeGarten.Web.Core
 {
     public static class ModeStateExtension
     {

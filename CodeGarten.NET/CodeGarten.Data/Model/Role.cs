@@ -61,9 +61,9 @@ namespace CodeGarten.Data.Model
 
         public long WorkSpaceTypeStructureId { get; set; }
 
-        [Required]
-        public virtual Rule Rule { get; set; }
+        public string RuleName { get; set; }
 
+        public long RuleStructureId { get; set; }
 
         [ForeignKey("RoleTypeName,RoleTypeStructureId")]
         public virtual RoleType RoleType { get; set; }
@@ -73,5 +73,8 @@ namespace CodeGarten.Data.Model
 
         [ForeignKey("WorkSpaceTypeName,WorkSpaceTypeStructureId")]
         public virtual WorkSpaceType WorkSpaceType { get; set; }
+
+        [ForeignKey("RuleName,RuleStructureId")]
+        public virtual Rule Rule { get; set; }
     }
 }

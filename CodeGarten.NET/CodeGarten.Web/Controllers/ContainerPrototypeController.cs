@@ -5,7 +5,7 @@ using CodeGarten.Data;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
-using CodeGarten.Web.Model;
+using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web.Controllers
 {

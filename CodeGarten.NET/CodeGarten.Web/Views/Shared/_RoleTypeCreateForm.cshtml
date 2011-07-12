@@ -1,0 +1,21 @@
+﻿@using CodeGarten.Data.Model
+@model RoleType
+@using (Ajax.BeginRouteForm("Default", new
+{
+    controller = "RoleType",
+    action = "Create",
+    structureId = Request.RequestContext.RouteData.Values["id"]
+}, new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess" }))
+{
+    @Html.ValidationSummary(true)
+    <h2>
+        Create role type</h2>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Name)
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+}

@@ -1,0 +1,38 @@
+body{ font: 62.5% "Trebuchet MS", sans-serif;}
+		
+h1 { padding: .2em; margin: 0;}
+
+.ui-button {display:inline-block; vertical-align:middle;}
+.ui-icon {display:inline-block; vertical-align:middle;}
+
+.ui-icon-trash, .ui-icon-plus { float:right; }
+
+.ui-state-highlight { text-align:center;}
+
+#error { margin-right: 300px; }
+
+#containerPrototypeDesign { margin-right: 300px;}
+#containerPrototypeDesign .Workspace {margin: 2em; display:inline-block;}
+#containerPrototypeDesign .RoleType {margin: 2em; display:inline-block;}
+#containerPrototypeDesign .Rule {margin: 1em; font-size:medium;}
+#containerPrototypeDesign .Rule > .item_options {margin-left:1em;}
+
+#components { float:right; min-width: 250px;max-width: 300px;}
+#components .item {margin-bottom:1em; cursor:pointer; font-size:medium;}
+#components .item_options {margin-left:1em;}
+#components .page_add {width:100%;}
+
+.Workspace > .ui-widget-header {background-image:url('ui-bg_gloss-wave_35_f6a828_500x100.png');}
+
+.Workspace_link 
+{
+    background-color:#f6a828;
+}
+
+.ui-accordion .ui-accordion-content{ overflow:hidden !important; }
+
+#main {margin:2em;}
+
+#actions { clear: both;}
+
+#foot { clear: both;}

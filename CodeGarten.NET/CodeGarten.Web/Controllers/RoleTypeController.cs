@@ -2,23 +2,17 @@
 using CodeGarten.Data.Access;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
     public sealed class RoleTypeController : Controller
     {
-        [StructureOwner("structureId")]
-        public ActionResult Create(long structureId)
-        {
-            var rt = new RoleTypeView();
-
-            return View(rt);
-        }
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, RoleTypeView roleType)
+        public JsonResult Create(long structureId, RoleTypeView roleType)
         {
             try
             {
@@ -26,40 +20,32 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.RoleType.Create(roleType, structureId);
 
-                return RedirectToAction("Index", "Structure", new {id = structureId});
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("Name", "Role type already exists.");
+                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
             }
         }
 
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name)
+        //[StructureOwner("structureId")]
+        public PartialViewResult Delete(long structureId, string name)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            var rt = dataBaseManager.RoleType.Get(structureId, name);
-
-            return View(rt);
+            return PartialView(dataBaseManager.RoleType.Get(structureId,name));
         }
 
         [HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name, RoleTypeView roleTypeView, FormCollection collection)
+        //[StructureOwner("structureId")]
+        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
         {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.RoleType.Delete(roleTypeView, structureId);
+            dataBaseManager.RoleType.Delete(new RoleTypeView{Name = name}, structureId);
 
-                return RedirectToAction("Index", "Structure", new {id = structureId});
-            }
-            catch
-            {
-                return View();
-            }
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }
