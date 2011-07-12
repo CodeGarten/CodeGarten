@@ -84,9 +84,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\scripts\CodeGartenModel.js" />
+    <Content Include="Content\scripts\ErrorPlaceholder.js" />
+    <Content Include="Content\scripts\FormDialog.js" />
+    <Content Include="Content\scripts\DialogConfirmView.js" />
+    <Content Include="Content\scripts\StructureController.js" />
+    <Content Include="Content\scripts\StructureView.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\base\Site.css" />
     <Content Include="Content\themes\base\jquery-ui.css" />
@@ -266,6 +273,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_FormContainerPrototype.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

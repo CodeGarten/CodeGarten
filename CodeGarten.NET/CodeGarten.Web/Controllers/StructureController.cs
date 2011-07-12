@@ -14,25 +14,9 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Index(long id)
         {
-            var structure = _context.Structures.Find(id);
-
-            ViewBag.Collaborators =
-                _context.Enrolls.Where(e => e.RoleTypeStructureId == id).Select(e => e.User).Distinct();
-
-            ViewBag.Rules = _context.Rules.Where(r => r.StructureId == id);
-
-            ViewBag.RoleTypes = _context.RoleTypes.Where(rt => rt.StructureId == id);
-
-            ViewBag.WorkSpaces = _context.WorkSpaceTypes.Where(wt => wt.StructureId == id);
-
-            ViewBag.TopContainerPrototype =
-                _context.ContainerPrototypes.Where(cp => cp.StructureId == id && cp.Parent == null).SingleOrDefault();
-
-            ViewBag.TopContainer =
-                _context.Containers.Where(c => c.ContainerPrototype.StructureId == id && c.ParentContainer == null).
-                    SingleOrDefault();
-
-            return View(structure);
+            var cp = new ContainerPrototypeView();
+            ViewBag.StructureId = id;
+            return View(cp);
         }
 
         public ActionResult Create()

@@ -1,90 +1,26 @@
-﻿@model CodeGarten.Data.Model.Structure
-@using CodeGarten.Data.Model
-@{
-    ViewBag.Title = Model.Name;
+﻿@model CodeGarten.Data.ModelView.ContainerPrototypeView
+           
+<script src="@Url.Content("~/Content/Scripts/ErrorPlaceholder.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/FormDialog.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/StructureController.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/CodeGartenModel.js")" type="text/javascript" ></script>        
+<script src="@Url.Content("~/Content/Scripts/StructureView.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/DialogConfirmView.js")" type="text/javascript" ></script>
 
-    var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
-}
-<fieldset>
-    <h2>@Model.Name</h2>
-    <p>@Model.Description</p>
-    @if (owner) { @Html.ActionLink("Delete this structure", "Delete", "Structure", new { id = Model.Id }, null); }
-    <table width="100%">
-        <tr>
-            <td width="50%">
-                <h5>
-                    Administrators (@Model.Administrators.Count) @if (owner) { @Html.ActionLink("Invite", "AddAdmin", "Structure", new { id = Model.Id }, null); }</h5>
-                @Html.Partial("_UserTable", Model.Administrators)
-            </td>
-            <td width="50%">
-                <h5>
-                    Collaborators</h5>
-                @Html.Partial("_UserTable", ViewBag.Collaborators as IEnumerable<User>)
-            </td>
-        </tr>
-    </table>
-    <table width="100%">
-        <tr>
-            <td width="33%">
-                <h5>
-                    Rules @if (owner) { @Html.ActionLink("Create New", "Create", "Rule", new { structureId = Model.Id }, null); }</h5>
-                @Html.Partial("_RuleTable", ViewBag.Rules as IEnumerable<Rule>)
-            </td>
-            <td width="33%">
-                <h5>
-                    Roles @if (owner) { @Html.ActionLink("Create New", "Create", "RoleType", new { structureId = Model.Id }, null); }</h5>
-                @Html.Partial("_RoleTypeTable", ViewBag.RoleTypes as IEnumerable<RoleType>)
-            </td>
-            <td width="33%">
-                <h5>
-                    WorkSpaces @if (owner) { @Html.ActionLink("Create New", "Create", "WorkSpaceType", new { structureId = Model.Id }, null); }</h5>
-                @Html.Partial("_WorkSpaceTable", ViewBag.WorkSpaces as IEnumerable<WorkSpaceType>)
-            </td>
-        </tr>
-    </table>
-    <table width="100%">
-        <tr>
-            <td width="50%">
-                <h5>
-                    Structure design</h5>
-                @if (@ViewBag.TopContainerPrototype == null)
-                {
-                    <text>There is no top prototype yet.</text> <br /> 
-                    if (owner)
-                    {
-                    <text>Create one </text> 
-                    @Html.ActionLink("now.", "Create", "ContainerPrototype", new { structureId = Model.Id }, null);
-                    }
-                }
-                else
-                {
-                    if (owner)
-                    {      
-                        @Html.Partial("_DesignEditTree", @ViewBag.TopContainerPrototype as ContainerPrototype);
-                    }
-                    else
-                    {
-                        @Html.Partial("_DesignTree", @ViewBag.TopContainerPrototype as ContainerPrototype);
-                    }
-                }
-            </td>
-            <td width="50%">
-                <h5>
-                    Projects</h5>
-                @if (@ViewBag.TopContainer == null)
-                {
-                    <text>No projects have been created yet.</text>  <br />
-                    if (owner)
-                    {
-                        <text>Create the first one </text> 
-                        @Html.ActionLink("now.", "Create", "Container", new { structureId = Model.Id }, null);
-                    }
-                }
-                else
-                {
-                    @Html.Partial("_ModelTree", @ViewBag.TopContainer as Container);
-                }
-            </td>
-        </tr>
-    </table>
-</fieldset>
+<div id="container_structure" /> 
+		
+<div id="error_container_structure"/>
+        
+<div id="form_containerPrototype" title="Create Container Prototype">
+	@Html.Partial("_FormContainerPrototype", Model)
+</div>
+		
+<div id="dialog_confirm">
+        
+</div>
+
+<script type="text/javascript">
+    DialogConfirmView.init("#dialog_confirm")
+    StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
+    StructureController.init();
+</script>

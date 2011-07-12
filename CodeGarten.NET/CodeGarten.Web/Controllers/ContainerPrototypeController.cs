@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -26,13 +28,13 @@ namespace CodeGarten.Web.Controllers
         public ActionResult Create(long structureId, string parent)
         {
             var cp = new ContainerPrototypeView();
-
+            
             return View(cp);
         }
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, ContainerPrototypeView containerPrototype, string parent)
+        public JsonResult Create(long structureId, ContainerPrototypeView containerPrototype, string parent)
         {
             try
             {
@@ -43,22 +45,13 @@ namespace CodeGarten.Web.Controllers
                 else
                     dataBaseManager.ContainerPrototype.Create(containerPrototype, structureId);
 
-                return RedirectToAction("Index", new {structureId, name = containerPrototype.Name});
             }
-            catch
+            catch(ArgumentException e)
             {
-                return View();
+                ModelState.AddModelError("form", "EROROROOROROROROROROROROR");
             }
-        }
-
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name)
-        {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-            var cp = dataBaseManager.ContainerPrototype.Get(structureId, name);
-
-            return View(cp);
+            
+            return ModelState.ToJson();
         }
 
         [HttpPost]
