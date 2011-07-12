@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
-using CodeGarten.Data.Access;
-using CodeGarten.Data.ModelView;
+using CodeGarten.Data.Model;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -12,112 +13,62 @@ namespace CodeGarten.Web.Controllers
     {
         private readonly Context _context = new Context();
 
+        [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Index(long structureId, string name, string cpName)
+        public JsonResult Create(long structureId, WorkSpaceType workSpaceType, IEnumerable<string> services)
         {
-            var workspaceType = _context.WorkSpaceTypes.Find(name, structureId);
+            try
+            {
+                if (services != null)
+                    foreach (var service in services.Select(s => _context.Services.Find(s)))
+                        workSpaceType.Services.Add(service);
 
+                _context.WorkSpaceTypes.Add(workSpaceType);
+                _context.SaveChanges();
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                ModelState.AddModelError("Name", "Workspace already exists.");
+                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public PartialViewResult Edit(long structureId, string name)
+        {
             ViewBag.Services = _context.Services;
-
-            ViewBag.CPname = cpName;
-
-            ViewBag.Roles =
-                _context.Roles.Where(
-                    r =>
-                    r.ContainerPrototypeStructureId == structureId && r.ContainerPrototypeName == cpName &&
-                    r.WorkSpaceTypeName == name);
-
-            return View(workspaceType);
-        }
-
-        [StructureOwner("structureId")]
-        public ActionResult Create(long structureId)
-        {
-            var wt = new WorkSpaceTypeView();
-
-            return View(wt);
+            return PartialView(_context.WorkSpaceTypes.Find(name, structureId));
         }
 
         [HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, WorkSpaceTypeView workSpaceType, string cpName)
+        public JsonResult Edit(long structureId, string name, IEnumerable<string> services)
         {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var workspace = _context.WorkSpaceTypes.Find(name, structureId);
 
-                dataBaseManager.WorkSpaceType.Create(workSpaceType, structureId);
+            workspace.Services.Clear();
 
-                return cpName == null
-                           ? RedirectToAction("Index", "Structure", new {id = structureId})
-                           : RedirectToAction("Index", "ContainerPrototype", new {structureId, name = cpName});
-            }
-            catch
-            {
-                return View();
-            }
+            if (services != null)
+                foreach (var service in services.Select(s => _context.Services.Find(s)))
+                    workspace.Services.Add(service);
+
+            _context.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name)
+        //[StructureOwner("structureId")]
+        public PartialViewResult Delete(long structureId, string name)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-            var wt = dataBaseManager.WorkSpaceType.Get(structureId, name);
-
-            return View(wt);
+            return PartialView(_context.WorkSpaceTypes.Find(name, structureId));
         }
 
         [HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name, WorkSpaceTypeView workSpaceTypeView)
+        //[StructureOwner("structureId")]
+        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
         {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.WorkSpaceType.Delete(workSpaceTypeView, structureId);
-
-                return RedirectToAction("Index", "Structure", new {id = structureId});
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [StructureOwner("structureId")]
-        public ActionResult AddService(long structureId, string workspaceName, string serviceName)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.WorkSpaceType.AddService(structureId, workspaceName, serviceName);
-
-                return RedirectToAction("Index", new {structureId, name = workspaceName});
-            }
-            catch
-            {
-                return RedirectToAction("Index", new {structureId, name = workspaceName});
-            }
-        }
-
-        [StructureOwner("structureId")]
-        public ActionResult RemoveService(long structureId, string workspaceName, string serviceName)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.WorkSpaceType.RemoveService(structureId, workspaceName, serviceName);
-
-                return RedirectToAction("Index", new {structureId, name = workspaceName});
-            }
-            catch
-            {
-                return RedirectToAction("Index", new {structureId, name = workspaceName});
-            }
+            _context.WorkSpaceTypes.Remove(_context.WorkSpaceTypes.Find(name, structureId));
+            _context.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }

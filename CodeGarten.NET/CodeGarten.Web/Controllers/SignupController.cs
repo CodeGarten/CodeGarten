@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.ModelView;
 using Apache;
@@ -26,12 +27,7 @@ namespace CodeGarten.Web.Controllers
 
                 dbManager.User.Create(user);
 
-                var cookie = new HttpCookie("authenticated");
-                cookie["name"] = user.Name;
-
-                HttpContext.Response.Cookies.Add(cookie);
-
-                PasswordManager.CreateUser(user.Name, user.Password, PasswordManager.EncodeType.Sha1);
+                FormsAuthentication.SetAuthCookie(user.Name,false);
 
                 return RedirectToAction("Index", "Login");
             }

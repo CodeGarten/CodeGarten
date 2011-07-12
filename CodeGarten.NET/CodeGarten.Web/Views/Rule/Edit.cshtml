@@ -1,0 +1,36 @@
+﻿@using CodeGarten.Data.Model
+@model Rule
+<h2>
+    Edit @Model.Name</h2>
+@using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess", Url = "/Rule/Edit?structureId=" + Request["structureId"] + "&name=" + Model.Name }))
+{
+    <h3>
+        Service permissions</h3>
+    <div id='service_permissions'>
+        <ul>
+            @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+            {
+                <li><a href="#@service.Name">@service.Name</a></li>
+            }
+        </ul>
+        @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+        {
+            <div id="@service.Name">
+                @foreach (var permission in Model.Permissions.Where(p => p.ServiceName == service.Name))
+                {
+                    var permissionId = service.Name + "_" + permission.Name;
+                    var permissionValue = service.Name + " " + permission.Name;
+                    <label for="@permissionId">@permission.Name</label>
+                    <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" checked="checked"/>
+                }
+                @foreach (var permission in service.Permissions.Except(Model.Permissions))
+                {
+                    var permissionId = service.Name + "_" + permission.Name;
+                    var permissionValue = service.Name + " " + permission.Name;
+                    <label for="@permissionId">@permission.Name</label>
+                    <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
+                }
+            </div>
+        }
+    </div>
+}

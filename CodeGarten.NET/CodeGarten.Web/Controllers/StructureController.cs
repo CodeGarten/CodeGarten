@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
 
@@ -11,6 +13,33 @@ namespace CodeGarten.Web.Controllers
     public sealed class StructureController : Controller
     {
         private readonly Context _context = new Context();
+
+        public ActionResult Design(long id)
+        {
+            var structure = _context.Structures.Find(id);
+
+            ViewBag.Services = _context.Services;
+
+            return View(structure);
+        }
+
+        [HttpPost]
+        public ActionResult Design(long id, IEnumerable<Role> roles)
+        {
+            //_context.Roles.Local.Clear();
+
+            //foreach (var role in roles)
+            //{
+            //    role.ContainerPrototypeStructureId =
+            //        role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = id;
+
+            //    _context.Roles.Add(role);
+            //}
+
+            //_context.SaveChanges();
+
+            return RedirectToAction("Index", new {id});
+        }
 
         public ActionResult Index(long id)
         {
@@ -51,7 +80,7 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.Structure.Create(structure, User.Identity.Name);
 
-                return RedirectToAction("Index", new {id = structure.Id});
+                return RedirectToAction("Design", new {id = structure.Id});
             }
             catch
             {

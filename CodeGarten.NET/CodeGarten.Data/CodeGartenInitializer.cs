@@ -43,7 +43,7 @@ namespace CodeGarten.Data
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_rule ON dbo.Rules " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.Rule_Name AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RuleName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
                                                "DELETE dbo.Rules FROM deleted WHERE deleted.Name = dbo.Rules.Name AND deleted.StructureId = dbo.Rules.StructureId"
                 );
 

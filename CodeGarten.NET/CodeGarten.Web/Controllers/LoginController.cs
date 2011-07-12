@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.ModelView;
 
@@ -26,12 +27,12 @@ namespace CodeGarten.Web.Controllers
                 var dbManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
                 if (!dbManager.Authentication.Authenticate(user.Name, user.Password))
+                {
+                    ModelState.AddModelError("", "Incorrect username/password.");
                     return View();
+                }
 
-                var cookie = new HttpCookie("authenticated");
-                cookie["name"] = user.Name;
-
-                HttpContext.Response.Cookies.Add(cookie);
+                FormsAuthentication.SetAuthCookie(user.Name,false);
 
                 if (returnUrl != null)
                     return Redirect(returnUrl);
@@ -46,11 +47,7 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Logout()
         {
-            var authenticatedCookie = HttpContext.Request.Cookies["authenticated"] ?? new HttpCookie("authenticated");
-
-            authenticatedCookie.Expires = DateTime.Now.Subtract(new TimeSpan(1, 0, 0));
-
-            HttpContext.Response.Cookies.Add(authenticatedCookie);
+            FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }

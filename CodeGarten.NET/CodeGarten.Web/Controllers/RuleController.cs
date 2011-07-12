@@ -1,8 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using CodeGarten.Data;
-using CodeGarten.Data.Access;
-using CodeGarten.Data.ModelView;
+using CodeGarten.Data.Model;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -11,105 +13,70 @@ namespace CodeGarten.Web.Controllers
     {
         private readonly Context _context = new Context();
 
+        [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Index(long structureId, string name)
+        public JsonResult Create(long structureId, Rule rule, IEnumerable<string> permissions)
+        {
+            try
+            {
+                if (permissions != null)
+                    foreach (var permission in permissions.Select(p => p.Split(' ')))
+                    {
+                        var serviceName = permission[0];
+                        var permissionName = permission[1];
+                        rule.Permissions.Add(_context.ServicePermissions.Find(permissionName, serviceName));
+                    }
+
+                _context.Rules.Add(rule);
+                _context.SaveChanges();
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                ModelState.AddModelError("Name", "Rule already exists.");
+                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public PartialViewResult Edit(long structureId, string name)
+        {
+            ViewBag.Services = _context.Services;
+            return PartialView(_context.Rules.Find(name, structureId));
+        }
+
+        [HttpPost]
+        public JsonResult Edit(long structureId, string name, IEnumerable<string> permissions)
         {
             var rule = _context.Rules.Find(name, structureId);
 
-            ViewBag.Services = _context.Services;
+            rule.Permissions.Clear();
 
-            return View(rule);
+            if (permissions != null)
+                foreach (var permission in permissions.Select(p => p.Split(' ')))
+                {
+                    var serviceName = permission[0];
+                    var permissionName = permission[1];
+                    rule.Permissions.Add(_context.ServicePermissions.Find(permissionName, serviceName));
+                }
+
+            _context.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        [StructureOwner("structureId")]
-        public ActionResult Create(long structureId)
+        //[StructureOwner("structureId")]
+        public PartialViewResult Delete(long structureId, string name)
         {
-            var r = new RuleView();
-
-            return View(r);
-        }
-
-        [HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, RuleView rule)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.Rule.Create(rule, structureId);
-
-                return RedirectToAction("Index", new {structureId, name = rule.Name});
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name)
-        {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-            var cp = dataBaseManager.Rule.Get(structureId, name);
-
-            return View(cp);
+            return PartialView(_context.Rules.Find(name, structureId));
         }
 
         [HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name, RuleView ruleView, FormCollection collection)
+        //[StructureOwner("structureId")]
+        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
         {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.Rule.Delete(ruleView, structureId);
-
-                return RedirectToAction("Index", "Structure", new {id = structureId});
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //[HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult AddPermission(long structureId, string serviceName, string permissionName, string ruleName)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.Rule.AddPermission(structureId, ruleName, serviceName, permissionName);
-
-                return RedirectToAction("Index", new {structureId, name = ruleName});
-            }
-            catch
-            {
-                return RedirectToAction("Index", new {structureId, name = ruleName});
-            }
-        }
-
-        //[HttpPost]
-        [StructureOwner("structureId")]
-        public ActionResult RemovePermission(long structureId, string serviceName, string permissionName,
-                                             string ruleName)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-                dataBaseManager.Rule.RemovePermission(structureId, ruleName, serviceName, permissionName);
-
-                return RedirectToAction("Index", new {structureId, name = ruleName});
-            }
-            catch
-            {
-                return RedirectToAction("Index", new {structureId, name = ruleName});
-            }
+            _context.Rules.Remove(_context.Rules.Find(name, structureId));
+            _context.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }

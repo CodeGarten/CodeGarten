@@ -2,6 +2,7 @@
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Service;
 using CodeGarten.Web.Core;
@@ -61,10 +62,14 @@ namespace CodeGarten.Web
 
         public void Application_AuthenticateRequest()
         {
-            var authCookie = Request.Cookies["authenticated"];
+            var authCookie = Request.Cookies.Get(FormsAuthentication.FormsCookieName);
 
-            if (authCookie != null)
-                Context.User = new GenericPrincipal(new GenericIdentity(authCookie["name"]), null);
+            if (authCookie == null)
+                return;
+
+            var ticket = FormsAuthentication.Decrypt(authCookie.Value);
+
+            Context.User = new GenericPrincipal(new GenericIdentity(ticket.Name), null);
         }
 
         public void Application_BeginRequest()
