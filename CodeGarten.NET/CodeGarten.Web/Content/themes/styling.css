@@ -1,3 +1,9 @@
+#main, #foot, #top
+{
+    margin: 0 auto;
+    width: 920px;
+}
+
 body{ font: 62.5% "Trebuchet MS", sans-serif;}
 		
 h1 { padding: .2em; margin: 0;}
@@ -9,15 +15,15 @@ h1 { padding: .2em; margin: 0;}
 
 .ui-state-highlight { text-align:center;}
 
-#error { margin-right: 300px; }
+#error { width: 74%;float: left; }
 
-#containerPrototypeDesign { margin-right: 300px;}
+#containerPrototypeDesign { width: 74%;float: left;}
 #containerPrototypeDesign .Workspace {margin: 2em; display:inline-block;}
 #containerPrototypeDesign .RoleType {margin: 2em; display:inline-block;}
 #containerPrototypeDesign .Rule {margin: 1em; font-size:medium;}
 #containerPrototypeDesign .Rule > .item_options {margin-left:1em;}
 
-#components { float:right; min-width: 250px;max-width: 300px;}
+#components {width: 25%;float: right;}
 #components .item {margin-bottom:1em; cursor:pointer; font-size:medium;}
 #components .item_options {margin-left:1em;}
 #components .page_add {width:100%;}
@@ -31,8 +37,88 @@ h1 { padding: .2em; margin: 0;}
 
 .ui-accordion .ui-accordion-content{ overflow:hidden !important; }
 
-#main {margin:2em;}
-
 #actions { clear: both;}
 
-#foot { clear: both;}
+#foot 
+{
+    border-top: 1px solid #CCCCCC;
+    padding: 10px;
+    text-align: center;
+    line-height:normal;
+    font-size: .9em;
+    background-color: #F1F1F1;
+    margin-top: 20px;
+    width: 100%;
+}
+
+#foot > p
+{
+    margin: 0 auto;
+    width: 920px;
+}
+
+#top 
+{
+    border-bottom: 1px solid #CCCCCC;
+    height: 90px;
+    background-color: #F1F1F1;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error
+{
+    color: #ff0000;
+}
+
+.field-validation-valid
+{
+    display: none;
+}
+
+.input-validation-error
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid
+{
+    display: none;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label,
+.editor-label
+{
+    margin: 1em 0 0 0;
+}
+
+.display-field,
+.editor-field
+{
+    margin:0.5em 0 0 0;
+}
+
+.text-box.multi-line
+{
+    height: 6.5em;
+}
+
+.tri-state
+{
+    width: 6em;
+}
