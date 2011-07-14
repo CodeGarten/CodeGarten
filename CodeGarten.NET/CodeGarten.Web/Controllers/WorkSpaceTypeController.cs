@@ -26,12 +26,12 @@ namespace CodeGarten.Web.Controllers
                 _context.WorkSpaceTypes.Add(workSpaceType);
                 _context.SaveChanges();
 
-                return Json(true, JsonRequestBehavior.AllowGet);
+                return Json(new {Errors = new string[0]}, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                ModelState.AddModelError("Name", "Workspace already exists.");
-                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
+                ModelState.AddModelError("form", "An error occured. Please try again.");
+                return ModelState.ToJson();
             }
         }
 

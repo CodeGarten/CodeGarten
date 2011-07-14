@@ -20,12 +20,12 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.RoleType.Create(roleType, structureId);
 
-                return Json(true, JsonRequestBehavior.AllowGet);
+                return Json(new { Errors = new string[0] }, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                ModelState.AddModelError("Name", "Role type already exists.");
-                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
+                ModelState.AddModelError("form", "An error occured. Please try again.");
+                return ModelState.ToJson();
             }
         }
 
