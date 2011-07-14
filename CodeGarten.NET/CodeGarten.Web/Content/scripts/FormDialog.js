@@ -1,12 +1,13 @@
 function FormDialog() {
 
     var _dialog;
-    var _form;
     var _callback;
     var _functionClean;
     var _obj;
 
     var _formError = new ErrorPlaceholder();
+
+    this.FormId;
 
     var ApplyError = function (errors) {
 
@@ -15,13 +16,13 @@ function FormDialog() {
             if (error.Field == "form")
                 _formError.Error("Error", error.Error);
             else
-                $(_form + " input[name=\"" + error.Field + "\"]").val(error.Error);
+                FormId.find("input[name=\"" + error.Field + "\"]").val(error.Error);
         }
 
     };
 
     var LoadObj = function () {
-        var inputs = $(_form).serializeArray();
+        var inputs = $(FormId).serializeArray();
         for (var i in inputs) {
             var input = inputs[i];
             if (input.name in _obj)
@@ -31,7 +32,7 @@ function FormDialog() {
 
     var CleanFields = function () {
         _formError.HideError();
-        $(_form)[0].reset();
+        FormId[0].reset();
 
         if (_functionClean)
             _functionClean();
@@ -39,59 +40,64 @@ function FormDialog() {
 
     var CreateButtons = function () {
 
-        var butSubmit = $(_form + " input[type=\"submit\"]");
-        var butReset = $(_form + " input[type=\"reset\"]");
+        var butSubmit = FormId.find("input[type=\"submit\"]");
+        var butReset = FormId.find("input[type=\"reset\"]");
         var butSubmitVal = butSubmit.val();
         var butResetVal = butReset.val();
 
-        var obj = "({";
+        var obj = {};
         if (butSubmitVal) {
-            obj += butSubmitVal + ": function () {$(_form).submit();},";
+            obj[butSubmitVal] = function () { FormId.submit(); };
             butSubmit.remove();
         }
         if (butResetVal) {
-            obj += butResetVal + ": function () {CleanFields();},";
+            obj[butResetVal] = function () {CleanFields();};
             butReset.remove();
         }
-        obj.substring(0, obj.length - 1);
-
-        obj += "})"
-        return eval(obj);
+        
+        return obj;
     };
 
     this.init = function (dialog, functionClean) {
+        
+        if (dialog instanceof jQuery)
+            _dialog = dialog;
+        else
+            _dialog = $(dialog);
+            
         _functionClean = functionClean;
-        _dialog = dialog;
-        _form = dialog + " > form";
 
-        $(_dialog).dialog({
+        FormId = _dialog.children("form");
+
+        _dialog.dialog({
             autoOpen: false,
             modal: true
         });
 
-        $(_dialog).dialog("option", "buttons", CreateButtons());
+        _dialog.dialog("option", "buttons", CreateButtons());
 
-        $(_dialog).append("<div class='error_form'></div>");
-        _formError.init(_dialog + " > .error_form");
+        _dialog.append("<div class='error_form'></div>");
+
+        _formError.init(_dialog.children(".error_form"));
     };
 
     this.Open = function (title, obj, callback) {
         CleanFields();
-        $(_dialog).dialog("option", "title", title);
+        _dialog.dialog("option", "title", title);
         _callback = callback;
         _obj = obj;
-        $(_dialog).dialog("open");
+        _dialog.dialog("open");
     };
 
     this.OnSuccessCallBack = function (result) {
 
-        if (result.Errors.length > 0) {
+        if (result != undefined) {
             ApplyError(result.Errors);
             return;
         }
 
         LoadObj();
-        $(_dialog).dialog("close");
+        _dialog.dialog("close");
         _callback(_obj);
     };
 
