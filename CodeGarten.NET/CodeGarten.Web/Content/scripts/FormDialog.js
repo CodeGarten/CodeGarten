@@ -4,10 +4,9 @@ function FormDialog() {
     var _callback;
     var _functionClean;
     var _obj;
+    var _form;
 
     var _formError = new ErrorPlaceholder();
-
-    this.FormId;
 
     var ApplyError = function (errors) {
 
@@ -16,13 +15,13 @@ function FormDialog() {
             if (error.Field == "form")
                 _formError.Error("Error", error.Error);
             else
-                FormId.find("input[name=\"" + error.Field + "\"]").val(error.Error);
+                _form.find("input[name=\"" + error.Field + "\"]").val(error.Error);
         }
 
     };
 
     var LoadObj = function () {
-        var inputs = $(FormId).serializeArray();
+        var inputs = $(_form).serializeArray();
         for (var i in inputs) {
             var input = inputs[i];
             if (input.name in _obj)
@@ -32,7 +31,7 @@ function FormDialog() {
 
     var CleanFields = function () {
         _formError.HideError();
-        FormId[0].reset();
+        _form[0].reset();
 
         if (_functionClean)
             _functionClean();
@@ -40,14 +39,14 @@ function FormDialog() {
 
     var CreateButtons = function () {
 
-        var butSubmit = FormId.find("input[type=\"submit\"]");
-        var butReset = FormId.find("input[type=\"reset\"]");
+        var butSubmit = _form.find("input[type=\"submit\"]");
+        var butReset = _form.find("input[type=\"reset\"]");
         var butSubmitVal = butSubmit.val();
         var butResetVal = butReset.val();
 
         var obj = {};
         if (butSubmitVal) {
-            obj[butSubmitVal] = function () { FormId.submit(); };
+            obj[butSubmitVal] = function () { _form.submit(); };
             butSubmit.remove();
         }
         if (butResetVal) {
@@ -67,7 +66,7 @@ function FormDialog() {
             
         _functionClean = functionClean;
 
-        FormId = _dialog.children("form");
+        _form = _dialog.children("form");
 
         _dialog.dialog({
             autoOpen: false,
@@ -91,7 +90,7 @@ function FormDialog() {
 
     this.OnSuccessCallBack = function (result) {
 
-        if (result != undefined) {
+        if (!result.Success) {
             ApplyError(result.Errors);
             return;
         }
@@ -104,4 +103,9 @@ function FormDialog() {
     this.OnFailCallBack = function () {
         _formError.Error("Error", "Submit Fail");
     };
+
+    this.getForm = function () {
+        return _form;
+    };
+
 };
