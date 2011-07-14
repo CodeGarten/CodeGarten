@@ -45,13 +45,14 @@ namespace CodeGarten.Web.Controllers
                 else
                     dataBaseManager.ContainerPrototype.Create(containerPrototype, structureId);
 
+                return FormValidationResponse.Ok();
             }
             catch(ArgumentException e)
             {
-                ModelState.AddModelError("form", "EROROROOROROROROROROROROR");
+                ModelState.AddGlobalError("EROROROOROROROROROROROROR");
             }
-            
-            return ModelState.ToJson();
+
+            return FormValidationResponse.Error(ModelState);
         }
 
         [HttpPost]
