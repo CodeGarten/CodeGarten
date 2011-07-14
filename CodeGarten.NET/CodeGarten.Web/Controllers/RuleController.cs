@@ -34,8 +34,8 @@ namespace CodeGarten.Web.Controllers
             }
             catch
             {
-                ModelState.AddModelError("Name", "Rule already exists.");
-                return Json(ValidationError.Parse(ModelState), JsonRequestBehavior.AllowGet);
+                ModelState.AddModelError("form", "An error occured. Please try again.");
+                return ModelState.ToJson();
             }
         }
 
