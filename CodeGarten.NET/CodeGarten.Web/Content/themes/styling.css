@@ -49,6 +49,7 @@ h1 { padding: .2em; margin: 0;}
     background-color: #F1F1F1;
     margin-top: 20px;
     width: 100%;
+    clear: both;
 }
 
 #foot > p
@@ -66,8 +67,31 @@ h1 { padding: .2em; margin: 0;}
 }
 
 
-
-
+/* Styles Structure Container Prototype
+-----------------------------------------------------------*/
+#container_structure{ border: 1px solid; position:absolute; }
+			
+.container { min-width: 200px; float:left; }
+			
+.container_header
+{
+	text-align: center;
+	min-width: 100px;
+	min-height: 20px;
+	margin: 1px 1px 1px 1px;
+}
+						
+.container_childs .container { float: left; }
+			
+.container_header h2 { display:inline; }
+			
+.container_header .ui-icon-trash { margin-top:3px; float: left;}
+			
+.container_header .ui-icon-plusthick { margin-top:3px; float:left;}
+			
+.container_header .toggle { margin-top:3px; float: right; }
+			
+.container_header > a { cursor: pointer;}
 
 
 /* Styles for validation helpers
