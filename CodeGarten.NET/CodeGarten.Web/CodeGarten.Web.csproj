@@ -81,21 +81,24 @@
     <Compile Include="Controllers\WorkSpaceController.cs" />
     <Compile Include="Controllers\WorkSpaceTypeController.cs" />
     <Compile Include="Core\ControllerFactory.cs" />
-    <Compile Include="Core\ValidationError.cs" />
+    <Compile Include="Core\Utils.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Model\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\scripts\CodeGartenModel.js" />
     <Content Include="Content\scripts\ErrorPlaceholder.js" />
+    <Content Include="Content\scripts\Eventcontroller.js" />
     <Content Include="Content\scripts\FormDialog.js" />
     <Content Include="Content\scripts\DialogConfirmView.js" />
+    <Content Include="Content\scripts\RoleType.js" />
+    <Content Include="Content\scripts\Rule.js" />
     <Content Include="Content\scripts\StructureController.js" />
     <Content Include="Content\scripts\StructureView.js" />
-    <Content Include="Content\scripts\DialogHelper.js" />
+    <Content Include="Content\scripts\Tree.js" />
+    <Content Include="Content\scripts\Workspace.js" />
     <Content Include="Content\themes\base\styling.css" />
     <Content Include="Content\themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -111,6 +114,7 @@
     <Content Include="Content\themes\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\smoothness\jquery-ui-1.8.14.custom.css" />
+    <Content Include="Content\themes\styling.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\base\Site.css" />
     <Content Include="Scripts\jquery-1.5.1.min.js" />
@@ -272,6 +276,7 @@
     <Content Include="Views\WorkSpace\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Model\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>

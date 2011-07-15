@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
 using CodeGarten.Data.ModelView;
@@ -50,6 +51,11 @@ namespace CodeGarten.Data.Access
             var roleTp = Get(_dbContext, structure, roleType);
 
             return roleTp == null ? null : roleTp.Convert();
+        }
+        //TODO
+        public IEnumerable<RoleType> GetAll(long structureId)
+        {
+            return _dbContext.RoleTypes.Where(rt => rt.StructureId== structureId);
         }
     }
 }

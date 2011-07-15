@@ -11,7 +11,8 @@ var StructureController = new (function () {
     this.init = function () {
         ContainerPrototypeModel.init(true);
         var ret = ContainerPrototypeModel.GetContainerPrototypeWithParent(null);
-        initializer(ret);
+        if(ret!=null)
+            initializer(ret);
     };
 
     this.Delete = function (containerName) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
 using CodeGarten.Data.ModelView;
@@ -54,6 +55,11 @@ namespace CodeGarten.Data.Access
                            WorkSpaceTypeName = workspaceType,
                            RoleTypeName = roleType
                        };
+        }
+        //TODO
+        public IEnumerable<Role> GetAll(long structureId)
+        {
+            return _dbContext.Roles.Where(rl => rl.RuleStructureId == structureId);
         }
 
         public void Delete(RoleView roleView, long structureId)

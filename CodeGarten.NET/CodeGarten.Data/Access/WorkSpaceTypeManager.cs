@@ -81,6 +81,11 @@ namespace CodeGarten.Data.Access
             var workSpaceTypeObj = Get(_dbContext, structure, workspace);
             return workSpaceTypeObj == null ? null : workSpaceTypeObj.Convert();
         }
+        //TODO
+        public IEnumerable<WorkSpaceType> GetAll(long structureId)
+        {
+            return _dbContext.WorkSpaceTypes.Where(wk => wk.StructureId == structureId);
+        }
 
         public void AddService(long structure, string workSpaceType, string service)
         {

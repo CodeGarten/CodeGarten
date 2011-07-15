@@ -28,10 +28,52 @@ function ContainerPrototype(name, parentContainer)
 
 };
 
+var StructureModel = new (function(){
+    
+    var _structureModel;
+    var _id;
+
+    this.init = function(id){
+        _id = id;
+        _structureModel = eval ('('+$.ajax({
+              type: "GET",
+              url: "/Structure/Synchronization",
+              data: ({id:id}),
+              cache: false,
+              async: false,
+            }).responseText+')');
+    };
+
+    this.getId = function (){
+        return _id;
+    };
+
+    this.getContainerPrototypes = function () {
+        return _structureModel.ContainerPrototypes;
+    };
+
+    this.getRoleTypes = function (){
+        return _structureModel.RoleTypes;
+    };
+
+    this.getWorkspaceTypes = function (){
+        return _structureModel.WorkspaceTypes;
+    };
+
+    this.getRoles = function (){
+        return _structureModel.Roles;
+    };
+
+    this.getRules = function (){
+        return _structureModel.Rules;
+    };
+
+})();
+
 var ContainerPrototypeModel = new (function () {
 
     var _containerPrototype;
-
+    var _structureId;
     function GetContainer(containerPrototype, containerPrototypeName, compare) {
 
         if (compare(containerPrototype, containerPrototypeName))
@@ -53,13 +95,17 @@ var ContainerPrototypeModel = new (function () {
             GetAllContainers(containerPrototype.childs[i], containerPrototypeName, array, compare);
     };
 
-    this.init = function (sync) {
-        //syncronize with codegarten;
+    this.init = function (sync, structureId) {
+
+        _structureId = StructureModel.getId();
         _containerPrototype = null;
         if (!sync) return;
-//        this.CreateContainerPrototype("UC", null);
-//        this.CreateContainerPrototype("Turma_tipo_1", "UC");
-//        this.CreateContainerPrototype("Turma_tipo_2", "UC");
+
+        var containerPrototypes = StructureModel.getContainerPrototypes();
+        for(var i in containerPrototypes){
+            var container = containerPrototypes[i];
+            this.CreateContainerPrototype(container.Name, container.ParentName);
+        }
     };
 
     this.GetContainerPrototype = function (containerPrototypeName) {
@@ -102,11 +148,19 @@ var ContainerPrototypeModel = new (function () {
         if (_containerPrototype == null)
             return false;
 
+        $.ajax({
+              type: "POST",
+              url: "/ContainerPrototype/Delete",
+              data: ({structureId:_structureId, name: containerPrototypeName}),
+              cache: false,
+              async: false,
+            });  
+
         var compare = function (containerPrototype, containerPrototypeName) {
 
             if (containerPrototype.name == containerPrototypeName) {
                 if (containerPrototype.parent == null) {
-                    _containerPrototype == null;
+                    _containerPrototype = null;
                     return true;
                 }
 

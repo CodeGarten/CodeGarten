@@ -20,6 +20,7 @@ namespace CodeGarten.Web.Controllers
             var containerPrototype = _context.ContainerPrototypes.Find(name, structureId);
 
             ViewBag.WorkSpaces = _context.WorkSpaceTypes.Where(ws => ws.StructureId == structureId);
+            ViewBag.structureId = structureId;
 
             return View(containerPrototype);
         }

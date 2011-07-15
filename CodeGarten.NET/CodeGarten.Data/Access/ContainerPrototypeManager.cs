@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using CodeGarten.Data.Model;
@@ -86,6 +87,11 @@ namespace CodeGarten.Data.Access
             var containerProto = Get(_dbContext, structure, containerPrototype);
 
             return containerProto == null ? null : containerProto.Convert();
+        }
+        //TODO
+        public IEnumerable<ContainerPrototype> GetAll(long structureId)
+        {
+            return _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId);
         }
 
         public bool AddWorkSpaceType(long structure, string containerPrototype, string workspaceType)

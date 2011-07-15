@@ -90,6 +90,11 @@ namespace CodeGarten.Data.Access
             return ruleObj == null ? null : ruleObj.Convert();
         }
 
+        public IEnumerable<Rule> GetAll(long structureId)
+        {
+            return _dbContext.Rules.Where(rl => rl.StructureId == structureId);
+        }
+
         public bool AddPermission(long structure, string rule, string service, string permission)
         {
             var ruleObj = Get(_dbContext, structure, rule);
