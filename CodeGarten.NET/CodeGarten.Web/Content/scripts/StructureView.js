@@ -1,7 +1,7 @@
-var StructureHtml = new (function(){
+var StructureHtml = new (function () {
 
-	this.Container = function(containerPrototypeName){
-	    return "<div id='" + containerPrototypeName + "' class='container' >\
+    this.Container = function (containerPrototypeName) {
+        return "<div id='" + containerPrototypeName + "' class='container' >\
 					<div class='container_header ui-widget-header'>\
 						<h2>" + containerPrototypeName + "</h2>\
                         <a title='Toggle " + containerPrototypeName + "' onclick='StructureController.Toggle(\"" + containerPrototypeName + "\")' class='toggle ui-icon ui-icon-carat-1-n'>Toggle container</a>\
@@ -11,7 +11,14 @@ var StructureHtml = new (function(){
 					<div class='container_childs'>\
 					</div>\
 				</div>";
-	};
+    };
+
+    this.FirstContainerPrototype = function () {
+        return "<div>\
+                    Create your first container \
+                    <a onclick='StructureController.AddChild(null)'>here</a>\
+                </div>";
+    };
 
 })();
 
@@ -25,6 +32,7 @@ var StructureView = new (function () {
 
     this.init = function (structure, formContainerPrototype) {
         _structure = $(structure);
+        _structure.html(StructureHtml.FirstContainerPrototype());
         _formContainerPrototype = $(formContainerPrototype);
         _formParent = $(formContainerPrototype + " input[name=\"parent\"]")
 
@@ -57,24 +65,32 @@ var StructureView = new (function () {
         else
             parentName = parent;
 
-        if (parentName == null)
-            _structure.append(StructureHtml.Container(child.name));
-        else {
-            var item = $(StructureHtml.Container(child.name)).hide();
-            $("#" + parentName + " > .container_childs").append(item);
-            item.slideDown();
+        var item = $(StructureHtml.Container(child.name)).hide();
+        item.children(".container_header").children(".toggle").hide();
 
+        if (parentName == null) {
+            this.RemoveAll();
+            _structure.append(item);
+        } else {
+            $("#" + parentName + " > .container_header > .toggle").show();
+            $("#" + parentName + " > .container_childs").append(item);
         }
+        item.slideDown();
     };
 
     this.Remove = function (containerName) {
+        var firstContainerId = _structure.children(".container").attr("id");
+
         $("#" + containerName).slideToggle(function () {
             $("#" + containerName).remove();
+
+            if (firstContainerId == containerName)
+                _structure.html(StructureHtml.FirstContainerPrototype());
         });
     };
 
     this.CreateContainerPrototype = function (obj, callback) {
-        
+
         _formParent.val(obj.ParentName);
 
         this.ContainerPrototypeFormDialog.Open("Create Container Prototype", obj, callback);

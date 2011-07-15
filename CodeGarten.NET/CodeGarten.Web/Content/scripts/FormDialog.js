@@ -97,7 +97,9 @@ function FormDialog() {
 
         LoadObj();
         _dialog.dialog("close");
-        _callback(_obj);
+
+        if (_callback != undefined)
+            _callback(_obj);
     };
 
     this.OnFailCallBack = function () {

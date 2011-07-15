@@ -40,11 +40,11 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                if (parent != null)
-                    dataBaseManager.ContainerPrototype.Create(containerPrototype, structureId, parent);
-                else
+                if (String.IsNullOrEmpty(parent))
                     dataBaseManager.ContainerPrototype.Create(containerPrototype, structureId);
-
+                else
+                    dataBaseManager.ContainerPrototype.Create(containerPrototype, structureId, parent);
+                    
                 return FormValidationResponse.Ok();
             }
             catch(ArgumentException e)
@@ -57,14 +57,13 @@ namespace CodeGarten.Web.Controllers
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, string name, ContainerPrototypeView containerPrototypeView,
-                                   FormCollection collection)
+        public ActionResult Delete(long structureId, string name)
         {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.ContainerPrototype.Delete(containerPrototypeView, structureId);
+                dataBaseManager.ContainerPrototype.Delete(structureId, name);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }

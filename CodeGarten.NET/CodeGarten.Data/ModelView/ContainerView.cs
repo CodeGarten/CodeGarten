@@ -11,7 +11,7 @@ namespace CodeGarten.Data.ModelView
 
         [Required]
         [RegularExpression(@"[a-zA-Z0-9_]*")]
-        [MinLength(2)]
+        [MinLength(4)]
         [MaxLength(64)]
         public string Name { get; set; }
 

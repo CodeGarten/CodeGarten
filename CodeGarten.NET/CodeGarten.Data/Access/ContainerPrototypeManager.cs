@@ -57,9 +57,17 @@ namespace CodeGarten.Data.Access
         public void Delete(ContainerPrototypeView containerPrototypeView, long structureId)
         {
             //_dbContext.Entry(_dbContext.ContainerPrototypes.Find(containerPrototypeView.Name, structureId)).State = EntityState.Deleted;
+            Delete(containerPrototypeView.Name, structureId);
+            
+        }
 
-            _dbContext.ContainerPrototypes.Remove(_dbContext.ContainerPrototypes.Find(containerPrototypeView.Name,
-                                                                                      structureId));
+        public void Delete(string containerPrototype, long structureId)
+        {
+            var containerPrototypeObj = _dbContext.ContainerPrototypes.Find(containerPrototype, structureId);
+            if(containerPrototypeObj == null)
+                throw new Exception();
+
+            _dbContext.ContainerPrototypes.Remove(containerPrototypeObj);
 
             _dbContext.SaveChanges();
         }
