@@ -1,31 +1,48 @@
 ﻿@model Structure
 @using CodeGarten.Data.Model;
+@using CodeGarten.Data.ModelView
 @{
     ViewBag.Title = "Design";
 }
-<link href="@Url.Content("~/Content/themes/styling.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Content/Scripts/ErrorPlaceholder.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/FormDialog.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/ComponentsView.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/scripts/DialogHelper.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Workspace.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/RoleType.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Rule.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/scripts/ContainerPrototype.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/scripts/Tree.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Eventcontroller.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/json2.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/scripts/DialogConfirmView.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/StructureController.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/CodeGartenModel.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/StructureView.js")" type="text/javascript" ></script>
 <h1>
     @Model.Name Design</h1>
 <div>
-    <div id="components">
+    <div>
+        <h2>
+            Basic structure</h2>
+        <div id="container_structure">
+        </div>
+        <div id="error_container_structure">
+        </div>
     </div>
-    <div id="containerPrototypeDesign">
-    </div>
-    <div id="error">
-    </div>
-    <div id="actions">
-        <button>
-            Save</button>
+    <div>
+        <h2>
+            Container prototype details</h2>
+        <div id="containerPrototypeDesign">
+        </div>
+        <div id="components">
+        </div>
+        <div id="error">
+        </div>
+        <div id="actions">
+            <button>
+                Save</button>
+        </div>
     </div>
 </div>
 <div id="workspaceCreate">
@@ -37,6 +54,11 @@
 <div id="ruleCreate">
     @Html.Partial("_RuleCreateForm", new Rule())
 </div>
+<div id="form_containerPrototype">
+	@Html.Partial("_FormContainerPrototype", new ContainerPrototypeView())
+</div>
+<div id="dialog_confirm">
+</div>
 <script type="text/javascript">
     WorkspaceController.Init("#workspaceCreate", @Model.Id);
     RoleTypeView.Init("#roleTypeCreate", @Model.Id);
@@ -45,11 +67,10 @@
 
     EventController.Init("#error");
 
-    ContainerPrototypeController.Init("#containerPrototypeDesign");
-    ContainerPrototypeController.Create();
+    TreeController.Init("#containerPrototypeDesign");
 
     $("#actions button").button().click(function () {
-        var roles = ContainerPrototypeController.GetRoles("Disciplina");
+        var roles = TreeController.GetRoles("Disciplina");
         
         $.ajax(
         {
@@ -61,4 +82,13 @@
         }
      );
     });
+
+
+
+    DialogConfirmView.init("#dialog_confirm");
+    
+    
+    StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
+    StructureController.init();
+;
 </script>

@@ -2,8 +2,8 @@ var StructureHtml = new (function () {
 
     this.Container = function (containerPrototypeName) {
         return "<div id='" + containerPrototypeName + "' class='container' >\
-					<div class='container_header ui-widget-header'>\
-						<h2>" + containerPrototypeName + "</h2>\
+					<div class='container_header ui-widget-header ui-state-default ui-corner-all'>\
+						<h2 onclick='TreeController.Design(\"" + containerPrototypeName + "\")'>" + containerPrototypeName + "</h2>\
                         <a title='Toggle " + containerPrototypeName + "' onclick='StructureController.Toggle(\"" + containerPrototypeName + "\")' class='toggle ui-icon ui-icon-carat-1-n'>Toggle container</a>\
                         <a title='Add Child " + containerPrototypeName + "' onclick='StructureController.AddChild(\"" + containerPrototypeName + "\")' class='ui-icon ui-icon-plusthick'>Add child</a>\
 						<a title='Delete " + containerPrototypeName + "' onclick='StructureController.Delete(\"" + containerPrototypeName + "\")' class='ui-icon ui-icon-trash'>Delete</a>\
@@ -14,10 +14,12 @@ var StructureHtml = new (function () {
     };
 
     this.FirstContainerPrototype = function () {
-        return "<div>\
-                    Create your first container \
-                    <a onclick='StructureController.AddChild(null)'>here</a>\
-                </div>";
+        return EventController.Placeholder("Create your first container prototype <a href='javascript:StructureController.AddChild(null)'>here</a>.","h2");
+
+        //        return "<div>\
+        //                    Create your first container \
+        //                    <a onclick='StructureController.AddChild(null)'>here</a>\
+        //                </div>";
     };
 
 })();
@@ -75,17 +77,21 @@ var StructureView = new (function () {
             $("#" + parentName + " > .container_header > .toggle").show();
             $("#" + parentName + " > .container_childs").append(item);
         }
+        item.children(".container_header").hover(function () { item.children(".container_header").toggleClass("ui-state-default").toggleClass("ui-state-hover"); });
         item.slideDown();
     };
 
     this.Remove = function (containerName) {
         var firstContainerId = _structure.children(".container").attr("id");
 
-        $("#" + containerName).slideToggle(function () {
+        $("#" + containerName).slideUp(function () {
             $("#" + containerName).remove();
 
-            if (firstContainerId == containerName)
+            if (firstContainerId == containerName) {
+                $(_structure).hide();
                 _structure.html(StructureHtml.FirstContainerPrototype());
+                $(_structure).slideDown();
+            }
         });
     };
 

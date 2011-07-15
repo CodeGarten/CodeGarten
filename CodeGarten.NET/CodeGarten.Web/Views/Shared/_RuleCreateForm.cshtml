@@ -5,7 +5,7 @@
     controller = "Rule",
     action = "Create",
     structureId = Request.RequestContext.RouteData.Values["id"]
-}, new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess" }))
+}, new AjaxOptions { OnSuccess = "RuleView.create.OnSuccessCallBack" }))
 {
     @Html.ValidationSummary(true)
     <h2>
@@ -40,4 +40,7 @@
             </div>
         }
     </div>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
 }

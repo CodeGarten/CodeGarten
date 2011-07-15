@@ -30,12 +30,11 @@ namespace CodeGarten.Web.Controllers
                 _context.Rules.Add(rule);
                 _context.SaveChanges();
 
-                return Json(true, JsonRequestBehavior.AllowGet);
+                return FormValidationResponse.Ok();
             }
             catch
             {
-                ModelState.AddModelError("form", "An error occured. Please try again.");
-                return ModelState.ToJson();
+                return FormValidationResponse.Error(ModelState);
             }
         }
 
@@ -61,22 +60,16 @@ namespace CodeGarten.Web.Controllers
                 }
 
             _context.SaveChanges();
-            return Json(true, JsonRequestBehavior.AllowGet);
-        }
-
-        //[StructureOwner("structureId")]
-        public PartialViewResult Delete(long structureId, string name)
-        {
-            return PartialView(_context.Rules.Find(name, structureId));
+            return FormValidationResponse.Ok();
         }
 
         [HttpPost]
         //[StructureOwner("structureId")]
-        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
+        public JsonResult Delete(long structureId, string name)
         {
             _context.Rules.Remove(_context.Rules.Find(name, structureId));
             _context.SaveChanges();
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return FormValidationResponse.Ok();
         }
     }
 }

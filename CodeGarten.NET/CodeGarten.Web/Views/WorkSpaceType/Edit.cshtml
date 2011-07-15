@@ -2,7 +2,7 @@
 @using CodeGarten.Data.Model;
 <h2>
     Edit @Model.Name</h2>
-@using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess", Url = "/WorkSpaceType/Edit?structureId=" + Request["structureId"] + "&name=" + Model.Name }))
+@using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "WorkspaceView.edit.OnSuccessCallBack", Url = "/WorkSpaceType/Edit?structureId=" + Request["structureId"] + "&name=" + Model.Name }))
 {
     <h3>
         Services</h3>
@@ -16,4 +16,8 @@
     <label for="@service.Name">@service.Name</label>
     <input id="@service.Name" name="services" type="checkbox" value="@service.Name"/>
     }
+    
+        <p>
+        <input type="submit" value="Save" />
+    </p>
 }

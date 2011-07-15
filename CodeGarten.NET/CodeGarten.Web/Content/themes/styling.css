@@ -69,24 +69,31 @@ h1 { padding: .2em; margin: 0;}
 
 /* Styles Structure Container Prototype
 -----------------------------------------------------------*/
-#container_structure{  }
+#container_structure{ width: inherit;}
 			
-.container .container {min-width: 200px; float:left}
+.container_childs > .container { min-width: 200px;display:table-cell; }
+
+.container
+{
+    width: inherit;
+}
 			
 .container_header
 {
 	text-align: center;
-	min-height: 20px;
+	min-width: 100px;
+	min-height: 25px;
 	margin: 1px 1px 1px 1px;
+    padding-top: 4px;
 }
-	
-.container_header h2 { display:inline; }
 			
-.container_header .ui-icon-trash { margin-top:3px; float: left;}
+.container_header h2 { display:inline; cursor: pointer; }
 			
-.container_header .ui-icon-plusthick { margin-top:3px; float:left;}
+.container_header .ui-icon-trash { margin-top:2px; float: left;}
 			
-.container_header .toggle { margin-top:3px; float: right; }
+.container_header .ui-icon-plusthick { margin-top:2px; float:left;}
+			
+.container_header .toggle { margin-top:2px; float: right; }
 			
 .container_header > a { cursor: pointer;}
 

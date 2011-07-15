@@ -7,7 +7,7 @@
     controller = "WorkSpaceType",
     action = "Create",
     structureId = Request.RequestContext.RouteData.Values["id"]
-}, new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess" }))
+}, new AjaxOptions { OnSuccess = "WorkspaceView.create.OnSuccessCallBack" }))
 {
     @Html.ValidationSummary(true)
     <div class="editor-label">
@@ -26,4 +26,7 @@
             <input id="@service.Name" name="services" type="checkbox" value="@service.Name" />
         }
     </div>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
 }

@@ -20,32 +20,23 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.RoleType.Create(roleType, structureId);
 
-                return Json(new { Errors = new string[0] }, JsonRequestBehavior.AllowGet);
+                return FormValidationResponse.Ok();
             }
             catch
             {
-                ModelState.AddModelError("form", "An error occured. Please try again.");
-                return ModelState.ToJson();
+                return FormValidationResponse.Error(ModelState);
             }
-        }
-
-        //[StructureOwner("structureId")]
-        public PartialViewResult Delete(long structureId, string name)
-        {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-            return PartialView(dataBaseManager.RoleType.Get(structureId,name));
         }
 
         [HttpPost]
         //[StructureOwner("structureId")]
-        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
+        public JsonResult Delete(long structureId, string name)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             dataBaseManager.RoleType.Delete(new RoleTypeView{Name = name}, structureId);
 
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return FormValidationResponse.Ok();
         }
     }
 }

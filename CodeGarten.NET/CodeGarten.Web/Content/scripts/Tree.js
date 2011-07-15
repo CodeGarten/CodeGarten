@@ -1,4 +1,4 @@
-function AcyclicTree(name, parent) {
+function Tree(name, parent) {
     this.Parent = parent;
 
     this.Name = name;
@@ -16,108 +16,109 @@ function Role(cpName, wsName, rtName, ruleName) {
     this.RuleName = ruleName;
 };
 
-var ContainerPrototypeController = new (function () {
+var TreeController = new (function () {
     var editing;
 
     this.Init = function (view) {
-        ContainerPrototypeModel.Init();
-        ContainerPrototypeView.Init(view);
+        TreeModel.Init();
+        TreeView.Init(view);
     };
 
-    this.Create = function () {
-        ContainerPrototypeView.Create(function (containerPrototypeName) {
-            ContainerPrototypeModel.AddContainerPrototype(containerPrototypeName);
-            ContainerPrototypeController.Design(containerPrototypeName);
-        });
+    this.Create = function (name) {
+        TreeModel.AddContainerPrototype(name);
+        TreeController.Design(name);
     };
 
     this.Delete = function (name) {
-        ContainerPrototypeView.Delete(function () {
-            ContainerPrototypeModel.Delete(name);
-            ContainerPrototypeView.Delete(name);
+        TreeView.Delete(function () {
+            TreeModel.Delete(name);
+            TreeView.Delete(name);
         });
     };
 
     this.Design = function (name) {
-        var containerPrototype = ContainerPrototypeModel.GetContainerPrototype(name);
-        ContainerPrototypeView.Design(containerPrototype);
+        var containerPrototype = TreeModel.GetContainerPrototype(name);
+        TreeView.Design(containerPrototype);
         editing = containerPrototype;
     };
 
     this.AddWorkspace = function (workspaceName) {
-        var workspace = ContainerPrototypeModel.AddWorkspace(editing.Name, workspaceName);
+        var workspace = TreeModel.AddWorkspace(editing.Name, workspaceName);
         if (workspace)
-            ContainerPrototypeView.AddWorkspace(WorkspaceView.GetWidget(workspace));
+            TreeView.AddWorkspace(WorkspaceView.GetWidget(workspace));
         else
             EventController.GlobalError("the container prototype '" + editing.Name + "' already contains the workspace '" + workspaceName + "'");
     };
 
     this.RemoveWorkspace = function (workspaceName) {
-        if (ContainerPrototypeModel.RemoveWorkspace(editing.Name, workspaceName))
-            ContainerPrototypeView.RemoveWorkspace(workspaceName);
+        if (TreeModel.RemoveWorkspace(editing.Name, workspaceName))
+            TreeView.RemoveWorkspace(workspaceName);
     };
 
     this.DeleteWorkspace = function (workspaceName) {
-        ContainerPrototypeModel.DeleteWorkspace(workspaceName);
-        this.Design(editing.Name);
+        TreeModel.DeleteWorkspace(workspaceName);
+        if(editing)
+            this.Design(editing.Name);
     };
 
     this.CreateAddWorkspace = function () {
         WorkspaceController.Create(function (workspaceName) {
-            ContainerPrototypeController.AddWorkspace(workspaceName);
+            TreeController.AddWorkspace(workspaceName);
         });
     };
 
     this.AddRoleType = function (workspaceName, roleTypeName) {
-        var roleType = ContainerPrototypeModel.AddRoleType(editing.Name, workspaceName, roleTypeName);
+        var roleType = TreeModel.AddRoleType(editing.Name, workspaceName, roleTypeName);
         if (roleType)
-            ContainerPrototypeView.AddRoleType(workspaceName, RoleTypeView.GetWidget(roleType));
+            TreeView.AddRoleType(workspaceName, RoleTypeView.GetWidget(roleType));
         else
             EventController.GlobalError("the workspace '" + workspaceName + "' already contains the role type '" + roleTypeName + "'");
     };
 
     this.RemoveRoleType = function (workspaceName, roleTypeName) {
-        if (ContainerPrototypeModel.RemoveRoleType(editing.Name, workspaceName, roleTypeName))
-            ContainerPrototypeView.RemoveRoleType(workspaceName, roleTypeName);
+        if (TreeModel.RemoveRoleType(editing.Name, workspaceName, roleTypeName))
+            TreeView.RemoveRoleType(workspaceName, roleTypeName);
     };
 
     this.DeleteRoleType = function (roleTypeName) {
-        if (ContainerPrototypeModel.DeleteRoleType(roleTypeName))
-            this.Design(editing.Name);
+        if (TreeModel.DeleteRoleType(roleTypeName))
+            if (editing)
+                this.Design(editing.Name);
     };
 
     this.CreateAddRoleType = function (workspaceName) {
         RoleTypeController.Create(function (roleTypeName) {
-            ContainerPrototypeController.AddRoleType(workspaceName, roleTypeName);
+            TreeController.AddRoleType(workspaceName, roleTypeName);
         });
     };
 
     this.AddRule = function (workspaceName, roleTypeName, ruleName) {
-        var rule = ContainerPrototypeModel.AddRule(editing.Name, workspaceName, roleTypeName, ruleName);
+        var rule = TreeModel.AddRule(editing.Name, workspaceName, roleTypeName, ruleName);
         if (rule)
-            ContainerPrototypeView.AddRule(workspaceName, roleTypeName, RuleView.GetWidget(rule));
+            TreeView.AddRule(workspaceName, roleTypeName, RuleView.GetWidget(rule));
         else
             EventController.GlobalError("the role type '" + roleTypeName + "' already contains the rule '" + ruleName + "'");
     };
 
     this.RemoveRule = function (workspaceName, roleTypeName, ruleName) {
-        if (ContainerPrototypeModel.RemoveRule(editing.Name, workspaceName, roleTypeName, ruleName))
-            ContainerPrototypeView.RemoveRule(workspaceName, roleTypeName, ruleName);
+        if (TreeModel.RemoveRule(editing.Name, workspaceName, roleTypeName, ruleName))
+            TreeView.RemoveRule(workspaceName, roleTypeName, ruleName);
     };
 
     this.DeleteRule = function (ruleName) {
-        if (ContainerPrototypeModel.DeleteRule(ruleName))
-            this.Design(editing.Name);
+        if (TreeModel.DeleteRule(ruleName))
+            if (editing)
+                this.Design(editing.Name);
     };
 
     this.CreateAddRule = function (workspaceName, roleTypeName) {
         RuleController.Create(function (ruleName) {
-            ContainerPrototypeController.AddRule(workspaceName, roleTypeName, ruleName);
+            TreeController.AddRule(workspaceName, roleTypeName, ruleName);
         });
     };
 
     this.GetRoles = function (containerPrototypeName) {
-        var containerPrototype = ContainerPrototypeModel.GetContainerPrototype(containerPrototypeName);
+        var containerPrototype = TreeModel.GetContainerPrototype(containerPrototypeName);
         var roles = [];
         for (var v in containerPrototype.Childs) {
             var workspace = containerPrototype.Childs[v];
@@ -133,7 +134,7 @@ var ContainerPrototypeController = new (function () {
     };
 });
 
-var ContainerPrototypeModel = new (function () {
+var TreeModel = new (function () {
     var containerPrototypes;
 
     this.Init = function () {
@@ -149,7 +150,7 @@ var ContainerPrototypeModel = new (function () {
     this.AddContainerPrototype = function (name) {
         if (this.GetContainerPrototype(name))
             return undefined;
-        return containerPrototypes.push(new AcyclicTree(name));
+        return containerPrototypes.push(new Tree(name));
     };
 
     this.RemoveContainerPrototype = function (name) {
@@ -165,7 +166,7 @@ var ContainerPrototypeModel = new (function () {
         for (var v in containerPrototype.Childs)
             if (containerPrototype.Childs[v].Name == workspaceName)
                 return undefined;
-        var workspace = new AcyclicTree(workspaceName, containerPrototype);
+        var workspace = new Tree(workspaceName, containerPrototype);
         containerPrototype.Childs.push(workspace);
         return workspace;
     };
@@ -201,7 +202,7 @@ var ContainerPrototypeModel = new (function () {
         for (v in workspace.Childs)
             if (workspace.Childs[v].Name == roleTypeName)
                 return undefined;
-        var roleType = new AcyclicTree(roleTypeName, workspace);
+        var roleType = new Tree(roleTypeName, workspace);
         workspace.Childs.push(roleType);
         return roleType;
     };
@@ -250,7 +251,7 @@ var ContainerPrototypeModel = new (function () {
         for (v in roleType.Childs)
             if (roleType.Childs[v].Name == ruleName)
                 return undefined;
-        var rule = new AcyclicTree(ruleName, roleType);
+        var rule = new Tree(ruleName, roleType);
         roleType.Childs.push(rule);
         return rule;
     };
@@ -291,7 +292,7 @@ var ContainerPrototypeModel = new (function () {
 
 });
 
-var ContainerPrototypeView = new (function () {
+var TreeView = new (function () {
     var view;
     var containerPrototypeTag;
 
@@ -303,22 +304,8 @@ var ContainerPrototypeView = new (function () {
         containerPrototypeTag = $(view).children(".ContainerPrototype");
     };
 
-    this.Create = function (callback) {
-        var formTag = $("<div>Name:<input type='text' name='Name'/></div>");
-        $(formTag).dialog({ autoOpen: true, modal: true, draggable: false, resizable: false, title: "Create a new container prototype",
-            buttons: {
-                "Create": function () {
-                    var name = $(this).children("input[name=Name]").val();
-                    callback(name);
-                    $(formTag).dialog("destroy");
-                },
-                "Cancel": function () { $(formTag).dialog("destroy"); }
-            }
-        });
-    };
-
     this.Design = function (containerPrototype) {
-        $(view).fadeOut(function () {
+        $(view).fadeOut('fast',function () {
             $(view).children(".ui-state-highlight").hide();
             $(containerPrototypeTag).empty();
 
@@ -328,7 +315,7 @@ var ContainerPrototypeView = new (function () {
             $(cpHeader).text(containerPrototype.Name);
 
             $(containerPrototypeTag).append(cpHeader);
-            $(containerPrototypeTag).append(EventController.Placeholder("Drag workspaces from the components into this container prototype.  Or add a <a href='javascript:ContainerPrototypeController.CreateAddWorkspace();'>new one.</a>", "h3"));
+            $(containerPrototypeTag).append(EventController.Placeholder("Drag workspaces from the components into this container prototype.  Or add a <a href='javascript:TreeController.CreateAddWorkspace();'>new one.</a>", "h3"));
             $(containerPrototypeTag).append(cpContent);
 
             $(containerPrototypeTag).droppable({
@@ -336,12 +323,12 @@ var ContainerPrototypeView = new (function () {
                 hoverClass: "ui-state-hover",
                 accept: ".Workspace",
                 drop: function (event, ui) {
-                    ContainerPrototypeController.AddWorkspace(ui.draggable.text());
+                    TreeController.AddWorkspace(ui.draggable.text());
                 }
             });
 
             for (var v in containerPrototype.Childs)
-                ContainerPrototypeView.AddWorkspace(WorkspaceView.GetWidget(containerPrototype.Childs[v]));
+                TreeView.AddWorkspace(WorkspaceView.GetWidget(containerPrototype.Childs[v]));
 
             $(view).fadeIn();
         });
@@ -377,48 +364,48 @@ var ContainerPrototypeView = new (function () {
         });
     };
 
-        this.AddRoleType = function (workspaceName, roleTypeWidget) {
-            var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
+    this.AddRoleType = function (workspaceName, roleTypeWidget) {
+        var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
 
 
-            var content = $(workspaceWidget).children(".ui-widget-content");
-            $(roleTypeWidget).hide();
-            $(workspaceWidget).children(".ui-state-highlight").hide();
-            $(content).append(roleTypeWidget);
-            $(roleTypeWidget).fadeIn();
-        };
+        var content = $(workspaceWidget).children(".ui-widget-content");
+        $(roleTypeWidget).hide();
+        $(workspaceWidget).children(".ui-state-highlight").hide();
+        $(content).append(roleTypeWidget);
+        $(roleTypeWidget).fadeIn();
+    };
 
-        this.RemoveRoleType = function (workspaceName, roleTypeName) {
-            var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
-            var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
+    this.RemoveRoleType = function (workspaceName, roleTypeName) {
+        var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
+        var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
 
-            $(roleTypeWidget).fadeOut(function () {
-                if ($(roleTypeWidget).siblings().length == 0)
-                    $(workspaceWidget).children(".ui-state-highlight").fadeIn();
-                $(roleTypeWidget).remove();
-            });
-        };
+        $(roleTypeWidget).fadeOut(function () {
+            if ($(roleTypeWidget).siblings().length == 0)
+                $(workspaceWidget).children(".ui-state-highlight").fadeIn();
+            $(roleTypeWidget).remove();
+        });
+    };
 
-        this.AddRule = function (workspaceName, roleTypeName, ruleWidget) {
-            var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
-            var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
+    this.AddRule = function (workspaceName, roleTypeName, ruleWidget) {
+        var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
+        var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
 
-            var content = $(roleTypeWidget).children(".ui-widget-content");
-            $(ruleWidget).hide();
-            $(roleTypeWidget).children(".ui-state-highlight").hide();
-            $(content).append(ruleWidget);
-            $(ruleWidget).fadeIn();
-        };
+        var content = $(roleTypeWidget).children(".ui-widget-content");
+        $(ruleWidget).hide();
+        $(roleTypeWidget).children(".ui-state-highlight").hide();
+        $(content).append(ruleWidget);
+        $(ruleWidget).fadeIn();
+    };
 
-        this.RemoveRule = function (workspaceName, roleTypeName, ruleName) {
-            var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
-            var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
-            var ruleWidget = this.GetRuleWidget(roleTypeWidget, ruleName);
+    this.RemoveRule = function (workspaceName, roleTypeName, ruleName) {
+        var workspaceWidget = this.GetWorkspaceWidget(workspaceName);
+        var roleTypeWidget = this.GetRoleTypeWidget(workspaceWidget, roleTypeName);
+        var ruleWidget = this.GetRuleWidget(roleTypeWidget, ruleName);
 
-            $(ruleWidget).fadeOut(function () {
-                if ($(ruleWidget).siblings().length == 0)
-                    $(roleTypeWidget).children(".ui-state-highlight").fadeIn();
-                $(ruleWidget).remove();
-            });
-        };
+        $(ruleWidget).fadeOut(function () {
+            if ($(ruleWidget).siblings().length == 0)
+                $(roleTypeWidget).children(".ui-state-highlight").fadeIn();
+            $(ruleWidget).remove();
+        });
+    };
 });

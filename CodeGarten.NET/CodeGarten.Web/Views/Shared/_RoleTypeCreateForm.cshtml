@@ -5,7 +5,7 @@
     controller = "RoleType",
     action = "Create",
     structureId = Request.RequestContext.RouteData.Values["id"]
-}, new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess" }))
+}, new AjaxOptions { OnSuccess = "RoleTypeView.create.OnSuccessCallBack" }))
 {
     @Html.ValidationSummary(true)
     <h2>
@@ -18,4 +18,7 @@
         @Html.EditorFor(model => model.Name)
         @Html.ValidationMessageFor(model => model.Name)
     </div>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
 }

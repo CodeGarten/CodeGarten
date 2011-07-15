@@ -57,11 +57,9 @@ var ContainerPrototypeModel = new (function () {
         //syncronize with codegarten;
         _containerPrototype = null;
         if (!sync) return;
-        this.CreateContainerPrototype("UC", null);
-        this.CreateContainerPrototype("Turma_tipo_1", "UC");
-        this.CreateContainerPrototype("Turma_tipo_2", "UC");
-        this.CreateContainerPrototype("Grupo_tipo_1", "Turma_tipo_1");
-        this.CreateContainerPrototype("Grupo_tipo_2", "Turma_tipo_2");
+//        this.CreateContainerPrototype("UC", null);
+//        this.CreateContainerPrototype("Turma_tipo_1", "UC");
+//        this.CreateContainerPrototype("Turma_tipo_2", "UC");
     };
 
     this.GetContainerPrototype = function (containerPrototypeName) {

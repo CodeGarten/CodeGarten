@@ -28,7 +28,7 @@ var StructureController = new (function () {
 
     this.AddChild = function (parentContainerName) {
 
-        StructureView.CreateContainerPrototype({Name: null, ParentName: parentContainerName}, function (obj) {
+        StructureView.CreateContainerPrototype({ Name: null, ParentName: parentContainerName }, function (obj) {
 
             var container = ContainerPrototypeModel.CreateContainerPrototype(obj.Name, obj.ParentName);
 
@@ -38,6 +38,7 @@ var StructureController = new (function () {
             }
 
             StructureView.AddChild(parentContainerName, container);
+            TreeController.Create(container.name);
         });
 
     };

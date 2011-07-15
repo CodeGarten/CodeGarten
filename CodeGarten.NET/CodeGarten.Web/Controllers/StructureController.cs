@@ -26,17 +26,17 @@ namespace CodeGarten.Web.Controllers
         [HttpPost]
         public ActionResult Design(long id, IEnumerable<Role> roles)
         {
-            //_context.Roles.Local.Clear();
+            _context.Roles.Local.Clear();
 
-            //foreach (var role in roles)
-            //{
-            //    role.ContainerPrototypeStructureId =
-            //        role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = id;
+            foreach (var role in roles)
+            {
+                role.ContainerPrototypeStructureId =
+                    role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = id;
 
-            //    _context.Roles.Add(role);
-            //}
+                _context.Roles.Add(role);
+            }
 
-            //_context.SaveChanges();
+            _context.SaveChanges();
 
             return RedirectToAction("Index", new {id});
         }

@@ -26,12 +26,11 @@ namespace CodeGarten.Web.Controllers
                 _context.WorkSpaceTypes.Add(workSpaceType);
                 _context.SaveChanges();
 
-                return Json(new {Errors = new string[0]}, JsonRequestBehavior.AllowGet);
+                return FormValidationResponse.Ok();
             }
             catch
             {
-                ModelState.AddModelError("form", "An error occured. Please try again.");
-                return ModelState.ToJson();
+                return FormValidationResponse.Error(ModelState);
             }
         }
 
@@ -53,22 +52,16 @@ namespace CodeGarten.Web.Controllers
                     workspace.Services.Add(service);
 
             _context.SaveChanges();
-            return Json(true, JsonRequestBehavior.AllowGet);
-        }
-
-        //[StructureOwner("structureId")]
-        public PartialViewResult Delete(long structureId, string name)
-        {
-            return PartialView(_context.WorkSpaceTypes.Find(name, structureId));
+            return FormValidationResponse.Ok();
         }
 
         [HttpPost]
         //[StructureOwner("structureId")]
-        public JsonResult Delete(long structureId, string name, FormCollection formCollection)
+        public JsonResult Delete(long structureId, string name)
         {
             _context.WorkSpaceTypes.Remove(_context.WorkSpaceTypes.Find(name, structureId));
             _context.SaveChanges();
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return FormValidationResponse.Ok();
         }
     }
 }
