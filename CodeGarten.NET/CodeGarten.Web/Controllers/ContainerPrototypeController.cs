@@ -63,7 +63,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.ContainerPrototype.Delete(structureId, name);
+                dataBaseManager.ContainerPrototype.Delete(name, structureId);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
