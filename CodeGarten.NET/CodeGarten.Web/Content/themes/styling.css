@@ -28,13 +28,6 @@ h1 { padding: .2em; margin: 0;}
 #components .item_options {margin-left:1em;}
 #components .page_add {width:100%;}
 
-.Workspace > .ui-widget-header {background-image:url('ui-bg_gloss-wave_35_f6a828_500x100.png');}
-
-.Workspace_link 
-{
-    background-color:#f6a828;
-}
-
 .ui-accordion .ui-accordion-content{ overflow:hidden !important; }
 
 #actions { clear: both;}
@@ -69,9 +62,9 @@ h1 { padding: .2em; margin: 0;}
 
 /* Styles Structure Container Prototype
 -----------------------------------------------------------*/
-#container_structure{ width: inherit;}
-			
-.container_childs > .container { min-width: 200px;display:table-cell; }
+#container_structure{ }
+
+.container .container { min-width:200px; float:left;}
 
 .container
 {
@@ -81,7 +74,6 @@ h1 { padding: .2em; margin: 0;}
 .container_header
 {
 	text-align: center;
-	min-width: 100px;
 	min-height: 25px;
 	margin: 1px 1px 1px 1px;
     padding-top: 4px;

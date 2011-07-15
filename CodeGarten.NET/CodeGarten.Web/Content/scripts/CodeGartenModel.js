@@ -40,7 +40,7 @@ var StructureModel = new (function(){
               url: "/Structure/Synchronization",
               data: ({id:id}),
               cache: false,
-              async: false,
+              async: false
             }).responseText+')');
     };
 
@@ -102,9 +102,24 @@ var ContainerPrototypeModel = new (function () {
         if (!sync) return;
 
         var containerPrototypes = StructureModel.getContainerPrototypes();
-        for(var i in containerPrototypes){
+
+        var parent = null;
+        for (var i in containerPrototypes) {
             var container = containerPrototypes[i];
-            this.CreateContainerPrototype(container.Name, container.ParentName);
+            if (container.ParentName == null) {
+                parent = this.CreateContainerPrototype(container.Name, null);
+                containerPrototypes.splice(i, 1);
+                break;
+            }
+        }
+        if (parent == null) return;
+
+        while (containerPrototypes.length > 0) {
+            for(var i in containerPrototypes){
+                var container = containerPrototypes[i];
+                if(this.CreateContainerPrototype(container.Name, container.ParentName)!=null)
+                    containerPrototypes.splice(i, 1);
+            }
         }
     };
 
@@ -149,12 +164,12 @@ var ContainerPrototypeModel = new (function () {
             return false;
 
         $.ajax({
-              type: "POST",
-              url: "/ContainerPrototype/Delete",
-              data: ({structureId:_structureId, name: containerPrototypeName}),
-              cache: false,
-              async: false,
-            });  
+            type: "POST",
+            url: "/ContainerPrototype/Delete",
+            data: ({ structureId: _structureId, name: containerPrototypeName }),
+            cache: false,
+            async: false
+        });
 
         var compare = function (containerPrototype, containerPrototypeName) {
 
