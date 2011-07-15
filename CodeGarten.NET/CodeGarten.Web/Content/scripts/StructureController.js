@@ -11,15 +11,17 @@ var StructureController = new (function () {
     this.init = function () {
         ContainerPrototypeModel.init(true);
         var ret = ContainerPrototypeModel.GetContainerPrototypeWithParent(null);
-        if(ret!=null)
+        if (ret != null)
             initializer(ret);
     };
 
     this.Delete = function (containerName) {
-        DialogConfirmView.open("Delete " + containerName, "?????", function () {
+        DialogConfirmView.open("Delete a container prototype", "Are you sure you want to delete the container: " + containerName, function () {
 
-            if (ContainerPrototypeModel.Remove(containerName))
+            if (ContainerPrototypeModel.Remove(containerName)) {
                 StructureView.Remove(containerName);
+                TreeController.Delete(containerName);
+            }
             else
                 StructureView.Error("Can't delete the Container Prototype \"" + conainerName + "\"");
 

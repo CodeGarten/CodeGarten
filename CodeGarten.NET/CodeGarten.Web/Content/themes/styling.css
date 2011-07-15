@@ -17,6 +17,8 @@ h1 { padding: .2em; margin: 0;}
 
 #error { width: 74%;float: left; }
 
+#tree_design { clear: both;}
+
 #containerPrototypeDesign { width: 74%;float: left;}
 #containerPrototypeDesign .Workspace {margin: 2em; display:inline-block;}
 #containerPrototypeDesign .RoleType {margin: 2em; display:inline-block;}
@@ -64,7 +66,7 @@ h1 { padding: .2em; margin: 0;}
 -----------------------------------------------------------*/
 #container_structure{ }
 
-.container .container { min-width:200px; float:left;}
+.container .container { min-width:200px;float:left;}
 
 .container
 {

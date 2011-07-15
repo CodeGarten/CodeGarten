@@ -24,6 +24,8 @@ var ComponentsView = new (function () {
             }
             $(content).accordion({ 'clearStyle': true, autoHeight: false });
 
+            ComponentsView.Sync();
+
             $(divId).fadeIn();
         });
     };
@@ -60,5 +62,20 @@ var ComponentsView = new (function () {
                 $(pageTag).parent().next().children(".ui-state-highlight").fadeIn();
             $(itemTag).remove();
         });
+    };
+
+    this.Sync = function() {
+        var workspaces = StructureModel.getWorkspaceTypes();
+        var roleTypes = StructureModel.getRoleTypes();
+        var rules = StructureModel.getRules();
+
+        for (var v in workspaces)
+            ComponentsView.AddItem("Workspace", workspaces[v].Name);
+
+        for (v in roleTypes)
+            ComponentsView.AddItem("RoleType", roleTypes[v].Name);
+
+        for (var v in rules)
+            ComponentsView.AddItem("Rule", rules[v].Name);
     };
 });

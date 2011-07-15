@@ -35,7 +35,6 @@ namespace CodeGarten.Web.Controllers
             catch
             {
                 return FormValidationResponse.Error(ModelState);
-                return FormValidationResponse.Error(ModelState);
             }
         }
 

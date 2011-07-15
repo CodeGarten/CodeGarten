@@ -20,6 +20,7 @@ namespace CodeGarten.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            Database.SetInitializer(new CodeGartenInitializer());
 
             modelBuilder.Entity<Container>().HasRequired(c => c.ContainerPrototype).WithMany(cp => cp.Containers).
                 WillCascadeOnDelete(false);
