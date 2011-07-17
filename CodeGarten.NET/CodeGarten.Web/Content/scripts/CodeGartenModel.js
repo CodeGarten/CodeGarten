@@ -57,7 +57,7 @@ var StructureModel = new (function(){
     };
 
     this.getWorkspaceTypes = function (){
-        return _structureModel.WorkspaceTypes;
+        return _structureModel.WorkSpaceTypes;
     };
 
     this.getRoles = function (){

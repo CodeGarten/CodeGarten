@@ -39,7 +39,8 @@ var ComponentsView = new (function () {
         var buttonEdit = $("<button onclick='javascript:" + page + "Controller.Edit(\"" + item + "\");' title='Edit'/>").button({ icons: { primary: "ui-icon-gear" }, text: false });
         var buttonDelete = $("<button title='Delete' onclick='javascript:" + page + "Controller.Delete(\"" + item + "\");'/>").button({ icons: { primary: "ui-icon-trash" }, text: false });
 
-        $(itemTag).children(".item_options").append(buttonEdit);
+        if(page !== "RoleType")
+            $(itemTag).children(".item_options").append(buttonEdit);
         $(itemTag).children(".item_options").append(buttonDelete);
         $(pageTag).parent().next().children(".ui-state-highlight").hide();
         $(pageTag).parent().next().children(".page_content").append(itemTag);

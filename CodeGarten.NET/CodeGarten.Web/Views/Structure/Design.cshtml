@@ -14,23 +14,17 @@
 <script src="@Url.Content("~/Content/scripts/Rule.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Tree.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Eventcontroller.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/json2.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/json2.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/DialogConfirmView.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/Scripts/StructureController.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/CodeGartenModel.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/StructureView.js")" type="text/javascript" ></script>
-
 <script type="text/javascript">
+    $("#main").mask("Loading...", 500);
     StructureModel.init(@Model.Id);
 </script>
-
 <div id="title">
-   <h1>
-       @Model.Name Design</h1>
-   <div id="actions">
-       <button>
-           Save</button>
-   </div>
+    <h1>@Model.Name Design</h1>
 </div>
 <div>
     <div>
@@ -51,6 +45,14 @@
         <div id="error">
         </div>
     </div>
+    <div id="action_clear">
+    </div>
+    <div id="actions">
+        <button>
+            Save</button>
+        <button>
+            Publish</button>
+    </div>
 </div>
 <div id="workspaceCreate">
     @Html.Partial("_WorkspaceCreateForm", new WorkSpaceType())
@@ -62,7 +64,7 @@
     @Html.Partial("_RuleCreateForm", new Rule())
 </div>
 <div id="form_containerPrototype">
-	@Html.Partial("_FormContainerPrototype", new ContainerPrototypeView())
+    @Html.Partial("_FormContainerPrototype", new ContainerPrototypeView())
 </div>
 <div id="dialog_confirm">
 </div>
@@ -76,26 +78,48 @@
 
     TreeController.Init("#containerPrototypeDesign");
 
-    $("#actions button").button().click(function () {
-        var roles = TreeController.GetRoles("Disciplina");
+    $("#actions").children().button();
+
+    $("#actions button:contains(Save)").button("option","icons", { primary: "ui-icon-disk" }).click(function () {
+        $("#main").mask("Saving...", 500);
+        var roles = TreeController.GetAllRoles();
         
         $.ajax(
         {
             url: "/Structure/Design/" + @Model.Id,
             type: 'POST',
             data: JSON.stringify({roles: roles}),
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
+            dataType: 'html',
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+               $("#main").unmask(); 
+            }
         }
      );
     });
 
-
+    $("#actions button:contains(Publish)").click(function() {
+        DialogConfirmView.open("Are you sure?", "After publishing a structure you cannot go back to designing it.", function() {
+            $.ajax(
+                {
+                    url: "/Structure/Publish/" + @Model.Id ,
+                    type: 'POST',
+                    dataType: 'html',
+                    contentType: 'application/json; charset=utf-8',
+                    async: false,
+                    success: function() {
+                        window.location = "/Structure/Index/" + @Model.Id ;
+                    }
+                }
+     );
+        });
+    });
 
     DialogConfirmView.init("#dialog_confirm");
     
     
     StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
     StructureController.init();
-;
+    
+    $("#main").unmask();
 </script>

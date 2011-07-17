@@ -17,6 +17,7 @@ namespace CodeGarten.Web.Controllers
         public JsonResult Create(long structureId, IEnumerable<Role> roles)
         {
             _context.Roles.Local.Clear();
+            _context.SaveChanges();
 
             foreach (var role in roles)
             {

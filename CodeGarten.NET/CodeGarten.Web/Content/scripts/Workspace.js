@@ -26,7 +26,6 @@ var WorkspaceController = new (function () {
 var WorkspaceView = new (function () {
     this.create = new FormDialog();
     this.edit = new FormDialog();
-    this.del = new FormDialog();
 
     var structure;
 
@@ -41,18 +40,21 @@ var WorkspaceView = new (function () {
 
     this.Delete = function (name, callback) {
         DialogConfirmView.open("Delete a workspace", "Are you sure you want to delete the workspace: " + name, function () {
+            $("#main").mask("Deleting...", 500);
             $.post("/WorkSpaceType/Delete?structureId=" + structure + "&name=" + name, null, function (result) {
                 if (result.Success) {
+                    $("#main").unmask();
                     callback();
-                    $(this).dialog("close");
                 }
             });
         });
     };
 
     this.Edit = function (name) {
+        $("#main").mask("Loading...", 500);
         $.get("/WorkSpaceType/Edit?structureId=" + structure + "&name=" + name, function (result) {
             WorkspaceView.edit.init($("<div/>").append(result));
+            $("#main").unmask();
             WorkspaceView.edit.Open("Edit a workspace", { Name: null });
         });
     };

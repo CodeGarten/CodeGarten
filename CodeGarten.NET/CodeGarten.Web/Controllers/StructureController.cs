@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.Model;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -42,15 +45,19 @@ namespace CodeGarten.Web.Controllers
         {
             var structure = _context.Structures.Find(id);
 
+            if (!structure.Developing)
+                return RedirectToAction("Index", new {id});
+
             ViewBag.Services = _context.Services;
 
             return View(structure);
         }
 
         [HttpPost]
-        public ActionResult Design(long id, IEnumerable<Role> roles)
+        public JsonResult Design(long id, IEnumerable<Role> roles)
         {
-            _context.Roles.Local.Clear();
+            foreach (var role in _context.Roles.Where(r => r.ContainerPrototypeStructureId == id))
+                _context.Roles.Remove(role);
 
             foreach (var role in roles)
             {
@@ -62,31 +69,38 @@ namespace CodeGarten.Web.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", new {id});
+            return FormValidationResponse.Ok();
         }
 
         public ActionResult Index(long id)
         {
-            var cp = new ContainerPrototypeView();
-            ViewBag.StructureId = id;
-            return View(cp);
+            var structure = _context.Structures.Find(id);
+
+            if (structure.Developing)
+                return RedirectToAction("Design", new{id});
+
+            return View();
         }
 
         public ActionResult Create()
         {
-            var structure = new StructureView();
+            var structure = new Structure();
 
             return View(structure);
         }
 
         [HttpPost]
-        public ActionResult Create(StructureView structure)
+        public ActionResult Create(Structure structure)
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                structure.Developing = true;
+                structure.Public = true;
+                structure.Administrators.Add(_context.Users.Find(User.Identity.Name));
+                structure.CreatedOn = DateTime.Now;
 
-                dataBaseManager.Structure.Create(structure, User.Identity.Name);
+                _context.Structures.Add(structure);
+                _context.SaveChanges();
 
                 return RedirectToAction("Design", new {id = structure.Id});
             }
@@ -124,17 +138,15 @@ namespace CodeGarten.Web.Controllers
             }
         }
 
-        public ActionResult Search()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public PartialViewResult Search(string name)
+        [StructureOwner("id")]
+        public ActionResult Publish(long id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var structure = _context.Structures.Find(id);
+            structure.Developing = false;
+            _context.SaveChanges();
 
-            return PartialView("_StructureTable", _context.Structures.Where(s => s.Name.StartsWith(name)));
+            return FormValidationResponse.Ok();
         }
     }
 }

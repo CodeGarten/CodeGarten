@@ -38,10 +38,11 @@ var RoleTypeView = new (function () {
 
     this.Delete = function (name, callback) {
         DialogConfirmView.open("Delete a role type", "Are you sure you want to delete the role type: " + name, function () {
+            $("#main").mask("Deleting...", 500);
             $.post("/RoleType/Delete?structureId=" + structure + "&name=" + name, null, function (result) {
                 if (result.Success) {
+                    $("#main").unmask();
                     callback();
-                    $(this).dialog("close");
                 }
             });
         });

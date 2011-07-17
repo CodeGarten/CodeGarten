@@ -46,14 +46,14 @@ function FormDialog() {
 
         var obj = {};
         if (butSubmitVal) {
-            obj[butSubmitVal] = function () { _form.submit(); };
+            obj[butSubmitVal] = function () { $(_dialog).parent().mask("Working...", 500); _form.submit(); };
             butSubmit.remove();
         }
         if (butResetVal) {
-            obj[butResetVal] = function () {CleanFields();};
+            obj[butResetVal] = function () { CleanFields(); };
             butReset.remove();
         }
-        
+
         return obj;
     };
 
@@ -70,7 +70,8 @@ function FormDialog() {
 
         _dialog.dialog({
             autoOpen: false,
-            modal: true
+            modal: true,
+            resizable: false
         });
 
         _dialog.dialog("option", "buttons", CreateButtons());
@@ -89,7 +90,7 @@ function FormDialog() {
     };
 
     this.OnSuccessCallBack = function (result) {
-
+        $(_dialog).parent().unmask();
         if (!result.Success) {
             ApplyError(result.Errors);
             return;

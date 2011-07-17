@@ -17,8 +17,9 @@ var StructureController = new (function () {
 
     this.Delete = function (containerName) {
         DialogConfirmView.open("Delete a container prototype", "Are you sure you want to delete the container: " + containerName, function () {
-
+            $("#main").mask("Deleting...", 500);
             if (ContainerPrototypeModel.Remove(containerName)) {
+                $("#main").unmask();
                 StructureView.Remove(containerName);
                 TreeController.Delete(containerName);
             }

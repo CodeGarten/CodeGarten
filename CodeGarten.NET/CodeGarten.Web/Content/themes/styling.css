@@ -17,8 +17,6 @@ h1 { padding: .2em; margin: 0;}
 
 #error { width: 74%;float: left; }
 
-#tree_design { clear: both;}
-
 #containerPrototypeDesign { width: 74%;float: left;}
 #containerPrototypeDesign .Workspace {margin: 2em; display:inline-block;}
 #containerPrototypeDesign .RoleType {margin: 2em; display:inline-block;}
@@ -32,19 +30,17 @@ h1 { padding: .2em; margin: 0;}
 
 .ui-accordion .ui-accordion-content{ overflow:hidden !important; }
 
-#actions { clear: both;}
-
 #foot 
 {
     border-top: 1px solid #CCCCCC;
-    padding: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     text-align: center;
     line-height:normal;
     font-size: .9em;
     background-color: #F1F1F1;
-    margin-top: 20px;
     width: 100%;
-    clear: both;
+    margin-top: 20px;
 }
 
 #foot > p
@@ -59,14 +55,35 @@ h1 { padding: .2em; margin: 0;}
     height: 90px;
     background-color: #F1F1F1;
     margin-bottom: 20px;
+    width: 100%;
+}
+
+#top > div
+{
+    margin: 0 auto;
+    width: 920px;
+}
+
+#action_clear { clear: both;padding-bottom: 5px;}
+
+#actions { margin-bottom: 10px;border-top: 1px solid #CCCCCC;}
+
+#actions > button { margin-top: 5px;}
+
+#working
+{
+      float: right;
+      font-size: 10px;
+      margin-right: 10px;
+      display:none;
 }
 
 
 /* Styles Structure Container Prototype
 -----------------------------------------------------------*/
-#container_structure{ }
+#container_structure{  }
 
-.container .container { min-width:200px;float:left;}
+.container .container { min-width:184px;display: inline-block;vertical-align: top;}
 
 .container
 {

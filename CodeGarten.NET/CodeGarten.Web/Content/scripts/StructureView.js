@@ -15,11 +15,6 @@ var StructureHtml = new (function () {
 
     this.FirstContainerPrototype = function () {
         return EventController.Placeholder("Create your first container prototype <a href='javascript:StructureController.AddChild(null)'>here</a>.","h2");
-
-        //        return "<div>\
-        //                    Create your first container \
-        //                    <a onclick='StructureController.AddChild(null)'>here</a>\
-        //                </div>";
     };
 
 })();
@@ -45,13 +40,18 @@ var StructureView = new (function () {
         var toggle = $("#" + containerPrototypeName + " > .container_header .toggle");
         var container = $("#" + containerPrototypeName + " > .container_childs");
 
-        if (toggle.hasClass("ui-icon-carat-1-n")) {
-            container.slideUp("slow");
-            toggle.removeClass("ui-icon-carat-1-n").addClass("ui-icon-carat-1-se");
-        } else {
-            container.slideDown("slow");
-            toggle.removeClass("ui-icon-carat-1-se").addClass("ui-icon-carat-1-n");
-        }
+        toggle.toggleClass("ui-icon-carat-1-n").toggleClass("ui-icon-carat-1-se");
+        container.slideToggle("slow");
+
+//        if (toggle.hasClass("ui-icon-carat-1-n")) {
+//            container.slideUp("slow", function () {
+//                toggle.removeClass("ui-icon-carat-1-n").addClass("ui-icon-carat-1-se");
+//            });
+//        } else {
+//            container.slideDown("slow", function () {
+//                toggle.removeClass("ui-icon-carat-1-se").addClass("ui-icon-carat-1-n");
+//            });
+//        }
 
     };
 

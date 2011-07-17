@@ -9,6 +9,7 @@ var DialogConfirmView = new (function () {
         _dialog.dialog({
             autoOpen: false,
             modal: true,
+            resizable: false,
             buttons: {
                 "OK": function () {
                     $(this).dialog("close");

@@ -18,8 +18,10 @@ function Role(cpName, wsName, rtName, ruleName) {
 
 var TreeController = new (function () {
     var editing;
+    var view;
 
-    this.Init = function (view) {
+    this.Init = function (_view) {
+        view = _view;
         TreeModel.Init();
         TreeView.Init(view);
     };
@@ -30,13 +32,14 @@ var TreeController = new (function () {
     };
 
     this.Delete = function (name) {
-        TreeView.Delete(function () {
-            TreeModel.Delete(name);
-            TreeView.Delete(name);
-        });
+        TreeModel.RemoveContainerPrototype(name);
+        TreeView.Init(view);
+        editing = undefined;
     };
 
     this.Design = function (name) {
+        if (!TreeModel.GetContainerPrototype(name))
+            TreeModel.AddContainerPrototype(name);
         var containerPrototype = TreeModel.GetContainerPrototype(name);
         TreeView.Design(containerPrototype);
         editing = containerPrototype;
@@ -57,7 +60,7 @@ var TreeController = new (function () {
 
     this.DeleteWorkspace = function (workspaceName) {
         TreeModel.DeleteWorkspace(workspaceName);
-        if(editing)
+        if (editing)
             this.Design(editing.Name);
     };
 
@@ -132,6 +135,14 @@ var TreeController = new (function () {
         }
         return roles;
     };
+
+    this.GetAllRoles = function () {
+        var roles = [];
+        var cps = TreeModel.GetContainerPrototypes();
+        for (var v in cps)
+            roles = roles.concat(this.GetRoles(cps[v].Name));
+        return roles;
+    };
 });
 
 var TreeModel = new (function () {
@@ -139,6 +150,27 @@ var TreeModel = new (function () {
 
     this.Init = function () {
         containerPrototypes = [];
+        this.Sync();
+    };
+
+    this.Sync = function () {
+        var roles = StructureModel.getRoles();
+
+        for (var a in roles)
+            this.Treefy(roles[a]);
+    };
+
+    this.Treefy = function (role) {
+        if (!this.GetContainerPrototype(role.ContainerPrototypeName))
+            this.AddContainerPrototype(role.ContainerPrototypeName);
+
+        this.AddWorkspace(role.ContainerPrototypeName, role.WorkSpaceTypeName);
+        this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName);
+        this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.RuleName);
+    };
+
+    this.GetContainerPrototypes = function () {
+        return containerPrototypes;
     };
 
     this.GetContainerPrototype = function (name) {

@@ -40,20 +40,23 @@ var RuleView = new (function () {
 
     this.Delete = function (name, callback) {
         DialogConfirmView.open("Delete a rule", "Are you sure you want to delete the rule: " + name, function () {
+            $("#main").mask("Loading...", 500);
             $.post("/Rule/Delete?structureId=" + structure + "&name=" + name, null, function (result) {
                 if (result.Success) {
+                    $("#main").unmask();
                     callback();
-                    $(this).dialog("close");
                 }
             });
         });
     };
 
     this.Edit = function (name) {
+        $("#main").mask("Loading...", 500);
         $.get("/Rule/Edit?structureId=" + structure + "&name=" + name, function (result) {
             var element = $("<div/>").append(result);
             $(element).find("#service_permissions").tabs();
             RuleView.edit.init(element);
+            $("#main").unmask();
             RuleView.edit.Open("Edit a rule", { Name: null });
         });
     };
