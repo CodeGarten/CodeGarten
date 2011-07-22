@@ -1,4 +1,4 @@
-﻿@model CodeGarten.Data.ModelView.UserView
+﻿@model CodeGarten.Web.Model.UserView
 @{
     ViewBag.Title = "Signup";
 }
@@ -7,7 +7,6 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    <fieldset>
         <h2>
             SignUp</h2>
         <div class="editor-label">
@@ -34,5 +33,4 @@
         <p>
             <input type="submit" value="Create" />
         </p>
-    </fieldset>
 }

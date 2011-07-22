@@ -1,9 +1,0 @@
-﻿@model CodeGarten.Data.ModelView.RoleTypeView
-
-<h3>Are you sure you want to delete this?</h3>
- <h2>Delete role type</h2>
-
-    <div class="display-label">Name</div>
-    <div class="display-field">@Model.Name</div>
-@using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "DialogHelper.OnSuccess", Url = "/RoleType/Delete?structureId=" + Request["structureId"] + "&name=" + Model.Name }))
-{ }

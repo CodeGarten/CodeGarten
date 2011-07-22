@@ -60,13 +60,6 @@
     <Compile Include="CustomAttributes\UniqueEmailAttribute.cs" />
     <Compile Include="Interfaces\IAuthentication.cs" />
     <Compile Include="Interfaces\IAuthorization.cs" />
-    <Compile Include="ModelView\ContainerView.cs" />
-    <Compile Include="ModelView\EnrollView.cs" />
-    <Compile Include="ModelView\RoleView.cs" />
-    <Compile Include="ModelView\ServiceView.cs" />
-    <Compile Include="ModelView\StructureView.cs" />
-    <Compile Include="ModelView\UserView.cs" />
-    <Compile Include="ModelView\WorkSpaceView.cs" />
     <Compile Include="Model\Container.cs" />
     <Compile Include="Model\Enroll.cs" />
     <Compile Include="Model\Role.cs" />

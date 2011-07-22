@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
-using CodeGarten.Data;
+using CodeGarten.Data.Access;
 
 namespace CodeGarten.Web.Attributes
 {
@@ -17,8 +17,9 @@ namespace CodeGarten.Web.Attributes
 
         protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
         {
-            var _context = new Context();
-            var user = _context.Users.Find(httpContext.User.Identity.Name);
+            var dataBaseManager = httpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            var user = dataBaseManager.User.Get(httpContext.User.Identity.Name);
             var structureId =
                 Int32.Parse((httpContext.Request.RequestContext.RouteData.Values[StructureIdField] ??
                              httpContext.Request[StructureIdField]) as string);

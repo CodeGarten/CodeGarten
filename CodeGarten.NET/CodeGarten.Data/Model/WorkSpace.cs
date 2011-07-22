@@ -5,7 +5,6 @@ namespace CodeGarten.Data.Model
 {
     public class WorkSpaceType
     {
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(4)]
         [MaxLength(64)]
         public string Name { get; set; }

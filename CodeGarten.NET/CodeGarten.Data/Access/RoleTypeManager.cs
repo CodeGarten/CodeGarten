@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
-using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {
@@ -15,47 +14,71 @@ namespace CodeGarten.Data.Access
             _dbContext = db.DbContext;
         }
 
-        public void Create(RoleTypeView roleTypeView, long structure)
+        //public void Create(RoleTypeView roleTypeView, long structure)
+        //{
+        //    if (roleTypeView == null) throw new ArgumentNullException("roleTypeView");
+
+        //    var roleType = roleTypeView.Convert();
+
+        //    var strucureObj = StructureManager.Get(_dbContext, structure);
+        //    if (strucureObj == null) throw new ArgumentException("\"structure\" is a invalid argument");
+
+        //    roleType.Structure = strucureObj;
+
+        //    _dbContext.RoleTypes.Add(roleType);
+        //    _dbContext.SaveChanges();
+        //}
+
+        //public void Delete(RoleTypeView roleTypeView, long structure)
+        //{
+        //    //TODO Do better
+        //    _dbContext.RoleTypes.Remove(_dbContext.RoleTypes.Find(roleTypeView.Name, structure));
+        //    _dbContext.SaveChanges();
+        //}
+
+        //internal static RoleType Get(Context db, long structure, string roleType)
+        //{
+        //    return db.RoleTypes.Where(
+        //        (rt) =>
+        //        rt.Name == roleType &&
+        //        rt.StructureId == structure
+        //        ).SingleOrDefault();
+        //}
+
+        //public RoleTypeView Get(long structure, string roleType)
+        //{
+        //    var roleTp = Get(_dbContext, structure, roleType);
+
+        //    return roleTp == null ? null : roleTp.Convert();
+        //}
+        ////TODO
+        //public IEnumerable<RoleType> GetAll(long structureId)
+        //{
+        //    return _dbContext.RoleTypes.Where(rt => rt.StructureId== structureId);
+        //}
+        public RoleType Create(long structureId, string name)
         {
-            if (roleTypeView == null) throw new ArgumentNullException("roleTypeView");
+            var rt = new RoleType {StructureId = structureId, Name = name};
 
-            var roleType = roleTypeView.Convert();
-
-            var strucureObj = StructureManager.Get(_dbContext, structure);
-            if (strucureObj == null) throw new ArgumentException("\"structure\" is a invalid argument");
-
-            roleType.Structure = strucureObj;
-
-            _dbContext.RoleTypes.Add(roleType);
+            _dbContext.RoleTypes.Add(rt);
             _dbContext.SaveChanges();
+
+            return rt;
         }
 
-        public void Delete(RoleTypeView roleTypeView, long structure)
+        public void Delete(long structureId, string name)
         {
-            //TODO Do better
-            _dbContext.RoleTypes.Remove(_dbContext.RoleTypes.Find(roleTypeView.Name, structure));
-            _dbContext.SaveChanges();
+            _dbContext.RoleTypes.Remove(Get(structureId, name));
         }
 
-        internal static RoleType Get(Context db, long structure, string roleType)
+        public IQueryable<RoleType> GetAll(long structureId)
         {
-            return db.RoleTypes.Where(
-                (rt) =>
-                rt.Name == roleType &&
-                rt.StructureId == structure
-                ).SingleOrDefault();
+            return _dbContext.RoleTypes.Where(rt => rt.StructureId == structureId);
         }
 
-        public RoleTypeView Get(long structure, string roleType)
+        public RoleType Get(long structureId, string name)
         {
-            var roleTp = Get(_dbContext, structure, roleType);
-
-            return roleTp == null ? null : roleTp.Convert();
-        }
-        //TODO
-        public IEnumerable<RoleType> GetAll(long structureId)
-        {
-            return _dbContext.RoleTypes.Where(rt => rt.StructureId== structureId);
+            return _dbContext.RoleTypes.Find(name, structureId);
         }
     }
 }

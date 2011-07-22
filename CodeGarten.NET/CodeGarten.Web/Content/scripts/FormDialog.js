@@ -14,8 +14,13 @@ function FormDialog() {
             var error = errors[i];
             if (error.Field == "form")
                 _formError.Error("Error", error.Error);
-            else
-                _form.find("input[name=\"" + error.Field + "\"]").val(error.Error);
+            else {
+//                $.validator(showLabel(error.Field, error.Error), _form);
+                var field = _form.find("input[name=\"" + error.Field + "\"]");
+                $(field).removeClass("valid").addClass("input-validation-error");
+                $(field).next().html("<span for='" + error.Field + "' generated='true' class>" + error.Error + "</span>");
+                $(field).next().removeClass("field-validation-valid").addClass("field-validation-error");
+            }
         }
 
     };
@@ -46,7 +51,7 @@ function FormDialog() {
 
         var obj = {};
         if (butSubmitVal) {
-            obj[butSubmitVal] = function () { $(_dialog).parent().mask("Working...", 500); _form.submit(); };
+            obj[butSubmitVal] = function () { _form.submit(); };
             butSubmit.remove();
         }
         if (butResetVal) {
@@ -58,15 +63,22 @@ function FormDialog() {
     };
 
     this.init = function (dialog, functionClean) {
-        
+
         if (dialog instanceof jQuery)
             _dialog = dialog;
         else
             _dialog = $(dialog);
-            
+
         _functionClean = functionClean;
 
         _form = _dialog.children("form");
+
+        $(_dialog).ajaxStart(function () {
+            $(_dialog).parent().mask("Working...", 500);
+        });
+        $(_dialog).ajaxStop(function () {
+            $(_dialog).parent().unmask();
+        });
 
         _dialog.dialog({
             autoOpen: false,
@@ -90,7 +102,7 @@ function FormDialog() {
     };
 
     this.OnSuccessCallBack = function (result) {
-        $(_dialog).parent().unmask();
+        //        $(_dialog).parent().unmask();
         if (!result.Success) {
             ApplyError(result.Errors);
             return;

@@ -1,66 +1,64 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
-using CodeGarten.Data;
-using CodeGarten.Data.Model;
+using CodeGarten.Data.Access;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
     public sealed class WorkSpaceTypeController : Controller
     {
-        private readonly Context _context = new Context();
-
         [HttpPost]
         [StructureOwner("structureId")]
-        public JsonResult Create(long structureId, WorkSpaceType workSpaceType, IEnumerable<string> services)
+        public JsonResult Create(long structureId, WorkSpaceTypeView workSpaceType, IEnumerable<string> services)
         {
+            if (!ModelState.IsValid)
+                return FormValidationResponse.Error(ModelState);
+
             try
             {
-                if (services != null)
-                    foreach (var service in services.Select(s => _context.Services.Find(s)))
-                        workSpaceType.Services.Add(service);
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                _context.WorkSpaceTypes.Add(workSpaceType);
-                _context.SaveChanges();
+                dataBaseManager.WorkSpaceType.Create(structureId, workSpaceType.Name, services);
 
                 return FormValidationResponse.Ok();
             }
             catch
             {
+                ModelState.AddGlobalError("An error has occured, please try again.");
                 return FormValidationResponse.Error(ModelState);
             }
         }
 
         public PartialViewResult Edit(long structureId, string name)
         {
-            ViewBag.Services = _context.Services;
-            return PartialView(_context.WorkSpaceTypes.Find(name, structureId));
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            ViewBag.Services = dataBaseManager.Service.GetAll();
+            return PartialView(dataBaseManager.WorkSpaceType.Get(structureId, name));
         }
 
         [HttpPost]
+        [StructureOwner("structureId")]
         public JsonResult Edit(long structureId, string name, IEnumerable<string> services)
         {
-            var workspace = _context.WorkSpaceTypes.Find(name, structureId);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            workspace.Services.Clear();
+            dataBaseManager.WorkSpaceType.Edit(structureId, name, services);
 
-            if (services != null)
-                foreach (var service in services.Select(s => _context.Services.Find(s)))
-                    workspace.Services.Add(service);
-
-            _context.SaveChanges();
             return FormValidationResponse.Ok();
         }
 
         [HttpPost]
-        //[StructureOwner("structureId")]
+        [StructureOwner("structureId")]
         public JsonResult Delete(long structureId, string name)
         {
-            _context.WorkSpaceTypes.Remove(_context.WorkSpaceTypes.Find(name, structureId));
-            _context.SaveChanges();
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            dataBaseManager.WorkSpaceType.Delete(structureId, name);
+
             return FormValidationResponse.Ok();
         }
     }

@@ -68,14 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\StructureOwnerAttribute.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ContainerController.cs" />
     <Compile Include="Controllers\ContainerPrototypeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SignupController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\RoleTypeController.cs" />
     <Compile Include="Controllers\RuleController.cs" />
     <Compile Include="Controllers\StructureController.cs" />
@@ -86,7 +84,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\ContainerView.cs" />
+    <Compile Include="Model\RoleTypeView.cs" />
+    <Compile Include="Model\RoleView.cs" />
+    <Compile Include="Model\RuleView.cs" />
+    <Compile Include="Model\StructureView.cs" />
+    <Compile Include="Model\UserView.cs" />
+    <Compile Include="Model\WorkSpaceTypeView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\ContainerPrototypeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\scripts\CodeGartenModel.js" />
@@ -161,46 +167,13 @@
     <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\User\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Structure\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Structure\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ContainerPrototype\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ContainerPrototype\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\WorkSpaceType\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\RoleType\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Rule\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Rule\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Role\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Role\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Signup\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Structure\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Structure\Index.cshtml" />
@@ -212,52 +185,7 @@
     <Content Include="Views\Container\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_StructureTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_UserTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_DesignTree.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_ModelTree.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_ContainerPath.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_DesignEditTree.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ContainerPrototype\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_EnrollTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_ContainerProtoPath.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\WorkSpaceType\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_RuleTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_RoleTypeTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_WorkSpaceTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_RoleTable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Container\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Container\Enroll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Apache\Apache.csproj">
@@ -268,20 +196,15 @@
       <Project>{94BADD45-89F4-4D17-B970-A70C16BE768C}</Project>
       <Name>CodeGarten.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeGarten.Service\CodeGarten.Service.csproj">
-      <Project>{52AC5E24-7D95-457F-B900-2E5AC5644490}</Project>
-      <Name>CodeGarten.Service</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\WorkSpace\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_FormContainerPrototype.cshtml" />
+    <Content Include="Views\Shared\_ContainerPrototypeCreateForm.cshtml" />
     <Content Include="Views\Structure\Design.cshtml" />
   </ItemGroup>
   <ItemGroup>

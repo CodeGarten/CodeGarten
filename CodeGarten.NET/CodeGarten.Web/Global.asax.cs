@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using CodeGarten.Data.Access;
-using CodeGarten.Service;
+//using CodeGarten.Service;
 using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web
@@ -52,12 +52,12 @@ namespace CodeGarten.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            ControllerBuilder.Current.SetControllerFactory(new ControllerFactory());
+            //ControllerBuilder.Current.SetControllerFactory(new ControllerFactory());
 
-            HostingEnvironment.RegisterVirtualPathProvider(new ServiceVirtualPath());
+            //HostingEnvironment.RegisterVirtualPathProvider(new ServiceVirtualPath());
 
-            ServiceFactory.LoadServices();
-            ServiceFactory.InstallAll();
+            //ServiceFactory.LoadServices();
+            //ServiceFactory.InstallAll();
         }
 
         public void Application_AuthenticateRequest()

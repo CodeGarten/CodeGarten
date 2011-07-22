@@ -5,7 +5,6 @@ namespace CodeGarten.Data.Model
 {
     public class RoleType
     {
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(4)]
         [MaxLength(64)]
         public string Name { get; set; }
@@ -61,9 +60,7 @@ namespace CodeGarten.Data.Model
 
         public long WorkSpaceTypeStructureId { get; set; }
 
-        public string RuleName { get; set; }
-
-        public long RuleStructureId { get; set; }
+        public virtual ICollection<Rule> Rules { get; set; }
 
         [ForeignKey("RoleTypeName,RoleTypeStructureId")]
         public virtual RoleType RoleType { get; set; }
@@ -74,7 +71,9 @@ namespace CodeGarten.Data.Model
         [ForeignKey("WorkSpaceTypeName,WorkSpaceTypeStructureId")]
         public virtual WorkSpaceType WorkSpaceType { get; set; }
 
-        [ForeignKey("RuleName,RuleStructureId")]
-        public virtual Rule Rule { get; set; }
+        public Role()
+        {
+            Rules = new LinkedList<Rule>();
+        }
     }
 }

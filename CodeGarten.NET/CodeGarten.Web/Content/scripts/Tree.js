@@ -6,14 +6,14 @@ function Tree(name, parent) {
     this.Childs = [];
 };
 
-function Role(cpName, wsName, rtName, ruleName) {
+function Role(cpName, wsName, roleType, rules) {
     this.ContainerPrototypeName = cpName;
 
     this.WorkSpaceTypeName = wsName;
 
-    this.RoleTypeName = rtName;
+    this.RoleType = roleType;
 
-    this.RuleName = ruleName;
+    this.Rules = rules;
 };
 
 var TreeController = new (function () {
@@ -43,6 +43,7 @@ var TreeController = new (function () {
         var containerPrototype = TreeModel.GetContainerPrototype(name);
         TreeView.Design(containerPrototype);
         editing = containerPrototype;
+        $("#tree_design").fadeIn();
     };
 
     this.AddWorkspace = function (workspaceName) {
@@ -127,10 +128,13 @@ var TreeController = new (function () {
             var workspace = containerPrototype.Childs[v];
             for (var i in workspace.Childs) {
                 var roleType = workspace.Childs[i];
-                for (var j in roleType.Childs) {
-                    var rule = roleType.Childs[j];
-                    roles.push(new Role(containerPrototype.Name, workspace.Name, roleType.Name, rule.Name));
-                }
+                var roleTypeParsed = { Name: workspace.Childs[i].Name, BlockAbove: workspace.Childs[i].BlockAbove, BlockBelow: workspace.Childs[i].BlockBelow };
+                var role = new Role(containerPrototype.Name, workspace.Name, roleTypeParsed);
+                var rules = [];
+                for (var j in roleType.Childs)
+                    rules.push({ Name: roleType.Childs[j].Name });
+                role.Rules = rules;
+                roles.push(role);
             }
         }
         return roles;
@@ -166,7 +170,9 @@ var TreeModel = new (function () {
 
         this.AddWorkspace(role.ContainerPrototypeName, role.WorkSpaceTypeName);
         this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName);
-        this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.RuleName);
+
+        for (var v in role.Rules)
+            this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.Rules[v].Name);
     };
 
     this.GetContainerPrototypes = function () {
@@ -189,8 +195,15 @@ var TreeModel = new (function () {
         for (var v in containerPrototypes)
             if (containerPrototypes[v].Name == name) {
                 containerPrototypes.splice(v, 1);
+                CleanUp();
                 return containerPrototypes;
             }
+    };
+
+    var CleanUp = function () {
+        for (var v in containerPrototypes)
+            if (!ContainerPrototypeModel.GetContainerPrototype(containerPrototypes[v]))
+                containerPrototypes.splice(v, 1);
     };
 
     this.AddWorkspace = function (containerPrototypeName, workspaceName) {
@@ -235,6 +248,7 @@ var TreeModel = new (function () {
             if (workspace.Childs[v].Name == roleTypeName)
                 return undefined;
         var roleType = new Tree(roleTypeName, workspace);
+        roleType.BlockAbove = roleType.BlockBelow = false;
         workspace.Childs.push(roleType);
         return roleType;
     };
@@ -330,6 +344,10 @@ var TreeView = new (function () {
 
     this.Init = function (viewId) {
         view = viewId;
+
+        if (!ContainerPrototypeModel.GetContainerPrototypeWithParent(null))
+            $("#tree_design").slideUp();
+
         $(view).empty();
         $(view).append(EventController.Placeholder("Choose a container prototype from the structure to start editing.", "h2"));
         $(view).append("<div class='ContainerPrototype'/>");
@@ -337,7 +355,7 @@ var TreeView = new (function () {
     };
 
     this.Design = function (containerPrototype) {
-        $(view).fadeOut('fast',function () {
+        $(view).fadeOut('fast', function () {
             $(view).children(".ui-state-highlight").hide();
             $(containerPrototypeTag).empty();
 

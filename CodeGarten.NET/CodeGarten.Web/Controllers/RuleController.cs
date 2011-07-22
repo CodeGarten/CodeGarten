@@ -1,74 +1,64 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
-using CodeGarten.Data;
-using CodeGarten.Data.Model;
+using CodeGarten.Data.Access;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
     public sealed class RuleController : Controller
     {
-        private readonly Context _context = new Context();
-
         [HttpPost]
         [StructureOwner("structureId")]
-        public JsonResult Create(long structureId, Rule rule, IEnumerable<string> permissions)
+        public JsonResult Create(long structureId, RuleView rule, IEnumerable<string> permissions)
         {
+            if (!ModelState.IsValid)
+                return FormValidationResponse.Error(ModelState);
+
             try
             {
-                if (permissions != null)
-                    foreach (var permission in permissions.Select(p => p.Split(' ')))
-                    {
-                        var serviceName = permission[0];
-                        var permissionName = permission[1];
-                        rule.Permissions.Add(_context.ServicePermissions.Find(permissionName, serviceName));
-                    }
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                _context.Rules.Add(rule);
-                _context.SaveChanges();
+                dataBaseManager.Rule.Create(structureId, rule.Name, permissions);
 
                 return FormValidationResponse.Ok();
             }
             catch
             {
+                ModelState.AddGlobalError("An error has occured, please try again.");
                 return FormValidationResponse.Error(ModelState);
             }
         }
 
         public PartialViewResult Edit(long structureId, string name)
         {
-            ViewBag.Services = _context.Services;
-            return PartialView(_context.Rules.Find(name, structureId));
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            ViewBag.Services = dataBaseManager.Service.GetAll();
+            return PartialView(dataBaseManager.Rule.Get(structureId, name));
         }
 
         [HttpPost]
+        [StructureOwner("structureId")]
         public JsonResult Edit(long structureId, string name, IEnumerable<string> permissions)
         {
-            var rule = _context.Rules.Find(name, structureId);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            rule.Permissions.Clear();
+            dataBaseManager.Rule.Edit(structureId, name, permissions);
 
-            if (permissions != null)
-                foreach (var permission in permissions.Select(p => p.Split(' ')))
-                {
-                    var serviceName = permission[0];
-                    var permissionName = permission[1];
-                    rule.Permissions.Add(_context.ServicePermissions.Find(permissionName, serviceName));
-                }
-
-            _context.SaveChanges();
             return FormValidationResponse.Ok();
         }
 
         [HttpPost]
-        //[StructureOwner("structureId")]
+        [StructureOwner("structureId")]
         public JsonResult Delete(long structureId, string name)
         {
-            _context.Rules.Remove(_context.Rules.Find(name, structureId));
-            _context.SaveChanges();
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            dataBaseManager.Rule.Delete(structureId, name);
+            
             return FormValidationResponse.Ok();
         }
     }

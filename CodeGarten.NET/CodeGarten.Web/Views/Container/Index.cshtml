@@ -2,11 +2,6 @@
 @{
     ViewBag.Title = Model.Name;
 }
-<fieldset>
-    <h2>
-        @Html.Partial("_ContainerPath", Model)
-    </h2>
-
     <ul>
         @foreach (var workspace in Model.ContainerPrototype.WorkSpaceTypes)
         {
@@ -24,4 +19,3 @@
     {
         @Html.ActionLink("Enroll in this project", "Enroll", "Container", new { structureId = Model.ContainerPrototype.StructureId, containerId = Model.Id }, null);
     }
-</fieldset>

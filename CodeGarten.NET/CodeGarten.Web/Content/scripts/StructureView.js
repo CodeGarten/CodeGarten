@@ -82,6 +82,7 @@ var StructureView = new (function () {
     };
 
     this.Remove = function (containerName) {
+        //TODO - remove the expand/collapse icon if there is no more childs
         var firstContainerId = _structure.children(".container").attr("id");
 
         $("#" + containerName).slideUp(function () {

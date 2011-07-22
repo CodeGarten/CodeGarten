@@ -1,38 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-//using Database.CustomValidation;
+using CodeGarten.Data.Access;
 
 namespace CodeGarten.Data.Model
 {
     public class User
     {
         [Key]
-        [RegularExpression(@"[a-zA-Z0-9]*")]
         [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         [Required]
-        [DataType(DataType.Password)]
-        //[RegularExpression(@"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$")]
         [MinLength(8)]
-        public string Password { get; set; }
+        public string Password { get; internal set; }
 
         [Required]
-        //[CustomValidation(typeof(UniqueValidation),"UniqueEmail")]
-        [DataType(DataType.EmailAddress)]
-        [RegularExpression(@"^(([^<>()[\]\\.,;:\s@\""]+"
-                           + @"(\.[^<>()[\]\\.,;:\s@\""]+)*)|(\"".+\""))@"
-                           + @"((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
-                           + @"\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+"
-                           + @"[a-zA-Z]{2,}))$")]
-        public string Email { get; set; }
+        public string Email { get; internal set; }
 
 
-        public virtual ICollection<Structure> Structures { get; set; }
+        public virtual ICollection<Structure> Structures { get; internal set; }
 
-        public virtual ICollection<Enroll> Enrolls { get; set; }
+        public virtual ICollection<Enroll> Enrolls { get; internal set; }
 
 
         public User()
@@ -40,6 +29,14 @@ namespace CodeGarten.Data.Model
             Structures = new LinkedList<Structure>();
 
             Enrolls = new LinkedList<Enroll>();
+        }
+
+        public User(string name, string password, string email)
+            : this()
+        {
+            Name = name;
+            Password = AuthenticationManager.EncryptPassword(password);
+            Email = email;
         }
     }
 }

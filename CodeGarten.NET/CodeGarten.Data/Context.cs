@@ -3,7 +3,7 @@ using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data
 {
-    public sealed class Context : DbContext
+    internal sealed class Context : DbContext
     {
         public DbSet<Structure> Structures { get; set; }
         public DbSet<User> Users { get; set; }
@@ -53,7 +53,8 @@ namespace CodeGarten.Data
                     });
             //modelBuilder.Entity<Role>().HasRequired(r => r.ContainerPrototype).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Role>().HasMany(r => r.Rules).WithMany();
+            //modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.RoleType).WithMany().WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Enroll>().HasKey(

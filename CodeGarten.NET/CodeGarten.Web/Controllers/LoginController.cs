@@ -1,9 +1,7 @@
-﻿using System;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Security;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.ModelView;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -24,15 +22,23 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dbManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                if (!dbManager.Authentication.Authenticate(user.Name, user.Password))
+                var dbUser = dataBaseManager.User.Get(user.Name);
+
+                if (dbUser == null)
                 {
-                    ModelState.AddModelError("", "Incorrect username/password.");
-                    return View();
+                    ModelState.AddModelError("Name", "This user does not exist.");
+                    return View(user);
                 }
 
-                FormsAuthentication.SetAuthCookie(user.Name,false);
+                if (!dataBaseManager.Authentication.Authenticate(user.Name, user.Password))
+                {
+                    ModelState.AddModelError("Password", "Incorrect password.");
+                    return View(user);
+                }
+
+                FormsAuthentication.SetAuthCookie(user.Name, false);
 
                 if (returnUrl != null)
                     return Redirect(returnUrl);
@@ -41,6 +47,7 @@ namespace CodeGarten.Web.Controllers
             }
             catch
             {
+                ModelState.AddModelError("", "An error occured, please try again.");
                 return View();
             }
         }

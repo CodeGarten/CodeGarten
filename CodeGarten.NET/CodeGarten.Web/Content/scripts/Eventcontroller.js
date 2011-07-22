@@ -20,19 +20,54 @@ var EventController = new (function () {
         });
     };
 
-    this.LocalError = function (obj, message) {
-        var widget = $("<div class='ui-widget'><div class='ui-state-error ui-corner-all'> <div onclick='javascript:EventController.Close();' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-alert'></span><strong>Error:</strong> " + message + "</p></div></div>");
+    this.GlobalSuccess = function (message) {
+        var widget = $("<div class='ui-widget'><div class='ui-state-highlight ui-corner-all'> <div onclick='javascript:EventController.Close();' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-check'></span><strong>Success:</strong> " + message + "</p></div></div>");
 
         EventController.Close(function () {
-            $(widget).hide();
-            $(obj).append(widget);
-            $(widget).fadeIn(function () {
+            $(errorField).html(widget);
+            $(errorField).fadeIn(function () {
                 timer = setInterval(function () {
                     EventController.Close();
                 }, 5000);
             });
         });
     };
+
+    this.LocalError = function (obj, message) {
+        var widget = $("<div class='ui-widget'><div class='ui-state-error ui-corner-all'> <div onclick='#' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-alert'></span><strong>Error:</strong> " + message + "</p></div></div>").click(function () {
+            $(widget).fadeOut(function () { $(widget).remove(); });
+        }).hide();
+
+        $(obj).after(widget);
+        $(widget).fadeIn(function () {
+            timer = setInterval(function () {
+                $(widget).fadeOut(function () { $(widget).remove(); });
+            }, 5000);
+        });
+    };
+
+    this.LocalSuccess = function (obj, message) {
+        var widget = $("<div class='ui-widget'><div class='ui-state-highlight ui-corner-all'> <div onclick='#' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-check'></span><strong>Success:</strong> " + message + "</p></div></div>").click(function () {
+            $(widget).fadeOut(function () { $(widget).remove(); });
+        }).hide();
+
+        $(obj).after(widget);
+        $(widget).fadeIn(function () {
+            timer = setInterval(function () {
+                $(widget).fadeOut(function () { $(widget).remove(); });
+            }, 5000);
+        });
+    };
+
+//    this.Show = function (message, option) {
+//        var icon = option.Type == "error" ? "ui-icon-alert" : "ui-icon-check";
+//        var state = option.Type == "error" ? "ui-state-error" : "ui-state-highlight";
+//        var nearObj = option.NearObj 
+
+//        var widget = $("<div class='ui-widget event'><div class='ui-state-highlight ui-corner-all'> <div onclick='#' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-check'></span><strong>Success:</strong> " + message + "</p></div></div>").click(function () {
+//            $(widget).fadeOut(function () { $(widget).remove(); });
+//        }).hide();
+//    }
 
     this.Close = function (callback) {
         clearTimeout(timer);

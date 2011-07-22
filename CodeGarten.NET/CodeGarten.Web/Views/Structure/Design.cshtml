@@ -1,6 +1,5 @@
-﻿@model Structure
-@using CodeGarten.Data.Model;
-@using CodeGarten.Data.ModelView
+﻿@model CodeGarten.Data.Model.Structure
+@using CodeGarten.Web.Model
 @{
     ViewBag.Title = "Design";
 }
@@ -55,16 +54,16 @@
     </div>
 </div>
 <div id="workspaceCreate">
-    @Html.Partial("_WorkspaceCreateForm", new WorkSpaceType())
+    @Html.Partial("_WorkspaceCreateForm", new WorkSpaceTypeView())
 </div>
 <div id="roleTypeCreate">
-    @Html.Partial("_RoleTypeCreateForm", new RoleType())
+    @Html.Partial("_RoleTypeCreateForm", new RoleTypeView())
 </div>
 <div id="ruleCreate">
-    @Html.Partial("_RuleCreateForm", new Rule())
+    @Html.Partial("_RuleCreateForm", new RuleView())
 </div>
 <div id="form_containerPrototype">
-    @Html.Partial("_FormContainerPrototype", new ContainerPrototypeView())
+    @Html.Partial("_ContainerPrototypeCreateForm", new ContainerPrototypeView())
 </div>
 <div id="dialog_confirm">
 </div>
@@ -75,8 +74,6 @@
     ComponentsView.Init("#components", "Components", ["Workspace", "RoleType", "Rule"]);
 
     EventController.Init("#error");
-
-    TreeController.Init("#containerPrototypeDesign");
 
     $("#actions").children().button();
 
@@ -89,10 +86,14 @@
             url: "/Structure/Design/" + @Model.Id,
             type: 'POST',
             data: JSON.stringify({roles: roles}),
-            dataType: 'html',
+            dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            success: function () {
+            success: function (response) {
                $("#main").unmask(); 
+               if(!response.Success)
+                   EventController.LocalError("#actions", response.Errors[0].Error);
+               else
+                   EventController.LocalSuccess("#actions", "Saved.");
             }
         }
      );
@@ -120,6 +121,8 @@
     
     StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
     StructureController.init();
+    
+    TreeController.Init("#containerPrototypeDesign");
     
     $("#main").unmask();
 </script>

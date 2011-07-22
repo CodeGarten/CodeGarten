@@ -51,11 +51,22 @@ var RoleTypeView = new (function () {
     this.GetWidget = function (roleType) {
         var widget = $("<div class = 'RoleType'/>");
         var header = $("<h1 class='ui-widget-header'/>");
+
+        var stopTop = $("<a href='#' title='Block inheritance from above' class='ui-icon ui-icon-arrowthickstop-1-s ui-state-disabled'/>");
+        $(stopTop).click(function () { $(stopTop).toggleClass("ui-state-disabled"); });
+
+        var stopBottom = $("<a href='#' title='Block inheritance from below' class='ui-icon ui-icon-arrowthickstop-1-n ui-state-disabled'/>");
+        $(stopBottom).click(function () { $(stopBottom).toggleClass("ui-state-disabled"); });
+
         var deleteButton = $("<a href='javascript:TreeController.RemoveRoleType(\"" + roleType.Parent.Name + "\",\"" + roleType.Name + "\")' title='Delete' class='ui-icon ui-icon-trash'/>");
         var content = $("<div class='ui-widget-content'/>");
         var placeholder = $(EventController.Placeholder("Drag rules from the components into this role type. Or add a <a href='javascript:TreeController.CreateAddRule(\"" + roleType.Parent.Name + "\",\"" + roleType.Name + "\");'>new one.</a>", "h3"));
 
         $(header).text(roleType.Name);
+
+        $(header).append(stopTop);
+        $(header).append(stopBottom);
+
         $(header).append(deleteButton);
 
         $(widget).append(header);

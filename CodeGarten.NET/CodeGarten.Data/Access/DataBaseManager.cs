@@ -5,7 +5,7 @@ namespace CodeGarten.Data.Access
 {
     public sealed class DataBaseManager : IDisposable
     {
-        public readonly Context DbContext;
+        internal readonly Context DbContext;
 
         private UserManager _user;
 
@@ -47,16 +47,6 @@ namespace CodeGarten.Data.Access
         {
             if (DbContext != null)
                 DbContext.Dispose();
-        }
-
-        public static void DropAndCreate()
-        {
-            System.Data.Entity.Database.SetInitializer(new DropCreateDatabaseAlways<Context>());
-        }
-
-        public static void Initializer()
-        {
-            Database.SetInitializer(new CodeGartenInitializer());
         }
     }
 }

@@ -5,7 +5,6 @@ namespace CodeGarten.Data.Model
 {
     public class ContainerPrototype
     {
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(4)]
         [MaxLength(64)]
         public string Name { get; set; }
@@ -37,7 +36,6 @@ namespace CodeGarten.Data.Model
         [Key]
         public long Id { get; set; }
 
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(2)]
         [MaxLength(64)]
         public string Name { get; set; }

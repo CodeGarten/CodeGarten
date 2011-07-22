@@ -8,36 +8,37 @@ namespace CodeGarten.Data.Model
     {
         public long Id { get; set; }
 
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         [DataType(DataType.Date)]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; internal set; }
 
         [MaxLength(256)]
-        public string Description { get; set; }
+        public string Description { get; internal set; }
 
-        public bool Public { get; set; }
+        public bool Public { get; internal set; }
 
-        public bool Developing { get; set; }
+        public bool Developing { get; internal set; }
 
-        public virtual ICollection<User> Administrators { get; set; }
-
-        //public virtual ICollection<ContainerPrototype> ContainerPrototypes { get; set; }
-        //public virtual ICollection<WorkSpaceType> WorkSpaceTypes { get; set; }
-        //public virtual ICollection<RoleType> RoleTypes { get; set; }
-        //public virtual ICollection<Rule> Rules { get; set; }
+        public virtual ICollection<User> Administrators { get; internal set; }
 
         public Structure()
         {
             Administrators = new LinkedList<User>();
+        }
 
-            //ContainerPrototypes = new LinkedList<ContainerPrototype>();
-            //WorkSpaceTypes = new LinkedList<WorkSpaceType>();
-            //RoleTypes = new LinkedList<RoleType>();
-            //Rules = new LinkedList<Rule>();
+        public Structure(string name, string description, bool @public, User administrator):this()
+        {
+            Name = name;
+            Description = description;
+            Public = @public;
+            Developing = true;
+
+            CreatedOn = DateTime.Now;
+
+            Administrators.Add(administrator);
         }
     }
 }

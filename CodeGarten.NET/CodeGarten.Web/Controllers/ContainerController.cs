@@ -4,22 +4,21 @@ using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.ModelView;
-using CodeGarten.Service;
+//using CodeGarten.Service;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     public sealed class ContainerController : Controller
     {
-        private readonly Context _context = new Context();
-
         public ActionResult Index(long id)
         {
-            var container = _context.Containers.Find(id);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            ViewBag.Enroll =
-                _context.Enrolls.FirstOrDefault(e => e.UserName == User.Identity.Name && e.ContainerId == id);
+            var container = dataBaseManager.Container.Get(id);
+
+            ViewBag.Enroll = dataBaseManager.User.Enrolls(User.Identity.Name, id);
 
             return View(container);
         }
@@ -40,7 +39,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Create(container, structureId, parent);
+                dataBaseManager.Container.Create(structureId, container.Name, parent);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -63,13 +62,13 @@ namespace CodeGarten.Web.Controllers
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, long id, ContainerView containerView, FormCollection formCollection)
+        public ActionResult Delete(long structureId, long id, ContainerView containerView)
         {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Delete(containerView);
+                dataBaseManager.Container.Delete(id);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -81,45 +80,44 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Leave(long structureId, long containerId, string roleTypeName)
         {
-            var enroll = _context.Enrolls.Find(User.Identity.Name, containerId, roleTypeName, structureId);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            _context.Entry(enroll).State = EntityState.Deleted;
-            _context.SaveChanges();
+            dataBaseManager.User.Leave(User.Identity.Name, containerId);
 
             return RedirectToAction("Index", "Structure", new {id = structureId});
         }
 
-        public ActionResult Enroll(long structureId, long containerId)
-        {
-            var enroll = new EnrollView();
+        //public ActionResult Enroll(long structureId, long containerId)
+        //{
+        //    var enroll = new EnrollView();
 
-            var container = _context.Containers.Find(containerId);
+        //    var container = dataBaseManager.Container.Get(containerId);
 
-            ViewBag.RoleTypes =
-                _context.Roles.Where(
-                    r =>
-                    r.ContainerPrototype.StructureId == structureId &&
-                    r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
-                    ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
+        //    ViewBag.RoleTypes =
+        //        _context.Roles.Where(
+        //            r =>
+        //            r.ContainerPrototype.StructureId == structureId &&
+        //            r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
+        //            ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
 
-            return View(enroll);
-        }
+        //    return View(enroll);
+        //}
 
-        [HttpPost]
-        public ActionResult Enroll(long structureId, long containerId, string roleTypeName)
-        {
-            try
-            {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+        //[HttpPost]
+        //public ActionResult Enroll(long structureId, long containerId, string roleTypeName)
+        //{
+        //    try
+        //    {
+        //        var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName);
+        //        dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-                return RedirectToAction("Index", new {id = containerId});
-            }
-            catch (Exception)
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index", new {id = containerId});
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

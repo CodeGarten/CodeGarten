@@ -1,5 +1,4 @@
-﻿@model CodeGarten.Data.ModelView.UserView
-@using CodeGarten.Data.Access
+﻿@model CodeGarten.Web.Model.UserView
 @{
     ViewBag.Title = "Login";
 }
@@ -7,7 +6,6 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    <fieldset>
         <h2>
             Login</h2>
         <div class="editor-label">
@@ -27,5 +25,4 @@
         <p>
             <input type="submit" value="Login" />
         </p>
-    </fieldset>
 }

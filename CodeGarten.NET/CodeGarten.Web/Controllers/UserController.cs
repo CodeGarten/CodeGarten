@@ -1,18 +1,17 @@
 ﻿using System.Web.Mvc;
-using CodeGarten.Data;
+using CodeGarten.Data.Access;
 
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
     public sealed class UserController : Controller
     {
-        private readonly Context _context = new Context();
 
-        public ActionResult Index()
-        {
-            var user = _context.Users.Find(User.Identity.Name);
+        //public ActionResult Index()
+        //{
+        //    var user = dataBaseManager.User.Get(User.Identity.Name);
 
-            return View(user);
-        }
+        //    return View(user);
+        //}
     }
 }

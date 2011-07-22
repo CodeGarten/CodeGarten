@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
-using CodeGarten.Data;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.Model;
-using CodeGarten.Data.ModelView;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
     public sealed class StructureController : Controller
     {
-        private readonly Context _context = new Context();
-        
         public JsonResult Synchronization(long id)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-            if (dataBaseManager == null)
-                return Json(new {Success = false}, JsonRequestBehavior.AllowGet);
 
-            var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new {cp.Name, ParentName = cp.Parent==null?null:cp.Parent.Name});
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new {rl.ContainerPrototypeName,rl.RoleTypeName,rl.WorkSpaceTypeName,rl.RuleName});
-            var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new {rt.Name});
-            var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new {wk.Name});
-            var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new {rl.Name});
+            var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }) });
+            var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
+            var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
+            var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });
 
             return Json(new
                             {
@@ -41,110 +34,118 @@ namespace CodeGarten.Web.Controllers
 
         }
 
+        [StructureOwner("id")]
         public ActionResult Design(long id)
         {
-            var structure = _context.Structures.Find(id);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            var structure = dataBaseManager.Structure.Get(id);
 
             if (!structure.Developing)
-                return RedirectToAction("Index", new {id});
+                return RedirectToAction("Index", new { id });
 
-            ViewBag.Services = _context.Services;
+            ViewBag.Services = dataBaseManager.Service.GetAll();
 
             return View(structure);
         }
 
         [HttpPost]
-        public JsonResult Design(long id, IEnumerable<Role> roles)
+        [StructureOwner("id")]
+        public JsonResult Design(long id, IEnumerable<RoleView> roles)
         {
-            foreach (var role in _context.Roles.Where(r => r.ContainerPrototypeStructureId == id))
-                _context.Roles.Remove(role);
-
-            foreach (var role in roles)
+            try
             {
-                role.ContainerPrototypeStructureId =
-                    role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = id;
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                _context.Roles.Add(role);
+                dataBaseManager.Role.DeleteAll(id);
+
+                //if (roles != null)
+                //    foreach (var role in roles)
+                //        dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
+                //                                    role.RoleTypeName,
+                //                                    role.Rules.Select(rule => rule.Name));
+
+                return FormValidationResponse.Ok();
             }
-
-            _context.SaveChanges();
-
-            return FormValidationResponse.Ok();
+            catch
+            {
+                ModelState.AddGlobalError("An error has occured, please try again.");
+                return FormValidationResponse.Error(ModelState);
+            }
         }
 
         public ActionResult Index(long id)
         {
-            var structure = _context.Structures.Find(id);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            var structure = dataBaseManager.Structure.Get(id);
 
             if (structure.Developing)
-                return RedirectToAction("Design", new{id});
+                return RedirectToAction("Design", new { id });
 
             return View();
         }
 
         public ActionResult Create()
         {
-            var structure = new Structure();
+            var structure = new StructureView();
 
             return View(structure);
         }
 
         [HttpPost]
-        public ActionResult Create(Structure structure)
+        public ActionResult Create(StructureView structure)
         {
-            try
-            {
-                structure.Developing = true;
-                structure.Public = true;
-                structure.Administrators.Add(_context.Users.Find(User.Identity.Name));
-                structure.CreatedOn = DateTime.Now;
+            if (!ModelState.IsValid)
+                return View(structure);
 
-                _context.Structures.Add(structure);
-                _context.SaveChanges();
-
-                return RedirectToAction("Design", new {id = structure.Id});
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [StructureOwner("id")]
-        public ActionResult Delete(long id)
-        {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-            var structure = dataBaseManager.Structure.Get(id);
-
-            return View(structure);
-        }
-
-        [HttpPost]
-        [StructureOwner("id")]
-        public ActionResult Delete(long id, StructureView structureView, FormCollection formCollection)
-        {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Structure.Delete(structureView);
+                var dbStructure = dataBaseManager.Structure.Create(structure.Name, structure.Description,
+                                                                   structure.Public, User.Identity.Name);
 
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Design", new { id = dbStructure.Id });
             }
             catch
             {
+                ModelState.AddGlobalError("An error has occured, please try again.");
                 return View();
             }
         }
+
+        //[StructureOwner("id")]
+        //public ActionResult Delete(long id)
+        //{
+        //    var structure = dataBaseManager.Structure.Get(id);
+
+        //    return View(structure);
+        //}
+
+        //[HttpPost]
+        //[StructureOwner("id")]
+        //public ActionResult Delete(long id, StructureView structureView)
+        //{
+        //    try
+        //    {
+        //        dataBaseManager.Structure.Delete(id);
+
+        //        return RedirectToAction("Index", "User");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         [HttpPost]
         [StructureOwner("id")]
         public ActionResult Publish(long id)
         {
-            var structure = _context.Structures.Find(id);
-            structure.Developing = false;
-            _context.SaveChanges();
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            dataBaseManager.Structure.Publish(id);
 
             return FormValidationResponse.Ok();
         }

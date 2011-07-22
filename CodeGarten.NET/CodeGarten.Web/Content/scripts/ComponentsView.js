@@ -6,28 +6,24 @@ var ComponentsView = new (function () {
     this.Init = function (id, title, pages) {
         divId = id;
 
-        $(divId).fadeOut(function () {
-            $(divId).empty();
-            $(divId).append("<h1 class='ui-widget-header'/>");
-            $(divId).append("<div/>");
+        $(divId).empty();
+        $(divId).append("<h1 class='ui-widget-header'/>");
+        $(divId).append("<div/>");
 
-            var header = $(divId).children(".ui-widget-header");
-            content = $(divId).children(".ui-widget-header").next();
+        var header = $(divId).children(".ui-widget-header");
+        content = $(divId).children(".ui-widget-header").next();
 
-            $(header).text(title);
+        $(header).text(title);
 
-            for (var v in pages) {
-                var pageTag = $("<h3 class='" + pages[v] + "_link'><a class='page_link href='#'>" + pages[v] + "s</a></h3> <div> " + EventController.Placeholder("Empty. Click the add button to create.", "h5") + "<div class='page_content'/> <div class='page_options'/> </div>");
-                var addButton = $("<button class='page_add' onclick='javascript:" + pages[v] + "Controller.Create();'>Add " + pages[v] + "</button>").button({ icons: { primary: "ui-icon-plus"} });
-                $(pageTag).find(".page_options").append(addButton);
-                $(content).append(pageTag);
-            }
-            $(content).accordion({ 'clearStyle': true, autoHeight: false });
+        for (var v in pages) {
+            var pageTag = $("<h3 class='" + pages[v] + "_link'><a class='page_link href='#'>" + pages[v] + "s</a></h3> <div> " + EventController.Placeholder("Empty. Click the add button to create.", "h5") + "<div class='page_content'/> <div class='page_options'/> </div>");
+            var addButton = $("<button class='page_add' onclick='javascript:" + pages[v] + "Controller.Create();'>Add " + pages[v] + "</button>").button({ icons: { primary: "ui-icon-plus"} });
+            $(pageTag).find(".page_options").append(addButton);
+            $(content).append(pageTag);
+        }
+        $(content).accordion({ 'clearStyle': true, autoHeight: false });
 
-            ComponentsView.Sync();
-
-            $(divId).fadeIn();
-        });
+        ComponentsView.Sync();
     };
 
     this.AddItem = function (page, item) {
@@ -39,7 +35,7 @@ var ComponentsView = new (function () {
         var buttonEdit = $("<button onclick='javascript:" + page + "Controller.Edit(\"" + item + "\");' title='Edit'/>").button({ icons: { primary: "ui-icon-gear" }, text: false });
         var buttonDelete = $("<button title='Delete' onclick='javascript:" + page + "Controller.Delete(\"" + item + "\");'/>").button({ icons: { primary: "ui-icon-trash" }, text: false });
 
-        if(page !== "RoleType")
+        if (page !== "RoleType")
             $(itemTag).children(".item_options").append(buttonEdit);
         $(itemTag).children(".item_options").append(buttonDelete);
         $(pageTag).parent().next().children(".ui-state-highlight").hide();
@@ -65,7 +61,7 @@ var ComponentsView = new (function () {
         });
     };
 
-    this.Sync = function() {
+    this.Sync = function () {
         var workspaces = StructureModel.getWorkspaceTypes();
         var roleTypes = StructureModel.getRoleTypes();
         var rules = StructureModel.getRules();

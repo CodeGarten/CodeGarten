@@ -1,4 +1,4 @@
-﻿@model CodeGarten.Data.ModelView.ContainerPrototypeView
+﻿@model CodeGarten.Web.Model.ContainerPrototypeView
          
 <script src="@Url.Content("~/Content/Scripts/ErrorPlaceholder.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/scripts/Eventcontroller.js")" type="text/javascript"></script>
@@ -18,7 +18,7 @@
     <div id="error_container_structure" ></div>
 </div>   
 <div id="form_containerPrototype" title="Create Container Prototype">
-	@Html.Partial("_FormContainerPrototype", Model)
+	@Html.Partial("_ContainerPrototypeCreateForm", Model)
 </div>
 		
 <div id="dialog_confirm">

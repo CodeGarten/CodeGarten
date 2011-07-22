@@ -29,7 +29,7 @@ namespace CodeGarten.Data.Access
 
         public bool Authenticate(string user, string passwordEncrypt)
         {
-            var userObj = UserManager.Get(_dbContext, user);
+            var userObj = _dbContext.Users.Find(user);
             if (user == null) throw new Exception();
 
             return userObj.Password == EncryptPassword(passwordEncrypt);
