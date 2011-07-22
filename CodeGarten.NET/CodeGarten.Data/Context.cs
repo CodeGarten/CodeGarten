@@ -16,6 +16,7 @@ namespace CodeGarten.Data
         public DbSet<RoleType> RoleTypes { get; set; }
         public DbSet<ServicePermission> ServicePermissions { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<EnrollPassword> EnrollPassWords { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -51,9 +52,11 @@ namespace CodeGarten.Data
                         r.WorkSpaceTypeName,
                         r.WorkSpaceTypeStructureId
                     });
+
+            modelBuilder.Entity<EnrollPassword>().HasKey(e => new {e.ContainerId, e.RoleTypeName, e.RoleTypeStructureId});
             //modelBuilder.Entity<Role>().HasRequired(r => r.ContainerPrototype).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.RoleType).WithMany().WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Enroll>().HasKey(

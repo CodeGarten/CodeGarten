@@ -20,10 +20,10 @@ namespace CodeGarten.Service
 
         protected String PathService { get; private set; }
 
-        protected Service(String service)
+        protected Service(String serviceName)
         {
-            Name = service;
-            PathService = Path.Combine(ServiceConfig.ServicesResourceLibLocation, service);
+            Name = serviceName;
+            PathService = Path.Combine(ServiceConfig.ServicesResourceLibLocation, serviceName);
 
             Directory.CreateDirectory(PathService);
 
@@ -42,6 +42,7 @@ namespace CodeGarten.Service
         #region ControllerFactoryMembers
 
         public IController CreateController(RequestContext requestContext, string controllerName)
+            //TODO TESTE
             //public IController CreateController(string controllerName)
         {
             var lazyController = _compositionContainer.GetExports<IController, IControllerMetadata>().

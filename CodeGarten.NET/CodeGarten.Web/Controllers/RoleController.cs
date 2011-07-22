@@ -22,7 +22,7 @@ namespace CodeGarten.Web.Controllers
             foreach (var role in roles)
             {
                 role.ContainerPrototypeStructureId =
-                    role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = structureId;
+                    role.RoleTypeStructureId = role.ContainerPrototypeStructureId = role.WorkSpaceTypeStructureId = structureId;
 
                 _context.Roles.Add(role);
             }

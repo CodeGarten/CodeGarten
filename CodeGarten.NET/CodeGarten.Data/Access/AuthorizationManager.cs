@@ -6,6 +6,14 @@ using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data.Access
 {
+    //TODO code quarantined
+    //public sealed  class ServiceAuthorizatonInstance
+    //{
+    //    public Container Container { get; internal set; }
+    //    public WorkSpaceType WorkSpaceType { get; internal set; }
+    //    public IEnumerable<KeyValuePair<Role, IEnumerable<User>>> GroupRoleUsers { get; internal set; }
+    //}
+
     public sealed class AuthorizationManager
     {
         private readonly Context _dbContext;
@@ -15,153 +23,162 @@ namespace CodeGarten.Data.Access
             _dbContext = db.DbContext;
         }
 
-        private bool ContainsRoleType(Structure structure, Container container, RoleType roleType)
-        {
-            return _dbContext.Enrolls.Where(
-                (cu) =>
-                cu.ContainerId == container.Id &&
-                cu.RoleType.Name == roleType.Name &&
-                cu.RoleTypeStructureId == structure.Id
-                       ).Count() != 0;
-        }
+        
+        //private void CreateGroups(IAuthorizationPermissions authorization, long structure, long container)
+        //{
+        //    var roletypes = _dbContext.Enrolls.Where(
+        //        (c) => c.ContainerId == container
+        //        ).Select(
+        //            (c) => c.RoleType
+        //        ).Distinct();
 
 
-        private void CreateGroups(IAuthorization authorization, long structure, long container)
-        {
-            var roletypes = _dbContext.Enrolls.Where(
-                (c) => c.ContainerId == container
-                ).Select(
-                    (c) => c.RoleType
-                ).Distinct();
+        //    foreach (RoleType roletype in roletypes)
+        //    {
+        //        var roletypeContext = roletype;
+        //        var users = _dbContext.Enrolls.Where(
+        //            (cu) =>
+        //            cu.ContainerId == container &&
+        //            cu.RoleTypeName == roletypeContext.Name &&
+        //            cu.RoleTypeStructureId == structure
+        //            ).Select(
+        //                (cu) =>
+        //                cu.User.Name
+        //            );
 
+        //        authorization.CreateGroup(authorization.GroupName(structure, container, roletype.Name), users);
+        //    }
+        //}
 
-            foreach (RoleType roletype in roletypes)
-            {
-                var roletypeContext = roletype;
-                var users = _dbContext.Enrolls.Where(
-                    (cu) =>
-                    cu.ContainerId == container &&
-                    cu.RoleTypeName == roletypeContext.Name &&
-                    cu.RoleTypeStructureId == structure
-                    ).Select(
-                        (cu) =>
-                        cu.User.Name
-                    );
+        //public void CreateServiceAuthorization(IAuthorizationPermissions authorization, Container container, WorkSpaceType workSpaceType, string serviceName)
+        //{
+        //        var structureId = workSpaceType.StructureId;
 
-                authorization.AddGroup(authorization.GetGroupName(structure, container, roletype.Name), users);
-            }
-        }
+        //        var roles = _dbContext.Roles.Where(
+        //            (r) =>
+        //            r.ContainerPrototypeStructureId == structureId &&
+        //            r.WorkSpaceTypeStructureId == structureId &&
+        //            r.WorkSpaceTypeName == workSpaceType.Name &&
+        //            r.ContainerPrototypeName == container.ContainerPrototype.Name
+        //            );
 
+        //        foreach (var role in roles)
+        //        {
+        //            var groupName = authorization.GroupName(structureId, container.Id,
+        //                                                    role.RoleTypeName);
+                    
+        //            var permissions = role.Rule.Permissions.Where(
+        //                                                    (sp) =>
+        //                                                    sp.ServiceName == serviceName
+        //                                                    ).Select(
+        //                                                        (sp) =>
+        //                                                        sp.Name
+        //                                                    );
 
-        private void SetCurrentAndParentRoleTypes(
-            IAuthorization authorization,
-            Structure structure,
-            Container rootContainer,
-            string rootName,
-            string service,
-            IEnumerable<Role> roles
-            )
-        {
-            Container current = rootContainer;
+        //            //authorization.AddGroupPermissions(rootName, groupName, permissions);
+        //        }
 
-            do
-            {
-                foreach (var role in roles)
-                    if (ContainsRoleType(structure, current, role.RoleType))
-                    {
-                        var permissions = role.Rule.Permissions.Where(
-                            (sp) =>
-                            sp.ServiceName == service
-                            ).Select(
-                                (sp) =>
-                                sp.Name
-                            );
+        //}
 
-                        authorization.AddGroupPermission(
-                            rootName,
-                            authorization.GetGroupName(structure.Id, current.Id, role.RoleTypeName),
-                            permissions
-                            );
-                    }
+        //public void CreateServiceAuthorizationStruct(IAuthorizationInstance authorization, string serviceName)
+        //{
+        //    if (authorization == null) throw new ArgumentNullException("authorization");
 
-                current = current.ParentContainer;
-            } while (current != null);
-        }
+        //    foreach (Structure structure in _dbContext.Structures)
+        //    {
+        //        var structureContext = structure;
+        //        var containers =
+        //            _dbContext.Containers.Where((c) => c.ContainerPrototype.StructureId == structureContext.Id);
 
+        //        foreach (Container container in containers)
+        //        {
+        //            CreateGroups(authorization, structure.Id, container.Id);
 
-        private void SetChildsRoleTypes(
-            IAuthorization authorization,
-            Structure structure,
-            Container rootContainer,
-            string rootName,
-            string service,
-            IEnumerable<Role> roles
-            )
-        {
-            if (rootContainer.Childs == null) return;
+        //            foreach (WorkSpaceType workSpaceType in container.ContainerPrototype.WorkSpaceTypes)
+        //            {
+        //                var containerContext = container;
+        //                var workSpaceTypeContext = workSpaceType;
 
-            foreach (var child in rootContainer.Childs)
-            {
-                SetChildsRoleTypes(authorization, structure, child, service, rootName, roles);
+        //                var rootName = authorization.InstanceName(structure.Id, container.Id, workSpaceType.Name);
 
-                foreach (var role in roles)
-                    if (ContainsRoleType(structure, child, role.RoleType))
-                    {
-                        var permissions = role.Rule.Permissions.Where(
-                            (sp) =>
-                            sp.ServiceName == service
-                            ).Select(
-                                (sp) => sp.Name
-                            );
+        //                authorization.CreateInstance(rootName);
 
-                        authorization.AddGroupPermission(
-                            rootName,
-                            authorization.GetGroupName(structure.Id, child.Id, role.RoleTypeName),
-                            permissions
-                            );
-                    }
-            }
-        }
+        //                var roles = _dbContext.Roles.Where(
+        //                    (r) =>
+        //                    r.ContainerPrototypeStructureId == structureContext.Id &&
+        //                    r.WorkSpaceTypeStructureId == structureContext.Id &&
+        //                    r.WorkSpaceTypeName == workSpaceTypeContext.Name &&
+        //                    r.ContainerPrototypeName == containerContext.ContainerPrototype.Name
+        //                    );
 
-        public void CreateServiceAuthorizationStruct(IAuthorization authorization, string serviceName)
-        {
-            if (authorization == null) throw new ArgumentNullException("authorization");
+        //                foreach (var role in roles)
+        //                {
+        //                    var groupName = authorization.GroupName(structureContext.Id, containerContext.Id,
+        //                                                            role.RoleTypeName);
 
-            foreach (Structure structure in _dbContext.Structures)
-            {
-                var structureContext = structure;
-                var containers =
-                    _dbContext.Containers.Where((c) => c.ContainerPrototype.StructureId == structureContext.Id);
+        //                    var permissions = role.Rule.Permissions.Where(
+        //                                                            (sp) =>
+        //                                                            sp.ServiceName == serviceName
+        //                                                            ).Select(
+        //                                                                (sp) =>
+        //                                                                sp.Name
+        //                                                            );
 
-                foreach (Container container in containers)
-                {
-                    CreateGroups(authorization, structure.Id, container.Id);
+        //                    authorization.AddGroupPermissions(rootName, groupName, permissions);    
+        //                }
 
-                    foreach (WorkSpaceType workSpaceType in container.ContainerPrototype.WorkSpaceTypes)
-                    {
-                        var containerContext = container;
-                        var workSpaceTypeContext = workSpaceType;
+        //                //SetCurrentAndParentRoleTypes(authorization, structure, container, rootName, serviceName, roles);
 
-                        var rootName = authorization.GetContainerName(structure.Id, container.Id, workSpaceType.Name);
+        //                //SetChildsRoleTypes(authorization, structure, container, rootName, serviceName, roles);
+        //            }
+        //        }
+        //    }
 
-                        authorization.CreateContainer(rootName);
+        //    var disposable = authorization as IDisposable;
+        //    if(disposable!=null)
+        //        disposable.Dispose();
+        //}
 
-                        var roles = _dbContext.Roles.Where(
-                            (r) =>
-                            r.ContainerPrototypeStructureId == structureContext.Id &&
-                            r.WorkSpaceTypeStructureId == structureContext.Id &&
-                            r.WorkSpaceTypeName == workSpaceTypeContext.Name &&
-                            r.ContainerPrototypeName == containerContext.ContainerPrototype.Name
-                            );
+        //public ServiceAuthorizatonInstance GetServiceAuthorizationInstance(long structure, long containerId, string workspaceType)
+        //{
+        //    var containerObj = ContainerManager.Get(_dbContext, containerId);
+            
+        //    var roles =
+        //        _dbContext.Roles.Where(
+        //            r =>
+        //            r.ContainerPrototypeStructureId == structure &&
+        //            r.WorkSpaceTypeStructureId == structure &&
+        //            r.WorkSpaceTypeName == workspaceType &&
+        //            r.ContainerPrototypeName == containerObj.ContainerPrototype.Name
+        //            );
 
-                        SetCurrentAndParentRoleTypes(authorization, structure, container, rootName, serviceName, roles);
+        //    var list = new LinkedList<KeyValuePair<Role, IEnumerable<User>>>();
+        //    foreach (var role in roles)
+        //    {
+        //        var roleContext = role;
+        //        var users =
+        //            _dbContext.Enrolls.Where(e => e.ContainerId == containerId && e.RoleTypeName == roleContext.RoleTypeName).Select(e => e.User);
+        //        list.AddFirst(new KeyValuePair<Role, IEnumerable<User>>(role, users));
+        //    }
 
-                        SetChildsRoleTypes(authorization, structure, container, rootName, serviceName, roles);
-                    }
-                }
-            }
+        //    var serviceAuthorization = new ServiceAuthorizatonInstance()
+        //                                   {
+        //                                       Container = containerObj,
+        //                                       WorkSpaceType = WorkSpaceTypeManager.Get(_dbContext, structure, workspaceType),
+        //                                       GroupRoleUsers = list
+        //                                   };
 
-            authorization.Dispose();
-        }
+        //    return serviceAuthorization;
+        //}
+
+        //public IEnumerable<ServiceAuthorizatonInstance> GetAllServiceAuthorizationInstances()
+        //{
+        //    foreach (var container in _dbContext.Containers)
+        //        foreach (var workSpaceType in container.ContainerPrototype.WorkSpaceTypes)
+        //            yield return
+        //                GetServiceAuthorizationInstance(container.ContainerPrototype.StructureId, container.Id,
+        //                                                workSpaceType.Name);
+        //    yield break;
+        //}
     }
 }

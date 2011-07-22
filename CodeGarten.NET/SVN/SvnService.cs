@@ -9,6 +9,7 @@ using CodeGarten.Data.Access;
 using CodeGarten.Data.Interfaces;
 using CodeGarten.Data.ModelView;
 using CodeGarten.Service;
+using CodeGarten.Service.Utils;
 
 
 namespace SVN
@@ -34,8 +35,7 @@ namespace SVN
 
         public override void OnServiceInstall()
         {
-            //SVN can have a mehtod to get all privileges
-            //databaseManager change api to services
+            //TODO service api
             using (var databaseManager = new DataBaseManager())
             {
                 databaseManager.Service.Create(
@@ -58,12 +58,10 @@ namespace SVN
         {
             get
             {
+                //TODO service api
                 if (_isInstaled) return true;
                 using (var dataBaseManager = new DataBaseManager())
-                {
-                    //this is a problem ???
                     return dataBaseManager.Service.Get(Name) != null;
-                }
             }
         }
 
@@ -121,21 +119,44 @@ namespace SVN
         // need to create a logger
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            if (!e.Services.ContainsKey(Name)) return;
+            //if (!e.Services.ContainsKey(Name)) return;
+            
+            //var workspacesType = e.Services[Name];
 
-            var workspacesType = e.Services[Name];
+            //foreach (var workSpaceTypeView in workspacesType)
+            //{
+            //    var pathRepo = Path.Combine(PathService, "repositories");
+            //    //TODO AuthorizationManager Create the name
+            //    var repoName = String.Format("{0}{1}{2}", e.Strucuture, e.Container.Id, workSpaceTypeView.Name);
 
-            foreach (var workSpaceTypeView in workspacesType)
+            //    var repository = SVNRepositoryManager.Create(pathRepo, repoName);
+            //    if (repository == null)
+            //        continue; //Servicelogger;
+            //    if (!repository.Initialize())
+            //        continue; //Servicelogger;
+            //}
+            
+            foreach (var workSpaceType in e.Container.ContainerPrototype.WorkSpaceTypes)
             {
+                //TODO organizar isto
                 var pathRepo = Path.Combine(PathService, "repositories");
-                //TODO AuthorizationManager Create the name
-                var repoName = String.Format("{0}{1}{2}", e.Strucuture, e.Container.Id, workSpaceTypeView.Name);
+                
+                var instanceName = e.Container.UniqueInstanceName(workSpaceType);
 
-                var repository = SVNRepositoryManager.Create(pathRepo, repoName);
+                var repository = SVNRepositoryManager.Create(pathRepo, instanceName);
                 if (repository == null)
-                    continue; //Servicelogger;
+                    continue; //TODO Servicelogger;
                 if (!repository.Initialize())
-                    continue; //Servicelogger;
+                    continue; //TODO Servicelogger;
+
+                foreach (var role in workSpaceType.Roles.Where(r => r.ContainerPrototypeName == e.Container.ContainerPrototype.Name))
+                {
+                    var filePath = Path.Combine(_filesPath, String.Format("~{0}.tmp", _authFileName));
+
+                    var svnAuthorization = new SVNAuthorization(filePath);
+
+                    
+                }
             }
         }
 

@@ -47,7 +47,7 @@ namespace CodeGarten.Data.ModelView
         }
     }
 
-    internal static class MapperContainer
+    public static class MapperContainer
     {
         public static Container Convert(this ContainerView containerView)
         {
@@ -70,14 +70,14 @@ namespace CodeGarten.Data.ModelView
         }
     }
 
-    public sealed class ContainerPrototypeView : IEquatable<ContainerPrototypeView>
+    public sealed class ContainerPrototypeView :  IEquatable<ContainerPrototypeView>
     {
         [Required]
         [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(2)]
         [MaxLength(64)]
         public string Name { get; set; }
-
+        
         //[Required]
         //public long StructureId { get; set; }
 

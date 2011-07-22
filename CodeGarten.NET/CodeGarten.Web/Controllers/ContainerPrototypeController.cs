@@ -66,11 +66,13 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.ContainerPrototype.Delete(name, structureId);
 
-                return RedirectToAction("Index", "Structure", new {id = structureId});
+                return FormValidationResponse.Ok();
             }
             catch
             {
+                //TODO Json result error
                 return View();
+                // JsonValidationResponse.Error("sdfsdfsdf");
             }
         }
 

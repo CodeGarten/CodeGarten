@@ -12,4 +12,21 @@ namespace CodeGarten.Data.Interfaces
         void AddGroupPermission(string container, string group, IEnumerable<string> permissions);
         void AddUserPermission(string container, string user, IEnumerable<string> permissions);
     }
+
+    //public interface IAuthorizationGroup
+
+    public interface IAuthorizationPermissions
+    {
+        string GroupName(long structureId, long containerId, string roleTypeName);
+        void CreateGroup(string groupName, IEnumerable<string> users);
+        void AddGroupPermissions(string instanceName, string groupName, IEnumerable<string> permissions);
+        void AddUserPermissions(string instanceName, string username, IEnumerable<string> permissions);
+    }
+
+    public interface IAuthorizationInstance : IAuthorizationPermissions
+    {
+        void CreateInstance(string instanceName);
+        void DeleteInstance(string instanceName);
+        string InstanceName(long structureId, long container, string workspaceTypeName);
+    }
 }

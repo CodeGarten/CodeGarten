@@ -6,12 +6,10 @@ using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {
-    //TODO change location
+
     public class ContainerEventArgs : EventArgs
     {
-        public long Strucuture { get; set; }
-        public ContainerView Container { get; set; }
-        public IDictionary<string, IEnumerable<WorkSpaceTypeView>> Services;
+        public Container Container { get; set; }
     }
 
     public sealed class ContainerManager
@@ -35,7 +33,7 @@ namespace CodeGarten.Data.Access
 
         #endregion
 
-        public void Create(ContainerView containerView, long structure, long? parent)
+        public Container Create(ContainerView containerView, long structure, long? parent)
         {
             if (containerView == null) throw new ArgumentNullException("containerView");
 
@@ -59,22 +57,21 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            //TODO return container view
             containerView.Id = container.Id;
 
-            //TODO 
             try
             {
                 InvokeOnCreateContainer(container);
             }
             catch
             {
-                //TODO ROLLBACK
-                throw;
+                //TODO DataLogger
             }
+
+            return container;
         }
 
-        public void Create(ContainerView containerView, long structure, string containerPrototype)
+        public Container Create(ContainerView containerView, long structure, string containerPrototype)
         {
             if (containerView == null) throw new ArgumentNullException("containerView");
 
@@ -89,22 +86,21 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            //TODO return container view
             containerView.Id = container.Id;
-
-            //TODO 
+            
             try
             {
                 InvokeOnCreateContainer(container);
             }
             catch
             {
-                //TODO ROLLBACK
-                throw;
+                //TODO DataLogger
             }
+
+            return container;
         }
 
-        public void Create(ContainerView containerView, long structure, string containerPrototype, long parentContainer)
+        public Container Create(ContainerView containerView, long structure, string containerPrototype, long parentContainer)
         {
             if (containerView == null) throw new ArgumentNullException("containerView");
 
@@ -124,67 +120,67 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            //TODO return container view
             containerView.Id = container.Id;
 
-            //TODO 
+            
             try
             {
                 InvokeOnCreateContainer(container);
             }
             catch
             {
-                //TODO ROLLBACK
-                throw;
+                //TODO DataLogger
             }
+
+            return container;
         }
 
         public void Delete(ContainerView containerView)
         {
-            //_dbContext.Entry(_dbContext.Containers.Find(containerView.Id)).State = EntityState.Deleted;
-
             _dbContext.Containers.Remove(_dbContext.Containers.Find(containerView.Id));
 
             _dbContext.SaveChanges();
         }
 
-        internal static Container Get(Context db, long container)
+        public void AddPassword(long structure, long container, string roletype, string password)
         {
-            return db.Containers.Where(c =>
-                                       c.Id == container
-                ).SingleOrDefault();
+            var enrollPassword = new EnrollPassword()
+                                     {
+                                         ContainerId = container,
+                                         RoleTypeName = roletype,
+                                         RoleTypeStructureId = structure,
+                                         Password = AuthenticationManager.EncryptPassword(password)
+                                     };
+            
+            _dbContext.EnrollPassWords.Add(enrollPassword);
+
+            _dbContext.SaveChanges();
+        }
+        
+        public bool HasPassword(long structure, long container, string roletype)
+        {
+            return _dbContext.EnrollPassWords.Find(container, roletype, structure) != null;
         }
 
-        public ContainerView Get(long container)
+        internal static Container Get(Context db, long container)
         {
-            var cont = Get(_dbContext, container);
+            return db.Containers.Find(container);
+        }
 
-            return cont == null ? null : cont.Convert();
+        public Container Get(long container)
+        {
+            return _dbContext.Containers.Find(container);
         }
 
         #region InvokeEvents
 
         private void InvokeOnCreateContainer(Container container)
         {
-            var dicionay = new Dictionary<string, IEnumerable<WorkSpaceTypeView>>();
-            foreach (var service in _dbContext.Services)
-            {
-                var serviceContext = service;
-                var wk = container.ContainerPrototype.WorkSpaceTypes.Where(
-                    w => w.Services.Contains(serviceContext)
-                    ).Select(
-                        w => w.Convert()
-                    );
-                if (wk.Any())
-                    dicionay.Add(service.Name, wk.ToList());
-            }
-
             var eventArgs = new ContainerEventArgs()
                                 {
-                                    Strucuture = container.ContainerPrototype.StructureId,
-                                    Container = container.Convert(),
-                                    Services = dicionay
+                                    Container = container
                                 };
+
             var handler = _onCreateContainer;
             if (handler != null) handler(this, eventArgs);
         }

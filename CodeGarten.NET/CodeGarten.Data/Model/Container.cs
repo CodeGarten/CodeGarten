@@ -20,6 +20,8 @@ namespace CodeGarten.Data.Model
 
         public virtual ICollection<Container> Containers { get; set; }
 
+        public virtual ICollection<Role> Roles { get; set; }
+
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; set; }
 
@@ -49,10 +51,11 @@ namespace CodeGarten.Data.Model
 
         //public long ContainerPrototypeStructureId { get; set; }
 
-
         public virtual Container ParentContainer { get; set; }
 
         public virtual ICollection<Container> Childs { get; set; }
+
+        public virtual ICollection<EnrollPassword> Passwords { get; set; }
 
         [Required]
         public virtual ContainerPrototype ContainerPrototype { get; set; }

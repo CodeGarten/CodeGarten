@@ -15,6 +15,8 @@ namespace CodeGarten.Data.Model
 
         public virtual ICollection<Enroll> Enrolls { get; set; }
 
+        public virtual ICollection<Role> Roles { get; set; }
+
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; set; }
 
@@ -39,12 +41,22 @@ namespace CodeGarten.Data.Model
 
 
         public virtual ICollection<ServicePermission> Permissions { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
 
 
         public Rule()
         {
             Permissions = new LinkedList<ServicePermission>();
+            Roles = new LinkedList<Role>();
         }
+    }
+
+    public enum RoleBarrier
+    {
+        None = 0,
+        Top,
+        Bottom,
+        All
     }
 
     public class Role
@@ -61,9 +73,14 @@ namespace CodeGarten.Data.Model
 
         public long WorkSpaceTypeStructureId { get; set; }
 
-        public string RuleName { get; set; }
+        public ICollection<Rule> Rules { get; set; }
 
-        public long RuleStructureId { get; set; }
+        //public string RuleName { get; set; }
+
+        //public long RuleStructureId { get; set; }
+
+        public int Barrier { get; private set; }
+        public RoleBarrier RoleBarrier { get { return (RoleBarrier)Barrier; } set { Barrier = (int) value; } }
 
         [ForeignKey("RoleTypeName,RoleTypeStructureId")]
         public virtual RoleType RoleType { get; set; }
@@ -74,7 +91,12 @@ namespace CodeGarten.Data.Model
         [ForeignKey("WorkSpaceTypeName,WorkSpaceTypeStructureId")]
         public virtual WorkSpaceType WorkSpaceType { get; set; }
 
-        [ForeignKey("RuleName,RuleStructureId")]
-        public virtual Rule Rule { get; set; }
+        //[ForeignKey("RuleName,RuleStructureId")]
+        //public virtual Rule Rule { get; set; }
+
+        public Role()
+        {
+            Rules = new LinkedList<Rule>();
+        }
     }
 }

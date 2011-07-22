@@ -12,11 +12,11 @@ namespace CodeGarten.Data.Model
 
         public long StructureId { get; set; }
 
-
         public virtual ICollection<Service> Services { get; set; }
 
         public virtual ICollection<ContainerPrototype> ContainerPrototypes { get; set; }
 
+        public virtual ICollection<Role> Roles { get; set; }
 
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; set; }

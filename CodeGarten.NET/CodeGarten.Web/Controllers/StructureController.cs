@@ -24,7 +24,7 @@ namespace CodeGarten.Web.Controllers
                 return Json(new {Success = false}, JsonRequestBehavior.AllowGet);
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new {cp.Name, ParentName = cp.Parent==null?null:cp.Parent.Name});
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new {rl.ContainerPrototypeName,rl.RoleTypeName,rl.WorkSpaceTypeName,rl.RuleName});
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new {rl.ContainerPrototypeName,rl.RoleTypeName,rl.WorkSpaceTypeName, rl.Rules});
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new {rt.Name});
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new {wk.Name});
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new {rl.Name});
@@ -61,8 +61,7 @@ namespace CodeGarten.Web.Controllers
 
             foreach (var role in roles)
             {
-                role.ContainerPrototypeStructureId =
-                    role.RoleTypeStructureId = role.RuleStructureId = role.WorkSpaceTypeStructureId = id;
+                role.ContainerPrototypeStructureId = role.RoleTypeStructureId = role.WorkSpaceTypeStructureId = id;
 
                 _context.Roles.Add(role);
             }

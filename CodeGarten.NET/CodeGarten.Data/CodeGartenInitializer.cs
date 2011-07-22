@@ -41,11 +41,13 @@ namespace CodeGarten.Data
                                                "DELETE dbo.RoleTypes FROM deleted WHERE deleted.Name = dbo.RoleTypes.Name AND deleted.StructureId = dbo.RoleTypes.StructureId"
                 );
 
-            context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_rule ON dbo.Rules " +
-                                               "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RuleName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
-                                               "DELETE dbo.Rules FROM deleted WHERE deleted.Name = dbo.Rules.Name AND deleted.StructureId = dbo.Rules.StructureId"
-                );
+
+            //TODO remove the trigger
+            //context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_rule ON dbo.Rules " +
+            //                                   "INSTEAD OF DELETE AS SET NOCOUNT ON " +
+            //                                   "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RuleName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
+            //                                   "DELETE dbo.Rules FROM deleted WHERE deleted.Name = dbo.Rules.Name AND deleted.StructureId = dbo.Rules.StructureId"
+            //    );
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_wst ON dbo.WorkSpaceTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +

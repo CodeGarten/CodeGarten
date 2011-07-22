@@ -6,6 +6,7 @@ using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {
+
     public sealed class RoleManager
     {
         private readonly Context _dbContext;
@@ -15,51 +16,49 @@ namespace CodeGarten.Data.Access
             _dbContext = db.DbContext;
         }
 
-        public RoleView Create(long structure, string containerPrototype, string workspaceType, string roleType,
-                               string rule)
+        public Role Create(long structure, string containerPrototype, string workspaceType, string roleType,
+                               string rule = null, RoleBarrier roleBarrier = RoleBarrier.None)
         {
-            var containerPrototypeObj = ContainerPrototypeManager.Get(_dbContext, structure, containerPrototype);
-            if (containerPrototypeObj == null)
-                throw new ArgumentException("\"containerPrototype\" or \"structure\" is a invalid argument");
-
-            var workspaceTypeObj = WorkSpaceTypeManager.Get(_dbContext, structure, workspaceType);
-            if (workspaceTypeObj == null)
-                throw new ArgumentException("\"workspaceType\" or \"structure\" is a invalid argument");
-
-            var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
-            if (roleTypeObj == null) throw new ArgumentException("\"roleType\" or \"structure\" is a invalid argument");
-
-            var ruleObj = RuleManager.Get(_dbContext, structure, rule);
-            if (ruleObj == null) throw new ArgumentException("\"rule\" or \"structure\" is a invalid argument");
-
             var role = new Role()
                            {
-                               RoleType = roleTypeObj,
-                               ContainerPrototype = containerPrototypeObj,
-                               WorkSpaceType = workspaceTypeObj,
+                               RoleTypeName = roleType,
                                RoleTypeStructureId = structure,
-                               Rule = ruleObj
+                               ContainerPrototypeName = containerPrototype,
+                               ContainerPrototypeStructureId = structure,
+                               WorkSpaceTypeName = workspaceType,
+                               WorkSpaceTypeStructureId = structure,
+                               RoleBarrier = roleBarrier
                            };
+
+            if (rule != null)
+                role.Rules.Add(RuleManager.Get(_dbContext, structure, rule));
 
             _dbContext.Roles.Add(role);
             _dbContext.SaveChanges();
 
-            return role.Convert();
+            return role;
         }
 
-        public RoleView Get(string containerPrototype, string workspaceType, string roleType)
+        public Role Get(long structure, string containerPrototype, string workspaceType, string roleType)
         {
-            return new RoleView
-                       {
-                           ContainerPrototypeName = containerPrototype,
-                           WorkSpaceTypeName = workspaceType,
-                           RoleTypeName = roleType
-                       };
+            return _dbContext.Roles.Find(
+                                            containerPrototype,
+                                            structure,
+                                            roleType,
+                                            structure,
+                                            workspaceType,
+                                            structure
+                                         );
         }
-        //TODO
+
+        public void AddRule(long structure, string containerPrototype, string workspaceType, string roleType, string rule)
+        {
+            Get(structure, containerPrototype, workspaceType, roleType).Rules.Add(RuleManager.Get(_dbContext, structure, rule));
+        }
+
         public IEnumerable<Role> GetAll(long structureId)
         {
-            return _dbContext.Roles.Where(rl => rl.RuleStructureId == structureId);
+            return _dbContext.Roles.Where(rl => rl.ContainerPrototypeStructureId == structureId);
         }
 
         public void Delete(RoleView roleView, long structureId)

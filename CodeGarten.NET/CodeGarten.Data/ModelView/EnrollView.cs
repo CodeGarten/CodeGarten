@@ -15,6 +15,8 @@ namespace CodeGarten.Data.ModelView
         [Required]
         public long Container { get; set; }
 
+        public bool Inherited { get; set; }
+
         //public EnrollView(Enroll enroll)
         //{
         //    User = enroll.UserName;
@@ -38,7 +40,8 @@ namespace CodeGarten.Data.ModelView
                        {
                            UserName = enrollView.User,
                            RoleTypeName = enrollView.RoleType,
-                           ContainerId = enrollView.Container
+                           ContainerId = enrollView.Container,
+                           Inherited = enrollView.Inherited
                        };
         }
 
@@ -48,7 +51,8 @@ namespace CodeGarten.Data.ModelView
                        {
                            User = enroll.UserName,
                            RoleType = enroll.RoleTypeName,
-                           Container = enroll.ContainerId
+                           Container = enroll.ContainerId,
+                           Inherited = enroll.Inherited
                        };
         }
     }

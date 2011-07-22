@@ -14,7 +14,7 @@ namespace SVN
         rw
     }
 
-    public sealed class SVNAuthorization : IAuthorization, IDisposable
+    public sealed class SVNAuthorization : IAuthorizationInstance, IDisposable
     {
         private readonly StringBuilder _groups;
         private readonly Dictionary<String, StringBuilder> _repositories;
@@ -46,16 +46,6 @@ namespace SVN
             if (!_repositories.ContainsKey(repoName))
                 _repositories.Add(repoName, CreateRepository(repoName));
             AddGroupToRepo(_repositories[repoName], groupName, privileges.ToString());
-        }
-
-        public void CreateGroup(String groupName, IEnumerable<String> usersGroup)
-        {
-            _groups.AppendFormat("{0} =", groupName);
-
-            foreach (var user in usersGroup)
-                _groups.AppendFormat(" {0},", user);
-
-            _groups[_groups.Length - 1] = '\n';
         }
 
         public bool Save()
@@ -93,23 +83,33 @@ namespace SVN
 
         #region IAuthorization Members
 
-        public string GetGroupName(long structure, long container, string roleType)
+        public string GroupName(long structure, long container, string roleType)
         {
             return String.Format("{0}{1}{2}", structure, container, roleType);
         }
 
-        public string GetContainerName(long structure, long container, string workSpace)
+        public void DeleteInstance(string instanceName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string InstanceName(long structure, long container, string workSpace)
         {
             return String.Format("{0}{1}{2}", structure, container, workSpace);
         }
 
-        public void AddGroup(string container, IEnumerable<string> users)
+        public void CreateGroup(String groupName, IEnumerable<String> usersGroup)
         {
-            CreateGroup(container, users);
+            _groups.AppendFormat("{0} =", groupName);
+
+            foreach (var user in usersGroup)
+                _groups.AppendFormat(" {0},", user);
+
+            _groups[_groups.Length - 1] = '\n';
         }
 
         //TODO make this better
-        public void CreateContainer(string container)
+        public void CreateInstance(string container)
         {
             if (_repositories.ContainsKey(container))
                 throw new Exception("repositorio ja existe");
@@ -117,13 +117,13 @@ namespace SVN
             _repositories.Add(container, CreateRepository(container));
         }
 
-        public void AddGroupPermission(string container, string group, IEnumerable<string> permissions)
+        public void AddGroupPermissions(string container, string group, IEnumerable<string> permissions)
         {
             foreach (var permission in permissions)
                 AddGroupToRepo(_repositories[container], group, permission);
         }
 
-        public void AddUserPermission(string container, string user, IEnumerable<string> permissions)
+        public void AddUserPermissions(string container, string user, IEnumerable<string> permissions)
         {
             foreach (var permission in permissions)
                 AddUserToRepo(_repositories[container], user, permission);
