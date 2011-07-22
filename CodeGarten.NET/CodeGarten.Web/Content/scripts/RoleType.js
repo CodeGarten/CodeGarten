@@ -53,10 +53,29 @@ var RoleTypeView = new (function () {
         var header = $("<h1 class='ui-widget-header'/>");
 
         var stopTop = $("<a href='#' title='Block inheritance from above' class='ui-icon ui-icon-arrowthickstop-1-s ui-state-disabled'/>");
-        $(stopTop).click(function () { $(stopTop).toggleClass("ui-state-disabled"); });
-
         var stopBottom = $("<a href='#' title='Block inheritance from below' class='ui-icon ui-icon-arrowthickstop-1-n ui-state-disabled'/>");
-        $(stopBottom).click(function () { $(stopBottom).toggleClass("ui-state-disabled"); });
+
+        switch (roleType.Block) {
+            case 1:
+                {
+                    stopTop.removeClass("ui-state-disabled");
+                    break;
+                }
+            case 2:
+                {
+                    stopBottom.removeClass("ui-state-disabled");
+                    break;
+                }
+            case 3:
+                {
+                    stopTop.removeClass("ui-state-disabled");
+                    stopBottom.removeClass("ui-state-disabled");
+                }
+        }
+
+        $(stopTop).click(function () { $(stopTop).toggleClass("ui-state-disabled"); TreeController.SetRoleTypeBlock(roleType.Parent.Name, roleType.Name, !$(stopTop).hasClass("ui-state-disabled"), !$(stopBottom).hasClass("ui-state-disabled")); });
+
+        $(stopBottom).click(function () { $(stopBottom).toggleClass("ui-state-disabled"); TreeController.SetRoleTypeBlock(roleType.Parent.Name, roleType.Name, !$(stopTop).hasClass("ui-state-disabled"), !$(stopBottom).hasClass("ui-state-disabled")); });
 
         var deleteButton = $("<a href='javascript:TreeController.RemoveRoleType(\"" + roleType.Parent.Name + "\",\"" + roleType.Name + "\")' title='Delete' class='ui-icon ui-icon-trash'/>");
         var content = $("<div class='ui-widget-content'/>");

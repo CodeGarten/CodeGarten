@@ -68,6 +68,7 @@
 <div id="dialog_confirm">
 </div>
 <script type="text/javascript">
+    TreeController.Init("#containerPrototypeDesign");
     WorkspaceController.Init("#workspaceCreate", @Model.Id);
     RoleTypeView.Init("#roleTypeCreate", @Model.Id);
     RuleView.Init("#ruleCreate", @Model.Id);
@@ -121,8 +122,6 @@
     
     StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
     StructureController.init();
-    
-    TreeController.Init("#containerPrototypeDesign");
     
     $("#main").unmask();
 </script>

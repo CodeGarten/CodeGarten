@@ -17,7 +17,7 @@ namespace CodeGarten.Web.Controllers
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }) });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }), rl.BlockBarrier });
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });
@@ -59,11 +59,11 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.Role.DeleteAll(id);
 
-                //if (roles != null)
-                //    foreach (var role in roles)
-                //        dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
-                //                                    role.RoleTypeName,
-                //                                    role.Rules.Select(rule => rule.Name));
+                if (roles != null)
+                    foreach (var role in roles)
+                        dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
+                                                    role.RoleTypeName, role.RoleBarrier,
+                                                    role.Rules.Select(rule => rule.Name));
 
                 return FormValidationResponse.Ok();
             }

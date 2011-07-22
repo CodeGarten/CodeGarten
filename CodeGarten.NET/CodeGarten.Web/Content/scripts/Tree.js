@@ -6,14 +6,16 @@ function Tree(name, parent) {
     this.Childs = [];
 };
 
-function Role(cpName, wsName, roleType, rules) {
+function Role(cpName, wsName, roleTypeName, rules) {
     this.ContainerPrototypeName = cpName;
 
     this.WorkSpaceTypeName = wsName;
 
-    this.RoleType = roleType;
+    this.RoleTypeName = roleTypeName;
 
     this.Rules = rules;
+
+    this.RoleBarrier;
 };
 
 var TreeController = new (function () {
@@ -96,6 +98,20 @@ var TreeController = new (function () {
         });
     };
 
+    this.SetRoleTypeBlock = function (workspaceName, roleTypeName, blockAbove, blockBelow) {
+        var block = 0;
+
+        if (blockAbove && !blockBelow)
+            block = 1;
+        if (!blockAbove && blockBelow)
+            block = 2;
+        if (blockAbove && blockBelow)
+            block = 3;
+
+
+        TreeModel.SetRoleTypeBlock(editing.Name, workspaceName, roleTypeName, block);
+    };
+
     this.AddRule = function (workspaceName, roleTypeName, ruleName) {
         var rule = TreeModel.AddRule(editing.Name, workspaceName, roleTypeName, ruleName);
         if (rule)
@@ -128,8 +144,8 @@ var TreeController = new (function () {
             var workspace = containerPrototype.Childs[v];
             for (var i in workspace.Childs) {
                 var roleType = workspace.Childs[i];
-                var roleTypeParsed = { Name: workspace.Childs[i].Name, BlockAbove: workspace.Childs[i].BlockAbove, BlockBelow: workspace.Childs[i].BlockBelow };
-                var role = new Role(containerPrototype.Name, workspace.Name, roleTypeParsed);
+                var role = new Role(containerPrototype.Name, workspace.Name, roleType.Name);
+                role.RoleBarrier = roleType.Block;
                 var rules = [];
                 for (var j in roleType.Childs)
                     rules.push({ Name: roleType.Childs[j].Name });
@@ -169,7 +185,7 @@ var TreeModel = new (function () {
             this.AddContainerPrototype(role.ContainerPrototypeName);
 
         this.AddWorkspace(role.ContainerPrototypeName, role.WorkSpaceTypeName);
-        this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName);
+        this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.BlockBarrier);
 
         for (var v in role.Rules)
             this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.Rules[v].Name);
@@ -236,7 +252,7 @@ var TreeModel = new (function () {
         return deleted;
     };
 
-    this.AddRoleType = function (containerPrototypeName, workspaceName, roleTypeName) {
+    this.AddRoleType = function (containerPrototypeName, workspaceName, roleType, block) {
         var containerPrototype = this.GetContainerPrototype(containerPrototypeName);
         var workspace;
         for (var v in containerPrototype.Childs)
@@ -245,12 +261,14 @@ var TreeModel = new (function () {
                 break;
             }
         for (v in workspace.Childs)
-            if (workspace.Childs[v].Name == roleTypeName)
+            if (workspace.Childs[v].Name == roleType)
                 return undefined;
-        var roleType = new Tree(roleTypeName, workspace);
-        roleType.BlockAbove = roleType.BlockBelow = false;
-        workspace.Childs.push(roleType);
-        return roleType;
+
+        var roleTypeTree = new Tree(roleType, workspace);
+        roleTypeTree.Block = !block ? 0 : block;
+
+        workspace.Childs.push(roleTypeTree);
+        return roleTypeTree;
     };
 
     this.RemoveRoleType = function (containerPrototypeName, workspaceName, roleTypeName) {
@@ -264,6 +282,21 @@ var TreeModel = new (function () {
         for (v in workspace.Childs)
             if (workspace.Childs[v].Name == roleTypeName) {
                 workspace.Childs.splice(v, 1);
+                return workspace;
+            }
+    };
+
+    this.SetRoleTypeBlock = function (containerPrototypeName, workspaceName, roleTypeName, block) {
+        var containerPrototype = this.GetContainerPrototype(containerPrototypeName);
+        var workspace;
+        for (var v in containerPrototype.Childs)
+            if (containerPrototype.Childs[v].Name == workspaceName) {
+                workspace = containerPrototype.Childs[v];
+                break;
+            }
+        for (v in workspace.Childs)
+            if (workspace.Childs[v].Name == roleTypeName) {
+                workspace.Childs[v].Block = block;
                 return workspace;
             }
     };
@@ -346,13 +379,19 @@ var TreeView = new (function () {
         view = viewId;
 
         if (!ContainerPrototypeModel.GetContainerPrototypeWithParent(null))
-            $("#tree_design").slideUp();
+            $("#tree_design").slideUp(function () { Prepare(); });
+        else
+            Prepare();
 
+
+    };
+
+    var Prepare = function () {
         $(view).empty();
         $(view).append(EventController.Placeholder("Choose a container prototype from the structure to start editing.", "h2"));
         $(view).append("<div class='ContainerPrototype'/>");
         containerPrototypeTag = $(view).children(".ContainerPrototype");
-    };
+    }
 
     this.Design = function (containerPrototype) {
         $(view).fadeOut('fast', function () {

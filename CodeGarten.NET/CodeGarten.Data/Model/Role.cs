@@ -62,6 +62,8 @@ namespace CodeGarten.Data.Model
 
         public virtual ICollection<Rule> Rules { get; set; }
 
+        public int BlockBarrier { get; set; }
+
         [ForeignKey("RoleTypeName,RoleTypeStructureId")]
         public virtual RoleType RoleType { get; set; }
 

@@ -14,10 +14,6 @@ namespace CodeGarten.Web.Model
 
         public long StructureId { get; set; }
 
-        public bool BlockAbove { get; set; }
-
-        public bool BlockBelow { get; set; }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var context = new DataBaseManager();
