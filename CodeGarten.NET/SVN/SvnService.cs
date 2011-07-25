@@ -17,53 +17,51 @@ namespace SVN
     [Export(typeof (Service))]
     public class SvnService : Service
     {
-        private bool _isInstaled;
         private readonly string _filesPath;
         private readonly string _authFileName;
-
-        public SvnService() : base("Svn")
+        
+        public SvnService()
+            : base(new ServiceModel("Svn", "System Version Control", new []{SVNPrivileges.r.ToString(),SVNPrivileges.rw.ToString()}))
         {
             // put this in app.config file
             _filesPath = Path.Combine(PathService, "etc");
             Directory.CreateDirectory(_filesPath);
             _authFileName = "auth_file";
-
-            _isInstaled = false;
         }
 
         #region  Service Installer
 
-        public override void OnServiceInstall()
-        {
-            //TODO service api
-            using (var databaseManager = new DataBaseManager())
-            {
-                databaseManager.Service.Create(
-                    new ServiceView()
-                        {
-                            Name = Name
-                        },
-                    new string[]
-                        {
-                            SVNPrivileges.r.ToString(),
-                            SVNPrivileges.rw.ToString()
-                        }
-                    );
+        //public override void OnServiceInstall()
+        //{
+        //    //TODO service api
+        //    using (var databaseManager = new DataBaseManager())
+        //    {
+        //        databaseManager.Service.Create(
+        //            new ServiceView()
+        //                {
+        //                    Name = Name
+        //                },
+        //            new string[]
+        //                {
+        //                    SVNPrivileges.r.ToString(),
+        //                    SVNPrivileges.rw.ToString()
+        //                }
+        //            );
 
-                _isInstaled = true;
-            }
-        }
+        //        _isInstaled = true;
+        //    }
+        //}
 
-        public override bool IsInstaled
-        {
-            get
-            {
-                //TODO service api
-                if (_isInstaled) return true;
-                using (var dataBaseManager = new DataBaseManager())
-                    return dataBaseManager.Service.Get(Name) != null;
-            }
-        }
+        //public override bool IsInstaled
+        //{
+        //    get
+        //    {
+        //        //TODO service api
+        //        if (_isInstaled) return true;
+        //        using (var dataBaseManager = new DataBaseManager())
+        //            return dataBaseManager.Service.Get(Name) != null;
+        //    }
+        //}
 
         #endregion
 
@@ -79,83 +77,81 @@ namespace SVN
 
         #region ServiceBuilder Methods
 
-        // Event args need to be change
-        // make timespan to rewrite the file
-        private void OnUserEnroll(object sender, EventArgs e)
+        private void OnUserEnroll(object sender, EnrollEventArgs e)
         {
-            using (var dataBaseManager = new DataBaseManager())
+            //using (var dataBaseManager = new DataBaseManager())
+            //{
+            //    var filePath = Path.Combine(_filesPath, String.Format("~{0}.tmp", _authFileName));
+
+            //    var svnAuthorization = new SVNAuthorization(filePath);
+
+            //    dataBaseManager.Authorization.CreateServiceAuthorizationStruct(svnAuthorization, Name);
+
+            //    OverrideFile(filePath, Path.Combine(_filesPath, _authFileName));
+            //}
+
+            using (var svnAuthorization = new SVNAuthorization(_filesPath, _authFileName))
             {
-                var filePath = Path.Combine(_filesPath, String.Format("~{0}.tmp", _authFileName));
-
-                var svnAuthorization = new SVNAuthorization(filePath);
-
-                dataBaseManager.Authorization.CreateServiceAuthorizationStruct(svnAuthorization, Name);
-
-                OverrideFile(filePath, Path.Combine(_filesPath, _authFileName));
+                //foreach (var VARIABLE in e.Enroll)
+                //{
+                    
+                //}
+                //var groupName = e.  .UniqueGroupName(role);
+                //svnAuthorization.CreateGroup();
             }
         }
 
-        //Can be a extension method of File
-        public static void OverrideFile(string sourceFileName, string destFileName)
-        {
-            if (File.Exists(destFileName))
-            {
-                do
-                {
-                    try
-                    {
-                        File.Delete(destFileName);
-                        break;
-                    }
-                    catch (IOException e) // IF the file is in use
-                    {
-                    }
-                } while (true);
-            }
+        
+        //public static void OverrideFile(string sourceFileName, string destFileName)
+        //{
+        //    if (File.Exists(destFileName))
+        //    {
+        //        do
+        //        {
+        //            try
+        //            {
+        //                File.Delete(destFileName);
+        //                break;
+        //            }
+        //            catch (IOException e) // IF the file is in use
+        //            {
+        //            }
+        //        } while (true);
+        //    }
 
-            File.Move(sourceFileName, destFileName);
-        }
+        //    File.Move(sourceFileName, destFileName);
+        //}
 
-        // need to create a logger
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            //if (!e.Services.ContainsKey(Name)) return;
             
-            //var workspacesType = e.Services[Name];
+            //TODO organizar isto
+            var pathRepo = Path.Combine(PathService, "repositories");
 
-            //foreach (var workSpaceTypeView in workspacesType)
-            //{
-            //    var pathRepo = Path.Combine(PathService, "repositories");
-            //    //TODO AuthorizationManager Create the name
-            //    var repoName = String.Format("{0}{1}{2}", e.Strucuture, e.Container.Id, workSpaceTypeView.Name);
-
-            //    var repository = SVNRepositoryManager.Create(pathRepo, repoName);
-            //    if (repository == null)
-            //        continue; //Servicelogger;
-            //    if (!repository.Initialize())
-            //        continue; //Servicelogger;
-            //}
-            
-            foreach (var workSpaceType in e.Container.ContainerPrototype.WorkSpaceTypes)
+            using (var svnAuthorization = new SVNAuthorization(_filesPath, _authFileName))
             {
-                //TODO organizar isto
-                var pathRepo = Path.Combine(PathService, "repositories");
-                
-                var instanceName = e.Container.UniqueInstanceName(workSpaceType);
-
-                var repository = SVNRepositoryManager.Create(pathRepo, instanceName);
-                if (repository == null)
-                    continue; //TODO Servicelogger;
-                if (!repository.Initialize())
-                    continue; //TODO Servicelogger;
-
-                foreach (var role in workSpaceType.Roles.Where(r => r.ContainerPrototypeName == e.Container.ContainerPrototype.Name))
+                foreach (var workSpaceType in e.Container.ContainerPrototype.WorkSpaceTypes)
                 {
-                    var filePath = Path.Combine(_filesPath, String.Format("~{0}.tmp", _authFileName));
+                    var instanceName = e.Container.UniqueInstanceName(workSpaceType);
 
-                    var svnAuthorization = new SVNAuthorization(filePath);
+                    var repository = SVNRepositoryManager.Create(pathRepo, instanceName);
+                    if (repository == null)
+                        continue; //TODO Servicelogger;
+                    if (!repository.Initialize())
+                        continue; //TODO Servicelogger;
 
-                    
+                    var instance = svnAuthorization.CreateInstance(instanceName);
+                    foreach (var role in e.Container.ContainerPrototype.Roles)
+                    {
+                        var groupName = e.Container.UniqueGroupName(role);
+                        foreach (var rule in role.Rules)
+                        {
+                            var permissions = rule.Permissions.Where(p => p.ServiceName == Name).Select(p => p.Name);
+                            foreach (var permission in permissions)
+                                instance.AddGroupPermission(groupName, permission);
+                        }
+                    }
+
                 }
             }
         }

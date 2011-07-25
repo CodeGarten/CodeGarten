@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CodeGarten.Data.Access;
+using CodeGarten.Data.ModelView;
+using CodeGarten.Service.Utils;
 
 
 namespace CodeGarten.Service
@@ -14,26 +17,47 @@ namespace CodeGarten.Service
     public abstract class Service
     {
         public string Name { get; private set; }
+        public ServiceModel ServiceModel { get; private set; }
 
         private readonly AssemblyCatalog _assemblyCatalog;
         private readonly CompositionContainer _compositionContainer;
+        private bool _isInstaled;
 
         protected String PathService { get; private set; }
 
-        protected Service(String serviceName)
+        protected Service(ServiceModel service)
         {
-            Name = serviceName;
-            PathService = Path.Combine(ServiceConfig.ServicesResourceLibLocation, serviceName);
+            Name = service.Name;
+            ServiceModel = service;
+            PathService = Path.Combine(ServiceConfig.ServicesResourceLibLocation, Name);
 
             Directory.CreateDirectory(PathService);
 
             _assemblyCatalog = new AssemblyCatalog(GetType().Assembly);
             _compositionContainer = new CompositionContainer(_assemblyCatalog);
+
+            _isInstaled = false;
         }
 
-        public abstract void OnServiceInstall();
+        public virtual void OnServiceInstall()
+        {
+            using (var databaseManager = new DataBaseManager())
+            {
+                databaseManager.Service.Create(ServiceModel.Name, ServiceModel.Description, ServiceModel.Permissions);
 
-        public abstract bool IsInstaled { get; }
+                _isInstaled = true;
+            }
+        }
+
+        public virtual bool IsInstaled
+        {
+            get
+            {
+                if (_isInstaled) return true;
+                using (var dataBaseManager = new DataBaseManager())
+                    return (_isInstaled = dataBaseManager.Service.Get(Name) != null);
+            }
+        }
 
         public virtual void OnServiceCreating(ServiceBuilder serviceBuilder)
         {

@@ -134,7 +134,7 @@ namespace CodeGarten.Data.Access
 
             _dbContext.Enrolls.Add(enroll);
 
-            InvokeOnEnrollUser(new EventArgs());
+            InvokeOnEnrollUser(new EnrollEventArgs(enroll));
 
             return true;
         }
@@ -185,7 +185,7 @@ namespace CodeGarten.Data.Access
                 {
                     _dbContext.Enrolls.Remove(enroll);
 
-                    InvokeOnDisenrollUser(new EventArgs());
+                    InvokeOnDisenrollUser(new EnrollEventArgs(enroll));
                 }
 
             return true;

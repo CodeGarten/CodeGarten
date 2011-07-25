@@ -527,12 +527,7 @@ namespace CodeGarten.Data.Tests
                 userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
 
                 #endregion
-
-                var xpto = dataBaseManager.Role.Get(structure.Id, prototypeClass.Name, workspacePublic.Name,
-                                                    roleTypeStudant.Name);
-
-                Console.Write(xpto.RoleTypeName);
-
+                
                 //AuthorizationTestes aut = new AuthorizationTestes();
                 //AuthorizationManager authorizationManager = new AuthorizationManager(dataBaseManager);
 

@@ -16,23 +16,26 @@ namespace CodeGarten.Data.Access
             _dbContext = db.DbContext;
         }
 
-        public void Create(ServiceView serviceView)
+        public void Create(string name, string description)
         {
-            if (serviceView == null) throw new ArgumentNullException("serviceView");
-
-            var service = serviceView.Convert();
+            var service = new Service()
+            {
+                Name = name,
+                Description = description
+            };
 
             _dbContext.Services.Add(service);
 
             _dbContext.SaveChanges();
         }
 
-        public void Create(ServiceView serviceView, IEnumerable<string> permissions)
+        public void Create(string name, string description, IEnumerable<string> permissions)
         {
-            if (serviceView == null) throw new ArgumentNullException("serviceView");
-            if (permissions == null) throw new ArgumentNullException("permissions");
-
-            var service = serviceView.Convert();
+            var service = new Service()
+                              {
+                                  Name = name,
+                                  Description = description
+                              };
 
             foreach (var permission in permissions)
                 service.Permissions.Add(new ServicePermission()
