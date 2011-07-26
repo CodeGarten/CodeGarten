@@ -16,7 +16,7 @@ namespace CodeGarten.Data.Access
             _dbContext = db.DbContext;
         }
 
-        public void Create(string name, string description)
+        public Service Create(string name, string description)
         {
             var service = new Service()
             {
@@ -27,9 +27,11 @@ namespace CodeGarten.Data.Access
             _dbContext.Services.Add(service);
 
             _dbContext.SaveChanges();
+
+            return service;
         }
 
-        public void Create(string name, string description, IEnumerable<string> permissions)
+        public Service Create(string name, string description, IEnumerable<string> permissions)
         {
             var service = new Service()
                               {
@@ -47,6 +49,8 @@ namespace CodeGarten.Data.Access
 
             _dbContext.Services.Add(service);
             _dbContext.SaveChanges();
+
+            return service;
         }
 
         internal static Service Get(Context db, string service)

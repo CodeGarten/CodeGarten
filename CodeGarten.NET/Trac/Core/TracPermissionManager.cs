@@ -34,6 +34,15 @@ namespace Trac
             return TracAdmin.Add(name, _envPath, stringBuilder.ToString());
         }
 
+        public bool Add(String name, params String[] privilegeses)
+        {
+            var stringBuilder = new StringBuilder(privilegeses[0]);
+            for (int i = 1; i < privilegeses.Length; ++i)
+                stringBuilder.Append(' ').Append(privilegeses[i]);
+
+            return TracAdmin.Add(name, _envPath, stringBuilder.ToString());
+        }
+
         public bool AddAll(String name)
         {
             return TracAdmin.Add(name, _envPath, "'*'");
@@ -53,6 +62,15 @@ namespace Trac
             return TracAdmin.Remove(name, _envPath, stringBuilder.ToString());
         }
 
+        public bool Remove(String name, params String[] privilegeses)
+        {
+            var stringBuilder = new StringBuilder(privilegeses[0]);
+            for (int i = 1; i < privilegeses.Length; ++i)
+                stringBuilder.Append(' ').Append(privilegeses[i]);
+
+            return TracAdmin.Remove(name, _envPath, stringBuilder.ToString());
+        }
+
         public bool RemoveAll(String name)
         {
             return TracAdmin.Remove(name, _envPath, "'*'");
@@ -66,6 +84,11 @@ namespace Trac
         public bool AddGroupUser(String userName, String groupName)
         {
             return TracAdmin.Add(userName, _envPath, groupName);
+        }
+
+        public bool RemoveGroupUser(String userName, String groupName)
+        {
+            return TracAdmin.Remove(userName, _envPath, groupName);
         }
 
         public List<String> ListGroups(String name)

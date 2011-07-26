@@ -4,6 +4,8 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CodeGarten.Service.Utils;
+using NUnit.Framework;
 
 namespace Trac
 {
@@ -152,6 +154,16 @@ namespace Trac
                                                                               );
 
             Assert.IsNull(environment);
+        }
+
+        [Test]
+        public void ShouldListEnumPrivileges()
+        {
+            var list = EnumExtensions.ToEnumerable<TracPrivileges>();
+            foreach (var tracPrivilege in list)
+            {
+                Console.WriteLine(tracPrivilege);
+            }
         }
     }
 }

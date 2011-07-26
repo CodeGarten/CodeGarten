@@ -16,7 +16,7 @@ namespace CodeGarten.Service.Utils
         [MaxLength(256)]
         public string Description { get; set; }
 
-        public ICollection<string> Permissions { get; set; }
+        public IEnumerable<string> Permissions { get; set; }
 
         //public IEnumerable<string> Permissions { get; set; }
 
@@ -28,7 +28,7 @@ namespace CodeGarten.Service.Utils
         //    Permissions = service.Permissions.Select(permission => permission.Name);
         //}
 
-        public ServiceModel (string name, string description = null, ICollection<string> permissions = null)
+        public ServiceModel (string name, string description = null, IEnumerable<string> permissions = null)
         {
             Name = name;
             Description = description;

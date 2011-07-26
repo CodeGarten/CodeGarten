@@ -31,6 +31,14 @@ namespace CodeGarten.Data.Access
             remove { _onCreateContainer -= value; }
         }
 
+        private static event EventHandler<ContainerEventArgs> _onDeleteContainer;
+
+        public static event EventHandler<ContainerEventArgs> OnDeleteContainer
+        {
+            add { _onDeleteContainer += value; }
+            remove { _onDeleteContainer -= value; }
+        }
+
         #endregion
 
         public Container Create(ContainerView containerView, long structure, long? parent)
@@ -180,6 +188,18 @@ namespace CodeGarten.Data.Access
                                 {
                                     Container = container
                                 };
+
+            var handler = _onCreateContainer;
+            if (handler != null) handler(this, eventArgs);
+        }
+
+        //TODO
+        private void InvokeOnDeleteContainer(Container container)
+        {
+            var eventArgs = new ContainerEventArgs()
+            {
+                Container = container
+            };
 
             var handler = _onCreateContainer;
             if (handler != null) handler(this, eventArgs);
