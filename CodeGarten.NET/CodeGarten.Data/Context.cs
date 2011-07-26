@@ -22,7 +22,7 @@ namespace CodeGarten.Data
             //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             Database.SetInitializer(new CodeGartenInitializer());
 
-            modelBuilder.Entity<Container>().HasRequired(c => c.ContainerPrototype).WithMany(cp => cp.Containers).
+            modelBuilder.Entity<Container>().HasRequired(c => c.Prototype).WithMany().
                 WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ContainerPrototype>().HasKey(cp => new {cp.Name, cp.StructureId});
@@ -31,6 +31,7 @@ namespace CodeGarten.Data
 
             modelBuilder.Entity<WorkSpaceType>().HasKey(wt => new {wt.Name, wt.StructureId});
             modelBuilder.Entity<WorkSpaceType>().HasRequired(wt => wt.Structure).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<WorkSpaceType>().HasMany(wst => wst.Services).WithMany();
 
             modelBuilder.Entity<ServicePermission>().HasKey(sp => new {sp.Name, sp.ServiceName});
 
@@ -39,17 +40,16 @@ namespace CodeGarten.Data
 
             modelBuilder.Entity<Rule>().HasKey(r => new {r.Name, r.StructureId});
             modelBuilder.Entity<Rule>().HasRequired(rt => rt.Structure).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Rule>().HasMany(rule => rule.Permissions).WithMany();
 
             modelBuilder.Entity<Role>().HasKey(
                 r =>
                 new
                     {
+                        r.StructureId,
                         r.ContainerPrototypeName,
-                        r.ContainerPrototypeStructureId,
                         r.RoleTypeName,
-                        r.RoleTypeStructureId,
-                        r.WorkSpaceTypeName,
-                        r.WorkSpaceTypeStructureId
+                        r.WorkSpaceTypeName
                     });
             //modelBuilder.Entity<Role>().HasRequired(r => r.ContainerPrototype).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
@@ -64,9 +64,9 @@ namespace CodeGarten.Data
                         e.UserName,
                         e.ContainerId,
                         e.RoleTypeName,
-                        e.RoleTypeStructureId
+                        e.StructureId
                     });
-            modelBuilder.Entity<Enroll>().HasRequired(e => e.RoleType).WithMany(rt => rt.Enrolls).WillCascadeOnDelete(
+            modelBuilder.Entity<Enroll>().HasRequired(e => e.RoleType).WithMany().WillCascadeOnDelete(
                 false);
         }
     }

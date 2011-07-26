@@ -6,10 +6,10 @@ namespace CodeGarten.Web.Model
     public sealed class RoleView
     {
         [Required]
-        public string RoleTypeName { get; set; }
+        public string ContainerPrototypeName { get; set; }
 
         [Required]
-        public string ContainerPrototypeName { get; set; }
+        public string RoleTypeName { get; set; }
 
         [Required]
         public string WorkSpaceTypeName { get; set; }

@@ -73,7 +73,7 @@ namespace CodeGarten.Data.Access
 
         //    _dbContext.SaveChanges();
         //}
-        public Role Get(long structureId, string containerPrototypeName, string workspaceName, string roleTypeName, string ruleName)
+        public Role Get(long structureId, string containerPrototypeName, string workspaceName, string roleTypeName)
         {
             //TODO - Por a funcionar
 
@@ -82,12 +82,12 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<Role> GetAll(long structureId)
         {
-            return _dbContext.Roles.Where(r => r.ContainerPrototypeStructureId == structureId);
+            return _dbContext.Roles.Where(r => r.StructureId == structureId);
         }
 
-        public void Delete(long structureId, string containerPrototypeName, string workSpaceTypeName, string roleTypeName, string ruleName)
+        public void Delete(long structureId, string containerPrototypeName, string workSpaceTypeName, string roleTypeName)
         {
-            _dbContext.Roles.Remove(Get(structureId, containerPrototypeName, workSpaceTypeName, roleTypeName, ruleName));
+            _dbContext.Roles.Remove(Get(structureId, containerPrototypeName, workSpaceTypeName, roleTypeName));
             _dbContext.SaveChanges();
         }
 
@@ -95,12 +95,10 @@ namespace CodeGarten.Data.Access
         {
             var role = new Role
                            {
+                               StructureId = structureId,
                                ContainerPrototypeName = containerPrototypeName,
                                WorkSpaceTypeName = workSpacetypeName,
                                RoleTypeName = roleTypeName,
-                               ContainerPrototypeStructureId = structureId,
-                               WorkSpaceTypeStructureId = structureId,
-                               RoleTypeStructureId = structureId,
                                BlockBarrier = blockBarrier
                            };
 
@@ -115,7 +113,7 @@ namespace CodeGarten.Data.Access
 
         public void DeleteAll(long structureId)
         {
-            foreach (var role in _dbContext.Roles.Where(r => r.ContainerPrototypeStructureId == structureId))
+            foreach (var role in _dbContext.Roles.Where(r => r.StructureId == structureId))
                 _dbContext.Roles.Remove(role);
 
             _dbContext.SaveChanges();

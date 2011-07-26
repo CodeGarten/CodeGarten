@@ -94,7 +94,7 @@ var RoleTypeView = new (function () {
 
         $(widget).droppable({
             activeClass: "ui-state-default",
-            hoverClass: "ui-state-hover",
+            hoverClass: "ui-state-highlight",
             accept: ".Rule",
             drop: function (event, ui) {
                 TreeController.AddRule(roleType.Parent.Name, roleType.Name, ui.draggable.text());

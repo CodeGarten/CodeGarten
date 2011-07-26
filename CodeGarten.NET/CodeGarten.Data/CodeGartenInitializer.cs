@@ -21,23 +21,23 @@ namespace CodeGarten.Data
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_cp ON dbo.ContainerPrototypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
-                                               "DELETE dbo.Containers FROM deleted, dbo.Containers WHERE deleted.Name = dbo.Containers.ContainerPrototype_Name AND deleted.StructureId = dbo.Containers.ContainerPrototype_StructureId; " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Containers FROM deleted, dbo.Containers WHERE deleted.Name = dbo.Containers.Prototype_Name AND deleted.StructureId = dbo.Containers.Prototype_StructureId; " +
                                                "WITH q AS " +
                                                "(SELECT  Name, StructureId " +
                                                "FROM    deleted UNION ALL " +
                                                "SELECT  c.Name, c.StructureId " +
                                                "FROM    q " +
                                                "JOIN    dbo.ContainerPrototypes c " +
-                                               "ON      c.Parent_Name = q.Name AND c.Parent_StructureId = q.StructureId) " +
+                                               "ON      c.ParentName = q.Name AND c.StructureId = q.StructureId) " +
                                                "DELETE dbo.ContainerPrototypes " +
                                                "WHERE EXISTS ( SELECT  Name, StructureId INTERSECT SELECT  Name, StructureId FROM    q )"
                 );
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_rt ON dbo.RoleTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RoleTypeName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
-                                               "DELETE dbo.Enrolls FROM deleted, dbo.Enrolls WHERE deleted.Name = dbo.Enrolls.RoleTypeName AND deleted.StructureId = dbo.Enrolls.RoleTypeStructureId " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RoleTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Enrolls FROM deleted, dbo.Enrolls WHERE deleted.Name = dbo.Enrolls.RoleTypeName AND deleted.StructureId = dbo.Enrolls.StructureId " +
                                                "DELETE dbo.RoleTypes FROM deleted WHERE deleted.Name = dbo.RoleTypes.Name AND deleted.StructureId = dbo.RoleTypes.StructureId"
                 );
 
@@ -49,7 +49,7 @@ namespace CodeGarten.Data
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_wst ON dbo.WorkSpaceTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.WorkSpaceTypeName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.WorkSpaceTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
                                                "DELETE dbo.WorkSpaceTypes FROM deleted WHERE deleted.Name = dbo.WorkSpaceTypes.Name AND deleted.StructureId = dbo.WorkSpaceTypes.StructureId"
                 );
 
@@ -62,7 +62,7 @@ namespace CodeGarten.Data
                                                "SELECT  c.Id " +
                                                "FROM    q " +
                                                "JOIN    dbo.Containers c " +
-                                               "ON      c.ParentContainer_Id = q.Id) " +
+                                               "ON      c.Parent_Id = q.Id) " +
                                                "DELETE FROM    dbo.Containers " +
                                                "WHERE   EXISTS ( SELECT  Id INTERSECT SELECT  Id FROM    q )"
                 );

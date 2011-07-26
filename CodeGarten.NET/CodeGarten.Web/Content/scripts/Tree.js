@@ -386,12 +386,12 @@ var TreeView = new (function () {
 
     };
 
-    var Prepare = function () {
+    var Prepare = function() {
         $(view).empty();
         $(view).append(EventController.Placeholder("Choose a container prototype from the structure to start editing.", "h2"));
         $(view).append("<div class='ContainerPrototype'/>");
         containerPrototypeTag = $(view).children(".ContainerPrototype");
-    }
+    };
 
     this.Design = function (containerPrototype) {
         $(view).fadeOut('fast', function () {

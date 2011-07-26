@@ -7,24 +7,21 @@ namespace CodeGarten.Data.Model
     {
         [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public long StructureId { get; set; }
+        public long StructureId { get; internal set; }
 
 
-        public virtual ICollection<Service> Services { get; set; }
-
-        public virtual ICollection<ContainerPrototype> ContainerPrototypes { get; set; }
+        public virtual ICollection<Service> Services { get; internal set; }
 
 
         [ForeignKey("StructureId")]
-        public virtual Structure Structure { get; set; }
+        public virtual Structure Structure { get; internal set; }
 
 
         public WorkSpaceType()
         {
             Services = new LinkedList<Service>();
-            ContainerPrototypes = new LinkedList<ContainerPrototype>();
         }
     }
 }

@@ -4,28 +4,27 @@ namespace CodeGarten.Data.Model
 {
     public class Enroll
     {
-        public string UserName { get; set; }
+        public string UserName { get; internal set; }
 
-        public long ContainerId { get; set; }
+        public long ContainerId { get; internal set; }
 
-        //public string ContainerPrototypeName { get; set; }
+        public string RoleTypeName { get; internal set; }
 
-        //public long ContainerPrototypeStructureId { get; set; }
+        public long StructureId { get; internal set; }
 
-        public string RoleTypeName { get; set; }
-
-        public long RoleTypeStructureId { get; set; }
+        [ForeignKey("StructureId")]
+        public virtual Structure Structure { get; internal set; }
 
         [Required]
         [ForeignKey("UserName")]
-        public virtual User User { get; set; }
+        public virtual User User { get; internal set; }
 
         [Required]
         [ForeignKey("ContainerId")]
-        public virtual Container Container { get; set; }
+        public virtual Container Container { get; internal set; }
 
         [Required]
-        [ForeignKey("RoleTypeName,RoleTypeStructureId")]
-        public virtual RoleType RoleType { get; set; }
+        [ForeignKey("RoleTypeName,StructureId")]
+        public virtual RoleType RoleType { get; internal set; }
     }
 }

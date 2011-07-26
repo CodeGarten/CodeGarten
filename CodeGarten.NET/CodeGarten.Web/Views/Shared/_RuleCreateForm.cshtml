@@ -7,7 +7,6 @@
     structureId = Request.RequestContext.RouteData.Values["id"]
 }, new AjaxOptions { OnSuccess = "RuleView.create.OnSuccessCallBack" }))
 {
-    @Html.ValidationSummary(true)
     <h2>
         Create rule</h2>
     <div class="editor-label">

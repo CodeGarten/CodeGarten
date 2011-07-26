@@ -75,7 +75,7 @@ var WorkspaceView = new (function () {
 
         $(widget).droppable({
             activeClass: "ui-state-default",
-            hoverClass: "ui-state-hover",
+            hoverClass: "ui-state-highlight",
             accept: ".RoleType",
             drop: function (event, ui) {
                 TreeController.AddRoleType(workspace.Name, ui.draggable.text());

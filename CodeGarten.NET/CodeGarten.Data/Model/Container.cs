@@ -5,55 +5,51 @@ namespace CodeGarten.Data.Model
 {
     public class ContainerPrototype
     {
-        [MinLength(4)]
+        [MinLength(2)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public long StructureId { get; set; }
+        public long StructureId { get; internal set; }
 
-        public virtual ContainerPrototype Parent { get; set; }
+        public string ParentName { get; internal set; }
 
-        public virtual ICollection<ContainerPrototype> Childs { get; set; }
+        [ForeignKey("ParentName, StructureId")]
+        public virtual ContainerPrototype Parent { get; internal set; }
 
-        public virtual ICollection<WorkSpaceType> WorkSpaceTypes { get; set; }
+        public virtual ICollection<ContainerPrototype> Childs { get; internal set; }
 
-        public virtual ICollection<Container> Containers { get; set; }
+        public virtual ICollection<Role> Roles { get; internal set; }
 
         [ForeignKey("StructureId")]
-        public virtual Structure Structure { get; set; }
+        public virtual Structure Structure { get; internal set; }
 
 
         public ContainerPrototype()
         {
+            Roles = new LinkedList<Role>();
             Childs = new LinkedList<ContainerPrototype>();
-            WorkSpaceTypes = new LinkedList<WorkSpaceType>();
-            Containers = new LinkedList<Container>();
         }
     }
 
     public class Container
     {
         [Key]
-        public long Id { get; set; }
+        public long Id { get; internal set; }
 
-        [MinLength(2)]
+        [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         [MaxLength(256)]
-        public string Description { get; set; }
-
-        //public string ContainerPrototypeName { get; set; }
-
-        //public long ContainerPrototypeStructureId { get; set; }
+        public string Description { get; internal set; }
 
 
-        public virtual Container ParentContainer { get; set; }
+        public virtual Container Parent { get; internal set; }
 
-        public virtual ICollection<Container> Childs { get; set; }
+        public virtual ICollection<Container> Childs { get; internal set; }
 
         [Required]
-        public virtual ContainerPrototype ContainerPrototype { get; set; }
+        public virtual ContainerPrototype Prototype { get; internal set; }
 
 
         public Container()

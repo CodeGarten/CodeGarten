@@ -10,7 +10,6 @@
     structureId = Request.RequestContext.RouteData.Values["id"]
 }, new AjaxOptions { OnSuccess = "WorkspaceView.create.OnSuccessCallBack" }))
 {
-    @Html.ValidationSummary(true)
     <div class="editor-label">
         @Html.LabelFor(model => model.Name)
     </div>

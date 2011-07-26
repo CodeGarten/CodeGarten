@@ -3,8 +3,6 @@
                             new { controller = "ContainerPrototype", action = "Create", structureId = Request.RequestContext.RouteData.Values["id"] },
                             new AjaxOptions() { OnSuccess = "StructureView.ContainerPrototypeFormDialog.OnSuccessCallBack" }))
 {
-    @Html.ValidationSummary(true)
-    
     <h2>
         Create container prototype
     </h2>

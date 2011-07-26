@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CodeGarten.Data.Access;
 
 namespace CodeGarten.Data.Model
 {
@@ -29,14 +28,6 @@ namespace CodeGarten.Data.Model
             Structures = new LinkedList<Structure>();
 
             Enrolls = new LinkedList<Enroll>();
-        }
-
-        public User(string name, string password, string email)
-            : this()
-        {
-            Name = name;
-            Password = AuthenticationManager.EncryptPassword(password);
-            Email = email;
         }
     }
 }

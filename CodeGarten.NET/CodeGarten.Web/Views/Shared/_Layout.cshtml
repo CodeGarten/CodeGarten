@@ -17,12 +17,12 @@
             @{
                 if (!User.Identity.IsAuthenticated)
                 {
-                @Html.ActionLink("Login", "Index", "Login") <text>|</text>
+                @Html.ActionLink("Login", "Index", "Login")
                 @Html.ActionLink("Signup", "Index", "Signup")
                 }
                 else
                 {
-                @Html.ActionLink(User.Identity.Name, "Index", "User") <text>|</text>
+                @Html.ActionLink(User.Identity.Name, "Index", "User")
                 @Html.ActionLink("Logout", "Logout", "Login")
                 }
             }
@@ -35,8 +35,13 @@
         <p>
             CodeGarten 2011
             <br />
-            codegarten.1011@gmail.com
+            <a href="mailto:codegarten.1011@gmail.com">Contact Us</a>
         </p>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[type=submit], input[type=button]").button();
+        });
+    </script>
 </body>
 </html>

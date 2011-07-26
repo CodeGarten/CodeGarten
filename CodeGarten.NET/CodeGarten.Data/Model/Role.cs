@@ -7,37 +7,27 @@ namespace CodeGarten.Data.Model
     {
         [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public long StructureId { get; set; }
-
-
-        public virtual ICollection<Enroll> Enrolls { get; set; }
+        public long StructureId { get; internal set; }
 
         [ForeignKey("StructureId")]
-        public virtual Structure Structure { get; set; }
-
-
-        public RoleType()
-        {
-            Enrolls = new LinkedList<Enroll>();
-        }
+        public virtual Structure Structure { get; internal set; }
     }
 
     public class Rule
     {
-        [RegularExpression(@"[a-zA-Z0-9_]*")]
         [MinLength(4)]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public long StructureId { get; set; }
+        public long StructureId { get; internal set; }
 
         [ForeignKey("StructureId")]
-        public virtual Structure Structure { get; set; }
+        public virtual Structure Structure { get; internal set; }
 
 
-        public virtual ICollection<ServicePermission> Permissions { get; set; }
+        public virtual ICollection<ServicePermission> Permissions { get; internal set; }
 
 
         public Rule()
@@ -48,30 +38,29 @@ namespace CodeGarten.Data.Model
 
     public class Role
     {
-        public string RoleTypeName { get; set; }
+        public long StructureId { get; internal set; }
 
-        public long RoleTypeStructureId { get; set; }
+        public string RoleTypeName { get; internal set; }
 
-        public string ContainerPrototypeName { get; set; }
+        public string ContainerPrototypeName { get; internal set; }
 
-        public long ContainerPrototypeStructureId { get; set; }
+        public string WorkSpaceTypeName { get; internal set; }
 
-        public string WorkSpaceTypeName { get; set; }
+        public virtual ICollection<Rule> Rules { get; internal set; }
 
-        public long WorkSpaceTypeStructureId { get; set; }
+        public int BlockBarrier { get; internal set; }
 
-        public virtual ICollection<Rule> Rules { get; set; }
+        [ForeignKey("StructureId")]
+        public virtual Structure Structure { get; internal set; }
 
-        public int BlockBarrier { get; set; }
+        [ForeignKey("RoleTypeName,StructureId")]
+        public virtual RoleType RoleType { get; internal set; }
 
-        [ForeignKey("RoleTypeName,RoleTypeStructureId")]
-        public virtual RoleType RoleType { get; set; }
+        [ForeignKey("ContainerPrototypeName,StructureId")]
+        public virtual ContainerPrototype ContainerPrototype { get; internal set; }
 
-        [ForeignKey("ContainerPrototypeName,ContainerPrototypeStructureId")]
-        public virtual ContainerPrototype ContainerPrototype { get; set; }
-
-        [ForeignKey("WorkSpaceTypeName,WorkSpaceTypeStructureId")]
-        public virtual WorkSpaceType WorkSpaceType { get; set; }
+        [ForeignKey("WorkSpaceTypeName,StructureId")]
+        public virtual WorkSpaceType WorkSpaceType { get; internal set; }
 
         public Role()
         {

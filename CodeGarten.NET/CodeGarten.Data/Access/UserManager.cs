@@ -109,7 +109,7 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<Enroll> Enrolls(string user, long structureId)
         {
-            return _dbContext.Enrolls.Where(e => e.UserName == user && e.RoleTypeStructureId == structureId);
+            return _dbContext.Enrolls.Where(e => e.UserName == user && e.StructureId == structureId);
         }
 
         public void Leave(string name, long containerId)

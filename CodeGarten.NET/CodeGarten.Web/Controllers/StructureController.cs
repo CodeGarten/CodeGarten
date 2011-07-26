@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.Model;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
 using CodeGarten.Web.Model;

@@ -6,7 +6,7 @@ namespace CodeGarten.Data.Model
 {
     public class Structure
     {
-        public long Id { get; set; }
+        public long Id { get; internal set; }
 
         [MinLength(4)]
         [MaxLength(64)]
@@ -27,18 +27,6 @@ namespace CodeGarten.Data.Model
         public Structure()
         {
             Administrators = new LinkedList<User>();
-        }
-
-        public Structure(string name, string description, bool @public, User administrator):this()
-        {
-            Name = name;
-            Description = description;
-            Public = @public;
-            Developing = true;
-
-            CreatedOn = DateTime.Now;
-
-            Administrators.Add(administrator);
         }
     }
 }

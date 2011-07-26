@@ -10,7 +10,7 @@ namespace CodeGarten.Web.Controllers
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Home");
 
             var user = new UserView();
 
@@ -43,7 +43,7 @@ namespace CodeGarten.Web.Controllers
                 if (returnUrl != null)
                     return Redirect(returnUrl);
 
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Home");
             }
             catch
             {
