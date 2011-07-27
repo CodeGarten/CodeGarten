@@ -16,7 +16,7 @@
         }
     </ul>
 
-    @if (@ViewBag.Enroll != null)
+    @if (@ViewBag.Enroll != null && !ViewBag.Enroll.Inherited)
     {
         @Html.ActionLink("Leave this project", "Leave", "Container", new { structureId = Model.ContainerPrototype.StructureId, containerId = Model.Id, roleTypeName = @ViewBag.Enroll.RoleTypeName }, null);
     }

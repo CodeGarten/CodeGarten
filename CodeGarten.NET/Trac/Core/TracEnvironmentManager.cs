@@ -26,7 +26,7 @@ namespace Trac
 
         public static bool Delete(String parentPath, String envName)
         {
-            var path = FormatEnvironmentPath(parentPath, envName)
+            var path = FormatEnvironmentPath(parentPath, envName);
             if (!Directory.Exists(path))
                 return false;
             Directory.Delete(path, true);

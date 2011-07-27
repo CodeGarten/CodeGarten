@@ -81,12 +81,17 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Leave(long structureId, long containerId, string roleTypeName)
         {
-            var enroll = _context.Enrolls.Find(User.Identity.Name, containerId, roleTypeName, structureId);
+            try
+            {
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            _context.Entry(enroll).State = EntityState.Deleted;
-            _context.SaveChanges();
+                dataBaseManager.User.Disenroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-            return RedirectToAction("Index", "Structure", new {id = structureId});
+                return RedirectToAction("Index", "User");
+            }catch
+            {
+                return RedirectToAction("Index", "Container", new{id = containerId});
+            }
         }
 
         public ActionResult Enroll(long structureId, long containerId)

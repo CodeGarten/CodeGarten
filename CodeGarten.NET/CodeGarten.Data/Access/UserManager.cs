@@ -8,12 +8,14 @@ namespace CodeGarten.Data.Access
 
     public class EnrollEventArgs : EventArgs
     {
-        public EnrollEventArgs(Enroll enroll)
+        public EnrollEventArgs(Enroll enroll, Container container)
         {
             Enroll = enroll;
+            Container = container;
         }
 
         public Enroll Enroll { get; private set; }
+        public Container Container { get; private set; }
     }
 
     public class UserEventArgs : EventArgs
@@ -79,9 +81,8 @@ namespace CodeGarten.Data.Access
 
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
-            
-            //TODO view Event Args
-            InvokeOnCreateUser(new UserEventArgs(user));
+                       
+            InvokeOnCreateUser(user);
         }
 
         public void Delete(string user)
@@ -134,7 +135,7 @@ namespace CodeGarten.Data.Access
 
             _dbContext.Enrolls.Add(enroll);
 
-            InvokeOnEnrollUser(new EnrollEventArgs(enroll));
+            InvokeOnEnrollUser(enroll);
 
             return true;
         }
@@ -185,7 +186,7 @@ namespace CodeGarten.Data.Access
                 {
                     _dbContext.Enrolls.Remove(enroll);
 
-                    InvokeOnDisenrollUser(new EnrollEventArgs(enroll));
+                    InvokeOnDisenrollUser(enroll, container);
                 }
 
             return true;
@@ -244,8 +245,9 @@ namespace CodeGarten.Data.Access
             if (enroll.InheritedCount == 0)
             {
                 _dbContext.Enrolls.Remove(enroll);
-
-                InvokeOnDisenrollUser(new EnrollEventArgs(enroll));
+                
+                InvokeOnDisenrollUser(enroll, containerObj);
+                
             }else
                 enroll.Inherited = true;
 
@@ -297,7 +299,7 @@ namespace CodeGarten.Data.Access
 
                 _dbContext.Enrolls.Add(enroll);
 
-                InvokeOnEnrollUser(new EnrollEventArgs(enroll));
+                InvokeOnEnrollUser(enroll);
             }
 
             InheritedEnrollChilds(userObj, containerObj, roleTypeObj);    
@@ -318,29 +320,29 @@ namespace CodeGarten.Data.Access
         }
 
         #region InvokeEvents
-        //TODO remove handler
-        private void InvokeOnCreateUser(UserEventArgs e)
+        
+        private void InvokeOnCreateUser(User user)
         {
-            var handler = _onCreateUser;
-            if (handler != null) handler(this, e);
+            var e = new UserEventArgs(user);
+            if (_onCreateUser != null) _onCreateUser(this, e);
         }
 
-        private void InvokeOnRemoveUser(UserEventArgs e)
+        private void InvokeOnRemoveUser(User user)
         {
-            var handler = _onRemoveUser;
-            if (handler != null) handler(this, e);
+            var e = new UserEventArgs(user);
+            if (_onRemoveUser != null) _onRemoveUser(this, e);
         }
 
-        private void InvokeOnEnrollUser(EnrollEventArgs e)
+        private void InvokeOnEnrollUser(Enroll enroll)
         {
-            var handler = _onEnrollUser;
-            if (handler != null) handler(this, e);
+            var e = new EnrollEventArgs(enroll, enroll.Container);
+            if (_onEnrollUser != null) _onEnrollUser(this, e);
         }
 
-        private void InvokeOnDisenrollUser(EnrollEventArgs e)
+        private void InvokeOnDisenrollUser(Enroll enroll, Container container)
         {
-            var handler = _onDisenrollUser;
-            if (handler != null) handler(this, e);
+            var e = new EnrollEventArgs(enroll, container);
+            if (_onDisenrollUser != null) _onDisenrollUser(this, e);
         }
 
         #endregion

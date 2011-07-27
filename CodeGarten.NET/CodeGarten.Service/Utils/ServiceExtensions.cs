@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeGarten.Data.Access;
 using CodeGarten.Data.Model;
 
 namespace CodeGarten.Service.Utils
@@ -25,5 +26,18 @@ namespace CodeGarten.Service.Utils
         {
             return Enum.GetValues(typeof(T)).Cast<T>().Select(t => t.ToString());
         }   
+    }
+
+    public static class DataAccessExtensions
+    {
+        public static IEnumerable<WorkSpaceType> WorkSpaceTypeWithService(this Container container, string serviceName)
+        {
+            return container.ContainerPrototype.WorkSpaceTypes.Where(
+                                                                    workSpaceType =>
+                                                                    workSpaceType.Services.Where(
+                                                                                            s =>
+                                                                                            s.Name == serviceName
+                                                                                            ).Any());
+        }
     }
 }

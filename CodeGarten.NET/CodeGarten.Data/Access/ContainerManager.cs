@@ -9,7 +9,12 @@ namespace CodeGarten.Data.Access
 
     public class ContainerEventArgs : EventArgs
     {
-        public Container Container { get; set; }
+        public ContainerEventArgs(Container container)
+        {
+            Container = container;
+        }
+
+        public Container Container { get; private set; }
     }
 
     public sealed class ContainerManager
@@ -184,10 +189,7 @@ namespace CodeGarten.Data.Access
 
         private void InvokeOnCreateContainer(Container container)
         {
-            var eventArgs = new ContainerEventArgs()
-                                {
-                                    Container = container
-                                };
+            var eventArgs = new ContainerEventArgs(container);
 
             var handler = _onCreateContainer;
             if (handler != null) handler(this, eventArgs);
@@ -196,10 +198,7 @@ namespace CodeGarten.Data.Access
         //TODO
         private void InvokeOnDeleteContainer(Container container)
         {
-            var eventArgs = new ContainerEventArgs()
-            {
-                Container = container
-            };
+            var eventArgs = new ContainerEventArgs(container);
 
             var handler = _onCreateContainer;
             if (handler != null) handler(this, eventArgs);

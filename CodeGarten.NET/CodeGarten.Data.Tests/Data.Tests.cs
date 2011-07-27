@@ -79,6 +79,8 @@ namespace CodeGarten.Data.Tests
                 
                 var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] {"r", "rw"});
 
+                var serviceTrac = serviceManager.Create("Trac", "WIKI system", new []{"TRAC_ADMIN"});
+
                 #endregion
 
                 #region CREATE_USERS
@@ -164,14 +166,14 @@ namespace CodeGarten.Data.Tests
                                               Name = "public"
                                           };
 
-                workspaceType.Create(workspacePublic, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+                workspaceType.Create(workspacePublic, structure.Id, new[] {serviceGit.Name, serviceSvn.Name, serviceTrac.Name});
 
                 var workspacePrivate = new WorkSpaceTypeView()
                                            {
                                                Name = "private"
                                            };
 
-                workspaceType.Create(workspacePrivate, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+                workspaceType.Create(workspacePrivate, structure.Id, new[] {serviceGit.Name, serviceSvn.Name, serviceTrac.Name});
 
                 #endregion
 
@@ -262,7 +264,8 @@ namespace CodeGarten.Data.Tests
                 rule.Create(ruleReaders, structure.Id, new[]
                                                            {
                                                                new KeyValuePair<string, string>(serviceGit.Name, "r"),
-                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r")
+                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceTrac.Name, "TRAC_ADMIN")
                                                            });
 
                 var ruleReadersAndWriters = new RuleView()
@@ -277,7 +280,10 @@ namespace CodeGarten.Data.Tests
                                                                              "rw"),
                                                                          new KeyValuePair<string, string>(
                                                                              serviceSvn.Name,
-                                                                             "rw")
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceTrac.Name,
+                                                                             "TRAC_ADMIN")
                                                                      });
 
                 #endregion
@@ -490,8 +496,6 @@ namespace CodeGarten.Data.Tests
 
                 #endregion
 
-                dataBaseManager.Container.AddPassword(structure.Id, containerSdG1.Id, roleTypeStudant.Name, "SD_LED");
-
                 #region ENROLL_USER
 
                 userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
@@ -508,8 +512,8 @@ namespace CodeGarten.Data.Tests
                 userManager.Enroll(userRicardo.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
                 userManager.Enroll(userGeada.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
 
-                userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name, "SD_LED");
-                userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name, "SD_LED");
+                userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
+                userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
 
                 userManager.Enroll(userGeada.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
                 userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
@@ -1430,5 +1434,6 @@ namespace CodeGarten.Data.Tests
             //    authorizationManager.CreateServiceAuthorizationStruct(aut, serviceSvn.Name);
             //}
         }
+
     }
 }

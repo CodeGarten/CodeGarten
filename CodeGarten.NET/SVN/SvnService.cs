@@ -46,12 +46,7 @@ namespace SVN
         {
             using (var svnAuthorization = new SVNAuthorization(_filesPath, _authFileName))
             {
-                //foreach (var VARIABLE in e.Enroll)
-                //{
-
-                //}
-                //var groupName = e.  .UniqueGroupName(role);
-                //svnAuthorization.CreateGroup();
+                
             }
         }
 
