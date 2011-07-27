@@ -146,7 +146,7 @@ var TreeController = new (function () {
             for (var i in workspace.Childs) {
                 var roleType = workspace.Childs[i];
                 role = new Role(containerPrototype.Name, workspace.Name, roleType.Name);
-                role.RoleBarrier = roleType.Block;
+                role.RoleBarrier = roleType.RoleBarrier;
                 var rules = [];
                 for (var j in roleType.Childs)
                     rules.push({ Name: roleType.Childs[j].Name });
@@ -191,7 +191,7 @@ var TreeModel = new (function () {
     };
 
     this.Treefy = function (role) {
-        this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.BlockBarrier);
+        this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.RoleBarrier);
 
         for (var v in role.Rules)
             this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.Rules[v].Name);
@@ -271,7 +271,7 @@ var TreeModel = new (function () {
                 return undefined;
 
         var roleTypeTree = new Tree(roleType, workspace);
-        roleTypeTree.Block = !block ? 0 : block;
+        roleTypeTree.RoleBarrier = !block ? 0 : block;
 
         workspace.Childs.push(roleTypeTree);
         return roleTypeTree;
@@ -302,7 +302,7 @@ var TreeModel = new (function () {
             }
         for (v in workspace.Childs)
             if (workspace.Childs[v].Name == roleTypeName) {
-                workspace.Childs[v].Block = block;
+                workspace.Childs[v].RoleBarrier = block;
                 return workspace;
             }
     };

@@ -100,5 +100,10 @@ namespace CodeGarten.Data.Access
 
             return _dbContext.SaveChanges() != 0;
         }
+
+        public IQueryable<Service> GetAll()
+        {
+            return _dbContext.Services;
+        }
     }
 }

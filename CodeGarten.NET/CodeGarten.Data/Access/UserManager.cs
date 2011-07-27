@@ -337,5 +337,10 @@ namespace CodeGarten.Data.Access
         }
 
         #endregion
+
+        public IQueryable<User> GetAll()
+        {
+            return _dbContext.Users;
+        }
     }
 }

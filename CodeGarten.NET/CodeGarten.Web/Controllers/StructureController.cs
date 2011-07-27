@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
 using CodeGarten.Web.Model;
@@ -18,7 +19,7 @@ namespace CodeGarten.Web.Controllers
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }), rl.BlockBarrier });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }), rl.RoleBarrier });
             var Bindings =
                 dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => cp.Bindings).Select(
                     bl => bl.Select(b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName })).SingleOrDefault();
@@ -71,8 +72,9 @@ namespace CodeGarten.Web.Controllers
 
                         if (!string.IsNullOrEmpty(role.RoleTypeName))
                             dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
-                                                        role.RoleTypeName, role.RoleBarrier,
-                                                        role.Rules == null ? null : role.Rules.Select(rule => rule.Name));
+                                                        role.RoleTypeName,
+                                                        role.Rules == null ? null : role.Rules.Select(rule => rule.Name),
+                                                        (RoleBarrier) role.RoleBarrier);
                     }
 
                 return FormValidationResponse.Ok();
