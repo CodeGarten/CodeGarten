@@ -1,5 +1,46 @@
 ﻿@{
     ViewBag.Title = "Structured collaborative development";
 }
-<h2>
-        Welcome to CodeGarten</h2>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="ui-widget">
+        <div class="ui-widget-header ui-corner-top ui-state-default">
+            <h2>
+                Welcome to CodeGarten</h2>
+        </div>
+        <div class="ui-widget-content">
+            <div id="auth_user_actions">
+                <div class="action ui-corner-all ui-state-default">
+                    <img src="http://www.iconesgratis.net/imagens/Vista_1821_Search.png" alt="Search" />
+                    <div>
+                        Search</div>
+                </div>
+                <div class="action ui-corner-all ui-state-default">
+                    <img src="@Url.Content("~/Content/themes/smoothness/images/Structures.png")" alt="Structures" onclick='javascript:document.location = @Url.Action("Index","Structure")/' />
+                    <div>
+                        My Structures</div>
+                </div>
+                <div class="action ui-corner-all ui-state-default">
+                    <img src="http://cdn1.iconfinder.com/data/icons/iVista2/256/User.png" alt="Profile" />
+                    <div>
+                        Profile</div>
+                </div>
+                <div class="action ui-corner-all ui-state-default">
+                    <img src="http://www.iconesgratis.net/imagens/aplicativos_1045_Help.png" alt="Search" />
+                    <div>
+                        Help</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>
+        Under construction...</p>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".action").hover(function () { $(this).toggleClass("ui-state-default").toggleClass("ui-state-highlight"); });
+    });
+</script>

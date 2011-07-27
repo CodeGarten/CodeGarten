@@ -1,0 +1,12 @@
+﻿@using CodeGarten.Data.Model
+@model IEnumerable<Structure>
+@{
+    ViewBag.Title = "Structures";
+}
+
+<h2>Structures</h2>
+
+@foreach (var structure in Model)
+{
+    @Html.ActionLink(structure.Name, "Index", "Structure", new { id = structure.Id }, null)
+}

@@ -4,7 +4,7 @@
     width: 920px;
 }
 
-body{ font: 62.5% "Trebuchet MS", sans-serif;}
+body{ font: 62.5% "Trebuchet MS", sans-serif;line-height: 1.4;}
 		
 h1 { padding: .2em; margin: 0;}
 
@@ -41,12 +41,13 @@ h1 { padding: .2em; margin: 0;}
 {
     border-top: 1px solid #CCCCCC;
     padding-bottom: 10px;
-    padding-top: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-top: 20px;
     text-align: center;
     line-height:normal;
-    font-size: .9em;
     background-color: #F1F1F1;
-    width: 100%;
+    width: inherit;
     margin-top: 20px;
 }
 
@@ -62,7 +63,10 @@ h1 { padding: .2em; margin: 0;}
     height: 90px;
     background-color: #F1F1F1;
     margin-bottom: 20px;
-    width: 100%;
+    width: inherit;
+    margin-top: -8px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 #top > div
@@ -114,6 +118,26 @@ h1 { padding: .2em; margin: 0;}
 .container_header .toggle { margin-top:2px; float: right; }
 			
 .container_header > a { cursor: pointer;}
+
+
+/* Login form
+-----------------------------------------------------------*/
+#login_form input[type=text], #login_form input[type=password] { text-align: center;font-size: 150%;}
+
+/* Signup form
+-----------------------------------------------------------*/
+#signup_form input[type=text], #signup_form input[type=password] { text-align: center;}
+
+/* top user actions
+-----------------------------------------------------------*/
+#user_actions { float: right;padding: 10px;}
+
+/* auth user actions
+-----------------------------------------------------------*/
+#auth_user_actions { text-align: center;}
+.action { display: inline-block;margin: 10px;text-align: center;font-size: large;padding-left: 20px;padding-right: 20px; }
+.action > img { width: 125px;height: 125px;}
+.action:hover { cursor: pointer;}
 
 
 /* Styles for validation helpers

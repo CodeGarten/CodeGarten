@@ -89,9 +89,12 @@ namespace CodeGarten.Data.Access
             return structure;
         }
 
-        public IQueryable<Structure> GetAll()
+        public IQueryable<Structure> GetAll(string username)
         {
-            return _dbContext.Structures;
+            if (username == null)
+                return _dbContext.Structures;
+
+            return _dbContext.Structures.Where(s => s.Administrators.Select(a => a.Name).Contains(username));
         }
 
         public Structure Get(long id)
@@ -109,7 +112,7 @@ namespace CodeGarten.Data.Access
         {
             var structure = Get(id);
             var cps = _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == id);
-            
+
 
             if (cps.Count() == 0)
                 throw new InvalidOperationException("A structure must contain at least one container prototype.");
@@ -127,8 +130,8 @@ namespace CodeGarten.Data.Access
                             String.Format(
                                 "A workspace must contain at least one role type. Error occured at container prototype '{0}', workspace '{1}'.",
                                 binding.ContainerPrototypeName, binding.WorkSpaceTypeName));
-                    foreach(var role in binding.Roles)
-                        if(role.Rules.Count == 0)
+                    foreach (var role in binding.Roles)
+                        if (role.Rules.Count == 0)
                             throw new InvalidOperationException(
                             String.Format(
                                 "A role type must contain at least one rule. Error occured at container prototype '{0}', workspace '{1}', role type '{2}'.",

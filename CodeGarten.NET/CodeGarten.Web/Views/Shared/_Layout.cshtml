@@ -13,18 +13,21 @@
 <body>
     <div id="top">
         <div>
-            @Html.ActionLink("CodeGarten", "Index", "Home") -
+            @Html.ActionLink("CodeGarten", "Index", "Home")
             @{
-                if (!User.Identity.IsAuthenticated)
-                {
-                @Html.ActionLink("Login", "Index", "Login")
-                @Html.ActionLink("Signup", "Index", "Signup")
-                }
-                else
-                {
-                @Html.ActionLink(User.Identity.Name, "Index", "User")
-                @Html.ActionLink("Logout", "Logout", "Login")
-                }
+                <div id="user_actions" class="ui-widget-header ui-state-default ui-corner-bottom">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                
+                        @Html.ActionLink("Login", "Index", "Login")
+                        @Html.ActionLink("Signup", "Index", "Signup")
+                    }
+                    else
+                    {
+                        @Html.ActionLink(User.Identity.Name, "Index", "User")
+                        @Html.ActionLink("Logout", "Logout", "Login")
+                    }
+                </div>
             }
         </div>
     </div>
@@ -41,6 +44,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("input[type=submit], input[type=button]").button();
+            $("#user_actions").children().button();
         });
     </script>
 </body>

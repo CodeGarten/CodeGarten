@@ -12,6 +12,7 @@ namespace CodeGarten.Web.Controllers
     [Authorize]
     public sealed class StructureController : Controller
     {
+        [StructureOwner("id")]
         public JsonResult Synchronization(long id)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
@@ -83,16 +84,22 @@ namespace CodeGarten.Web.Controllers
             }
         }
 
-        public ActionResult Index(long id)
+        public ActionResult Index(long? id)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            var structure = dataBaseManager.Structure.Get(id);
+            if(id == null)
+            {
+                var structures = dataBaseManager.Structure.GetAll(User.Identity.Name);
+                return View("Structures", structures);
+            }
+
+            var structure = dataBaseManager.Structure.Get(id.Value);
 
             if (structure.Developing)
                 return RedirectToAction("Design", new { id });
 
-            return View();
+            return View(structure);
         }
 
         public ActionResult Create()
