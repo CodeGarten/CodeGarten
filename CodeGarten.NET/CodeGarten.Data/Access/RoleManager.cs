@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
-using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {

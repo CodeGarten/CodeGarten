@@ -32,12 +32,12 @@ namespace CodeGarten.Service.Utils
     {
         public static IEnumerable<WorkSpaceType> WorkSpaceTypeWithService(this Container container, string serviceName)
         {
-            return container.ContainerPrototype.WorkSpaceTypes.Where(
-                                                                    workSpaceType =>
-                                                                    workSpaceType.Services.Where(
-                                                                                            s =>
-                                                                                            s.Name == serviceName
-                                                                                            ).Any());
+            return container.Prototype.Bindings.Select(b => b.WorkSpaceType).Where(
+                                                                        workSpaceType =>
+                                                                        workSpaceType.Services.Where(
+                                                                                                s =>
+                                                                                                s.Name == serviceName
+                                                                                                ).Any());
         }
     }
 }

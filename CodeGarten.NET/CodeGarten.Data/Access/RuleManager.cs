@@ -31,9 +31,14 @@ namespace CodeGarten.Data.Access
             return rule;
         }
 
+        internal static Rule Get(Context db, long structureId, string name)
+        {
+            return db.Rules.Find(name, structureId);
+        }
+
         public Rule Get(long structureId, string name)
         {
-            return _dbContext.Rules.Find(name, structureId);
+            return Get(_dbContext, structureId, name);
         }
 
         public void Edit(long structureId, string name, IEnumerable<string> permissions)

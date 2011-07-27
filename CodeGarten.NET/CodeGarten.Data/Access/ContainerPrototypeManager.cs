@@ -24,7 +24,7 @@ namespace CodeGarten.Data.Access
 
         public ContainerPrototype Get(long structureId, string name)
         {
-            return _dbContext.ContainerPrototypes.Find(name, structureId);
+            return Get(_dbContext, structureId, name);
         }
 
         public ContainerPrototype Create(long structureId, string name, string parent)
