@@ -13,44 +13,40 @@ namespace CodeGarten.Data.Model
 
         public int InheritedCount {  get; internal set; }
 
-        //public string ContainerPrototypeName { get; set; }
+        public string RoleTypeName { get; internal set; }
 
-        //public long ContainerPrototypeStructureId { get; set; }
-
-        public string RoleTypeName { get; set; }
-
-        public long RoleTypeStructureId { get; set; }
+        public long StructureId { get; internal set; }
 
         [Required]
         [ForeignKey("UserName")]
-        public virtual User User { get; set; }
+        public virtual User User { get; internal set; }
 
         [Required]
         [ForeignKey("ContainerId")]
-        public virtual Container Container { get; set; }
+        public virtual Container Container { get; internal set; }
 
         [Required]
-        [ForeignKey("RoleTypeName,RoleTypeStructureId")]
-        public virtual RoleType RoleType { get; set; }
+        [ForeignKey("RoleTypeName,StructureId")]
+        public virtual RoleType RoleType { get; internal set; }
     }
 
     public class EnrollPassword
     {
-        public long ContainerId { get; set; }
+        public long ContainerId { get; internal set; }
 
-        public string RoleTypeName { get; set; }
+        public string RoleTypeName { get; internal set; }
 
-        public long RoleTypeStructureId { get; set; }
+        public long StructureId { get; internal set; }
 
         [Required]
         [MinLength(8)]
-        public string Password { get; set; }
+        public string Password { get; internal set; }
 
         [ForeignKey("ContainerId")]
-        public Container Container { get; set; }
+        public Container Container { get; internal set; }
 
-        [ForeignKey("RoleTypeName,RoleTypeStructureId")]
-        public RoleType RoleType { get; set; }
+        [ForeignKey("RoleTypeName,StructureId")]
+        public RoleType RoleType { get; internal set; }
     }
     
 }

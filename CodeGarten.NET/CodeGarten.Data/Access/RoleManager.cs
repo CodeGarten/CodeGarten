@@ -17,21 +17,19 @@ namespace CodeGarten.Data.Access
         }
 
         public Role Create(long structure, string containerPrototype, string workspaceType, string roleType,
-                               string rule = null, RoleBarrier roleBarrier = RoleBarrier.None)
+                               IEnumerable<string> rules = null, RoleBarrier roleBarrier = RoleBarrier.None)
         {
             var role = new Role()
                            {
                                RoleTypeName = roleType,
-                               RoleTypeStructureId = structure,
+                               StructureId = structure,
                                ContainerPrototypeName = containerPrototype,
-                               ContainerPrototypeStructureId = structure,
                                WorkSpaceTypeName = workspaceType,
-                               WorkSpaceTypeStructureId = structure,
                                RoleBarrier = roleBarrier
                            };
 
-            if (rule != null)
-                role.Rules.Add(RuleManager.Get(_dbContext, structure, rule));
+            if (rules != null)
+                role.Rules.Concat(rules.Select(r => RuleManager.Get(_dbContext, structure, r)));
 
             _dbContext.Roles.Add(role);
             _dbContext.SaveChanges();
@@ -58,16 +56,12 @@ namespace CodeGarten.Data.Access
 
         public IEnumerable<Role> GetAll(long structureId)
         {
-            return _dbContext.Roles.Where(rl => rl.ContainerPrototypeStructureId == structureId);
+            return _dbContext.Roles.Where(rl => rl.StructureId == structureId);
         }
 
-        public void Delete(RoleView roleView, long structureId)
+        public void Delete(long structureId, string containerPrototype, string workspaceType, string roleType)
         {
-            var role = _dbContext.Roles.Include("Rule").Single(r => r.ContainerPrototypeStructureId == structureId &&
-                                                                    r.ContainerPrototypeName ==
-                                                                    roleView.ContainerPrototypeName &&
-                                                                    r.RoleTypeName == roleView.RoleTypeName &&
-                                                                    r.WorkSpaceTypeName == roleView.WorkSpaceTypeName);
+            var role = Get(structureId, containerPrototype, workspaceType, roleType);
 
             _dbContext.Roles.Remove(role);
 

@@ -17,10 +17,11 @@ namespace CodeGarten.Data
         public DbSet<RoleType> RoleTypes { get; set; }
         public DbSet<ServicePermission> ServicePermissions { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<EnrollPassword> EnrollPassWords { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            
             Database.SetInitializer(new CodeGartenInitializer());
 
             modelBuilder.Entity<Container>().HasRequired(c => c.Prototype).WithMany().
@@ -52,13 +53,12 @@ namespace CodeGarten.Data
                         r.RoleTypeName,
                         r.WorkSpaceTypeName
                     });
-            //modelBuilder.Entity<Role>().HasRequired(r => r.ContainerPrototype).WithMany().WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasMany(r => r.Rules).WithMany();
-            //modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.RoleType).WithMany().WillCascadeOnDelete(false);
 
+
+            modelBuilder.Entity<EnrollPassword>().HasKey(e => new { e.ContainerId, e.RoleTypeName, e.StructureId });
+            
             modelBuilder.Entity<Enroll>().HasKey(
                 e =>
                 new

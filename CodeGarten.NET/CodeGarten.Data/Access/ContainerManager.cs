@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
-using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {
@@ -46,22 +45,24 @@ namespace CodeGarten.Data.Access
 
         #endregion
 
-        public Container Create(ContainerView containerView, long structure, long? parent)
+        public Container Create(long structure, string containerName, string description, long? parent)
         {
-            if (containerView == null) throw new ArgumentNullException("containerView");
-
-            var container = containerView.Convert();
+            var container = new Container()
+                                {
+                                    Name = containerName,
+                                    Description = description,
+                                };
 
             if (parent != null)
             {
                 var parentobj = _dbContext.Containers.Find(parent);
 
-                container.ContainerPrototype = parentobj.ContainerPrototype.Childs.First();
-                container.ParentContainer = parentobj;
+                container.Prototype = parentobj.Prototype.Childs.First();
+                container.Parent = parentobj;
             }
             else
             {
-                container.ContainerPrototype =
+                container.Prototype =
                     _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structure && cp.Parent == null).
                         SingleOrDefault();
             }
@@ -70,8 +71,6 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            containerView.Id = container.Id;
-
             try
             {
                 InvokeOnCreateContainer(container);
@@ -84,73 +83,9 @@ namespace CodeGarten.Data.Access
             return container;
         }
 
-        public Container Create(ContainerView containerView, long structure, string containerPrototype)
+        public void Delete(long containerId)
         {
-            if (containerView == null) throw new ArgumentNullException("containerView");
-
-            var container = containerView.Convert();
-
-            var containerPrototypeObj = ContainerPrototypeManager.Get(_dbContext, structure, containerPrototype);
-            if (containerPrototypeObj == null) throw new ArgumentException("Invalid argument");
-
-            container.ContainerPrototype = containerPrototypeObj;
-
-            _dbContext.Containers.Add(container);
-
-            _dbContext.SaveChanges();
-
-            containerView.Id = container.Id;
-            
-            try
-            {
-                InvokeOnCreateContainer(container);
-            }
-            catch
-            {
-                //TODO DataLogger
-            }
-
-            return container;
-        }
-
-        public Container Create(ContainerView containerView, long structure, string containerPrototype, long parentContainer)
-        {
-            if (containerView == null) throw new ArgumentNullException("containerView");
-
-            var container = containerView.Convert();
-
-            var containerPrototypeObj = ContainerPrototypeManager.Get(_dbContext, structure, containerPrototype);
-            if (containerPrototypeObj == null) throw new ArgumentException("Invalid argument");
-
-            var parentContainerObj = Get(_dbContext, parentContainer);
-            if (containerPrototypeObj.Parent.Name != parentContainerObj.ContainerPrototype.Name) throw new Exception();
-
-            container.ParentContainer = parentContainerObj;
-
-            container.ContainerPrototype = containerPrototypeObj;
-
-            _dbContext.Containers.Add(container);
-
-            _dbContext.SaveChanges();
-
-            containerView.Id = container.Id;
-
-            
-            try
-            {
-                InvokeOnCreateContainer(container);
-            }
-            catch
-            {
-                //TODO DataLogger
-            }
-
-            return container;
-        }
-
-        public void Delete(ContainerView containerView)
-        {
-            _dbContext.Containers.Remove(_dbContext.Containers.Find(containerView.Id));
+            _dbContext.Containers.Remove(_dbContext.Containers.Find(containerId));
 
             _dbContext.SaveChanges();
         }
@@ -161,7 +96,7 @@ namespace CodeGarten.Data.Access
                                      {
                                          ContainerId = container,
                                          RoleTypeName = roletype,
-                                         RoleTypeStructureId = structure,
+                                         StructureId = structure,
                                          Password = AuthenticationManager.EncryptPassword(password)
                                      };
             
