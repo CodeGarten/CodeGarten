@@ -18,7 +18,7 @@ namespace CodeGarten.Data.Model
 
         public virtual ICollection<ContainerPrototype> Childs { get; internal set; }
 
-        public virtual ICollection<Role> Roles { get; internal set; }
+        public virtual ICollection<Binding> Bindings { get; internal set; }
 
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; internal set; }
@@ -26,8 +26,9 @@ namespace CodeGarten.Data.Model
 
         public ContainerPrototype()
         {
-            Roles = new LinkedList<Role>();
             Childs = new LinkedList<ContainerPrototype>();
+
+            Bindings = new LinkedList<Binding>();
         }
     }
 

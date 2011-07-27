@@ -142,9 +142,10 @@ var TreeController = new (function () {
         var roles = [];
         for (var v in containerPrototype.Childs) {
             var workspace = containerPrototype.Childs[v];
+            var role = undefined;
             for (var i in workspace.Childs) {
                 var roleType = workspace.Childs[i];
-                var role = new Role(containerPrototype.Name, workspace.Name, roleType.Name);
+                role = new Role(containerPrototype.Name, workspace.Name, roleType.Name);
                 role.RoleBarrier = roleType.Block;
                 var rules = [];
                 for (var j in roleType.Childs)
@@ -152,6 +153,8 @@ var TreeController = new (function () {
                 role.Rules = rules;
                 roles.push(role);
             }
+            if (!role)
+                roles.push(new Role(containerPrototype.Name, workspace.Name));
         }
         return roles;
     };
@@ -174,17 +177,20 @@ var TreeModel = new (function () {
     };
 
     this.Sync = function () {
-        var roles = StructureModel.getRoles();
+        var bindings = StructureModel.getBindings();
+        for (var a in bindings) {
+            var binding = bindings[a];
+            if (!this.GetContainerPrototype(binding.ContainerPrototypeName))
+                this.AddContainerPrototype(binding.ContainerPrototypeName);
+            this.AddWorkspace(binding.ContainerPrototypeName, binding.WorkSpaceTypeName);
+        }
 
-        for (var a in roles)
+        var roles = StructureModel.getRoles();
+        for (a in roles)
             this.Treefy(roles[a]);
     };
 
     this.Treefy = function (role) {
-        if (!this.GetContainerPrototype(role.ContainerPrototypeName))
-            this.AddContainerPrototype(role.ContainerPrototypeName);
-
-        this.AddWorkspace(role.ContainerPrototypeName, role.WorkSpaceTypeName);
         this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.BlockBarrier);
 
         for (var v in role.Rules)
@@ -386,7 +392,7 @@ var TreeView = new (function () {
 
     };
 
-    var Prepare = function() {
+    var Prepare = function () {
         $(view).empty();
         $(view).append(EventController.Placeholder("Choose a container prototype from the structure to start editing.", "h2"));
         $(view).append("<div class='ContainerPrototype'/>");

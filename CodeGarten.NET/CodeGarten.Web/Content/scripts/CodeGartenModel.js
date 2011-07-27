@@ -28,23 +28,23 @@ function ContainerPrototype(name, parentContainer)
 
 };
 
-var StructureModel = new (function(){
-    
+var StructureModel = new (function () {
+
     var _structureModel;
     var _id;
 
-    this.init = function(id){
+    this.init = function (id) {
         _id = id;
-        _structureModel = eval ('('+$.ajax({
-              type: "GET",
-              url: "/Structure/Synchronization",
-              data: ({id:id}),
-              cache: false,
-              async: false
-            }).responseText+')');
+        _structureModel = eval('(' + $.ajax({
+            type: "GET",
+            url: "/Structure/Synchronization",
+            data: ({ id: id }),
+            cache: false,
+            async: false
+        }).responseText + ')');
     };
 
-    this.getId = function (){
+    this.getId = function () {
         return _id;
     };
 
@@ -52,19 +52,23 @@ var StructureModel = new (function(){
         return _structureModel.ContainerPrototypes;
     };
 
-    this.getRoleTypes = function (){
+    this.getRoleTypes = function () {
         return _structureModel.RoleTypes;
     };
 
-    this.getWorkspaceTypes = function (){
+    this.getWorkspaceTypes = function () {
         return _structureModel.WorkSpaceTypes;
     };
 
-    this.getRoles = function (){
+    this.getRoles = function () {
         return _structureModel.Roles;
     };
 
-    this.getRules = function (){
+    this.getBindings = function () {
+        return _structureModel.Bindings;
+    }
+
+    this.getRules = function () {
         return _structureModel.Rules;
     };
 

@@ -91,7 +91,7 @@ namespace CodeGarten.Data.Access
             _dbContext.SaveChanges();
         }
 
-        public Role Create(long structureId, string containerPrototypeName, string workSpacetypeName, string roleTypeName, int blockBarrier, IEnumerable<string> rules )
+        public Role Create(long structureId, string containerPrototypeName, string workSpacetypeName, string roleTypeName, int blockBarrier, IEnumerable<string> rules)
         {
             var role = new Role
                            {
@@ -102,8 +102,9 @@ namespace CodeGarten.Data.Access
                                BlockBarrier = blockBarrier
                            };
 
-            foreach(var rule in _dbContext.Rules.Where(r => r.StructureId == structureId && rules.Contains(r.Name)))
-                role.Rules.Add(rule);
+            if (rules != null)
+                foreach (var rule in _dbContext.Rules.Where(r => r.StructureId == structureId && rules.Contains(r.Name)))
+                    role.Rules.Add(rule);
 
             _dbContext.Roles.Add(role);
             _dbContext.SaveChanges();

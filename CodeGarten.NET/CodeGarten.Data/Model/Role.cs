@@ -56,11 +56,9 @@ namespace CodeGarten.Data.Model
         [ForeignKey("RoleTypeName,StructureId")]
         public virtual RoleType RoleType { get; internal set; }
 
-        [ForeignKey("ContainerPrototypeName,StructureId")]
-        public virtual ContainerPrototype ContainerPrototype { get; internal set; }
 
-        [ForeignKey("WorkSpaceTypeName,StructureId")]
-        public virtual WorkSpaceType WorkSpaceType { get; internal set; }
+        [ForeignKey("StructureId, ContainerPrototypeName, WorkSpaceTypeName")]
+        public virtual Binding Binding { get; internal set; }
 
         public Role()
         {

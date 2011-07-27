@@ -22,6 +22,7 @@ namespace CodeGarten.Data
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_cp ON dbo.ContainerPrototypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
                                                "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId " +
                                                "DELETE dbo.Containers FROM deleted, dbo.Containers WHERE deleted.Name = dbo.Containers.Prototype_Name AND deleted.StructureId = dbo.Containers.Prototype_StructureId; " +
                                                "WITH q AS " +
                                                "(SELECT  Name, StructureId " +
@@ -50,7 +51,14 @@ namespace CodeGarten.Data
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_wst ON dbo.WorkSpaceTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
                                                "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.WorkSpaceTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.WorkSpaceTypeName AND deleted.StructureId = dbo.Bindings.StructureId " +
                                                "DELETE dbo.WorkSpaceTypes FROM deleted WHERE deleted.Name = dbo.WorkSpaceTypes.Name AND deleted.StructureId = dbo.WorkSpaceTypes.StructureId"
+                );
+
+            context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_binding ON dbo.Bindings " +
+                                               "INSTEAD OF DELETE AS SET NOCOUNT ON " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.WorkSpaceTypeName = dbo.Roles.WorkSpaceTypeName AND deleted.ContainerPrototypeName = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Bindings FROM deleted WHERE deleted.WorkSpaceTypeName = dbo.Bindings.WorkSpaceTypeName AND deleted.ContainerPrototypeName = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId"
                 );
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_container on dbo.Containers " +

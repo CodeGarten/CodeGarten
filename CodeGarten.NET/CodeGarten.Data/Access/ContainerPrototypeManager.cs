@@ -184,5 +184,37 @@ namespace CodeGarten.Data.Access
             _dbContext.ContainerPrototypes.Remove(Get(structureId, name));
             _dbContext.SaveChanges();
         }
+
+        public ContainerPrototype AddWorkSpace(long structureId, string name, string workSpaceName)
+        {
+            var cp = Get(structureId, name);
+
+            cp.Bindings.Add(new Binding{WorkSpaceTypeName = workSpaceName});
+
+            _dbContext.SaveChanges();
+
+            return cp;
+        }
+
+        public void ClearAllBindings(long structureId)
+        {
+            foreach(var cp in _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId))
+                cp.Bindings.Clear();
+
+            _dbContext.SaveChanges();
+        }
+
+        public ContainerPrototype Bind(long structureId, string containerPrototypeName, string workSpaceTypeName)
+        {
+            var cp = Get(structureId, containerPrototypeName);
+            var binding = _dbContext.Bindings.Find(structureId, containerPrototypeName, workSpaceTypeName) ??
+                new Binding { WorkSpaceTypeName = workSpaceTypeName };
+
+            cp.Bindings.Add(binding);
+
+            _dbContext.SaveChanges();
+
+            return cp;
+        }
     }
 }

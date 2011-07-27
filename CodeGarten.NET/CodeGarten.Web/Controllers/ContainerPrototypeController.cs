@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Core;
@@ -49,26 +48,5 @@ namespace CodeGarten.Web.Controllers
                 return FormValidationResponse.Error(ModelState);
             }
         }
-
-        //TODO
-        //[StructureOwner("structureId")]
-        //public ActionResult AddWorkSpace(long structureId, string workspaceName, string containerName)
-        //{
-        //    var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-        //    dataBaseManager.ContainerPrototype.AddWorkSpaceType(structureId, containerName, workspaceName);
-
-        //    return RedirectToAction("Index", new { structureId, name = containerName });
-        //}
-
-        //[StructureOwner("structureId")]
-        //public ActionResult RemoveWorkSpace(long structureId, string workspaceName, string containerName)
-        //{
-        //    var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
-        //    dataBaseManager.ContainerPrototype.RemoveWorkSpaceType(structureId, containerName, workspaceName);
-
-        //    return RedirectToAction("Index", new { structureId, name = containerName });
-        //}
     }
 }

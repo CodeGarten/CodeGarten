@@ -78,7 +78,31 @@
 
     $("#actions").children().button();
 
-    $("#actions button:contains(Save)").button("option","icons", { primary: "ui-icon-disk" }).click(function () {
+    var Publish = function(callback)
+    {
+        Save(function() {
+                $("#main").mask("Verifying and publishing...", 500);
+                $.ajax(
+                    {
+                        url: "/Structure/Publish/" + @Model.Id ,
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        async: false,
+                        success: function(response) {
+                            $("#main").unmask(); 
+                            if (response.Success)
+                                if(callback)
+                                    callback();
+                            else
+                                EventController.LocalError("#actions", response.Errors[0].Error);
+                        }
+                    }
+                );  
+            });
+    };
+
+    var Save = function(callback) {
         $("#main").mask("Saving...", 500);
         var roles = TreeController.GetAllRoles();
         
@@ -94,26 +118,24 @@
                if(!response.Success)
                    EventController.LocalError("#actions", response.Errors[0].Error);
                else
-                   EventController.LocalSuccess("#actions", "Saved.");
+                   if(callback)
+                    callback(roles);
             }
         }
      );
+    };
+
+    $("#actions button:contains(Save)").button("option", "icons", { primary: "ui-icon-disk" }).click(function() {
+        Save(function () {
+            EventController.LocalSuccess("#actions", "Saved.");
+        });
     });
 
     $("#actions button:contains(Publish)").click(function() {
         DialogConfirmView.open("Are you sure?", "After publishing a structure you cannot go back to designing it.", function() {
-            $.ajax(
-                {
-                    url: "/Structure/Publish/" + @Model.Id ,
-                    type: 'POST',
-                    dataType: 'html',
-                    contentType: 'application/json; charset=utf-8',
-                    async: false,
-                    success: function() {
-                        window.location = "/Structure/Index/" + @Model.Id ;
-                    }
-                }
-     );
+            Publish(function() {
+                window.location = "/Structure/Index/" + @Model.Id ;
+            });
         });
     });
 

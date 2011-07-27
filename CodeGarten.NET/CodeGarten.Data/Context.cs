@@ -9,6 +9,7 @@ namespace CodeGarten.Data
         public DbSet<User> Users { get; set; }
         public DbSet<ContainerPrototype> ContainerPrototypes { get; set; }
         public DbSet<WorkSpaceType> WorkSpaceTypes { get; set; }
+        public DbSet<Binding> Bindings { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Enroll> Enrolls { get; set; }
@@ -52,7 +53,8 @@ namespace CodeGarten.Data
                         r.WorkSpaceTypeName
                     });
             //modelBuilder.Entity<Role>().HasRequired(r => r.ContainerPrototype).WithMany().WillCascadeOnDelete(false);
-            modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Role>().HasRequired(r => r.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasMany(r => r.Rules).WithMany();
             //modelBuilder.Entity<Role>().HasRequired(r => r.Rule).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<Role>().HasRequired(r => r.RoleType).WithMany().WillCascadeOnDelete(false);
@@ -68,6 +70,28 @@ namespace CodeGarten.Data
                     });
             modelBuilder.Entity<Enroll>().HasRequired(e => e.RoleType).WithMany().WillCascadeOnDelete(
                 false);
+
+
+
+
+
+
+            modelBuilder.Entity<Role>().HasRequired(r => r.Binding).WithMany().WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Binding>().HasMany(cpwst => cpwst.Roles).WithRequired(
+                r => r.Binding).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Binding>().HasKey(
+                cpwst => new {cpwst.StructureId, cpwst.ContainerPrototypeName, cpwst.WorkSpaceTypeName});
+
+            modelBuilder.Entity<Binding>().HasRequired(b => b.ContainerPrototype).WithMany(cp => cp.Bindings).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Binding>().HasRequired(b => b.WorkSpaceType).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Binding>().HasRequired(b => b.Structure).WithMany().WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<ContainerPrototype>().HasMany(cp => cp.WorkSpaceTypes).WithRequired(cpwst => cpwst.ContainerPrototype);
+
+            //        modelBuilder.Entity<WorkSpaceType>().HasMany(wst => wst.ContainerPrototypes).WithRequired(
+            //cpwst => cpwst.WorkSpaceType);
         }
     }
 }
