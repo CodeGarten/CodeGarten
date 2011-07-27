@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using CodeGarten.Data.Model;
-using CodeGarten.Data.ModelView;
 
 namespace CodeGarten.Data.Access
 {
@@ -73,16 +72,18 @@ namespace CodeGarten.Data.Access
 
         #endregion
 
-        public void Create(UserView userView)
+        public User Create(string name, string password, string email)
         {
-            if (userView == null) throw new ArgumentNullException("userView");
-
-            var user = userView.Convert();
-
+            var user = new User
+            {
+                Name = name,
+                Password = AuthenticationManager.EncryptPassword(password),
+                Email = email
+            };
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
-                       
-            InvokeOnCreateUser(user);
+
+            return user;
         }
 
         public void Delete(string user)
@@ -97,7 +98,7 @@ namespace CodeGarten.Data.Access
             var barrier = (int) roleBarrier;
 
             return _dbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.ContainerPrototype.Name &&
+                                          r.ContainerPrototypeName == container.Prototype.Name &&
                                           r.RoleTypeName == roleType.Name &&
                                           r.Barrier != barrier
                 ).Any();
@@ -106,7 +107,7 @@ namespace CodeGarten.Data.Access
         private bool ExisteRole(Container container, RoleType roleType)
         {
             return _dbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.ContainerPrototype.Name &&
+                                          r.ContainerPrototypeName == container.Prototype.Name &&
                                           r.RoleTypeName == roleType.Name
                 ).Any();
         }
@@ -115,7 +116,7 @@ namespace CodeGarten.Data.Access
 
         private bool EnrollInherited(User user, Container container, RoleType roleType)
         {
-            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.ContainerPrototype.StructureId);
+            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
 
             if (enroll != null)
             {
@@ -150,7 +151,7 @@ namespace CodeGarten.Data.Access
 
                 EnrollInherited(user, current, roleType);
 
-                current = current.ParentContainer;
+                current = current.Parent;
             }
         }
 
@@ -174,7 +175,7 @@ namespace CodeGarten.Data.Access
 
         private bool InheritedDisenroll(User user, Container container, RoleType roleType)
         {
-            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.ContainerPrototype.StructureId);
+            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
 
             if (enroll == null)
                 return false;
@@ -202,7 +203,7 @@ namespace CodeGarten.Data.Access
 
                 InheritedDisenroll(user, current, roleType);
 
-                current = current.ParentContainer;
+                current = current.Parent;
             } 
         }
 
@@ -224,15 +225,10 @@ namespace CodeGarten.Data.Access
         public bool Disenroll(string user, long structure, long container, string roleType)
         {
             var userObj = Get(_dbContext, user);
-            if (userObj == null) throw new ArgumentException("\"user\" is a invalid argument");
 
             var containerObj = ContainerManager.Get(_dbContext, container);
-            if (containerObj == null)
-                throw new ArgumentException(
-                    "\"structure\" or \"containerPrototype\" or \"container\" is a invalid argument");
 
             var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
-            if (roleTypeObj == null) throw new ArgumentException("\"structure\" or \"roleType\" is a invalid argument");
 
             var enroll = _dbContext.Enrolls.Find(user, container, roleType, structure);
 
@@ -252,7 +248,7 @@ namespace CodeGarten.Data.Access
                 enroll.Inherited = true;
 
             InheritedDisenrollChilds(userObj, containerObj, roleTypeObj);
-            InheritedDisenrollParents(userObj, containerObj.ParentContainer, roleTypeObj);
+            InheritedDisenrollParents(userObj, containerObj.Parent, roleTypeObj);
 
             return _dbContext.SaveChanges() != 0;
         }
@@ -260,15 +256,10 @@ namespace CodeGarten.Data.Access
         public bool Enroll(string user, long structure, long container, string roleType, string password = null)
         {
             var userObj = Get(_dbContext, user);
-            if (userObj == null) throw new ArgumentException("\"user\" is a invalid argument");
 
             var containerObj = ContainerManager.Get(_dbContext, container);
-            if (containerObj == null)
-                throw new ArgumentException(
-                    "\"structure\" or \"containerPrototype\" or \"container\" is a invalid argument");
 
             var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
-            if (roleTypeObj == null) throw new ArgumentException("\"structure\" or \"roleType\" is a invalid argument");
 
             if (!ExisteRole(containerObj, roleTypeObj))
                 return false; // throw exception
@@ -304,7 +295,7 @@ namespace CodeGarten.Data.Access
 
             InheritedEnrollChilds(userObj, containerObj, roleTypeObj);    
             
-            InheritedEnrollParents(userObj, containerObj.ParentContainer, roleTypeObj);
+            InheritedEnrollParents(userObj, containerObj.Parent, roleTypeObj);
 
             return _dbContext.SaveChanges() != 0;
         }

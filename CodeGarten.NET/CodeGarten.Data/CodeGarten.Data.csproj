@@ -57,7 +57,6 @@
     <Compile Include="Access\WorkSpaceTypeManager.cs" />
     <Compile Include="CodeGartenInitializer.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="CustomAttributes\UniqueEmailAttribute.cs" />
     <Compile Include="Interfaces\IAuthentication.cs" />
     <Compile Include="Interfaces\IAuthorization.cs" />
     <Compile Include="Model\Container.cs" />
