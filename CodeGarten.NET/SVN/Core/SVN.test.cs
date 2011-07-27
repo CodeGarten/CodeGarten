@@ -15,16 +15,16 @@ namespace SVN
         [Test]
         public void ShouldCreateSNVAuthorizationFile()
         {
-            using (var svnAuthorization = new SVNAuthorization(@"C:\CodeGarten\svn\etc\svn_acl"))
-            {
-                svnAuthorization.CreateGroup("GrupoDosFortes",
-                                             new String[] {"CodeGarten", "FaustinoLeiras", "SamirHafez"});
-                svnAuthorization.CreateGroup("GrupoDosFracos", new String[] {"ZeTestes"});
-                svnAuthorization.AddAllPermissionsToRepository("repository2", SVNPrivileges.r);
-                svnAuthorization.AddUserPermissionsToRepository("repository1", "Albertina", SVNPrivileges.r);
-                svnAuthorization.AddGroupPermissionsToRepository("repository1", "GrupoDosFortes", SVNPrivileges.rw);
-                svnAuthorization.AddGroupPermissionsToRepository("repository2", "GrupoDosFracos", SVNPrivileges.rw);
-            }
+            //using (var svnAuthorization = new SVNAuthorization(@"C:\CodeGarten\svn\etc\svn_acl"))
+            //{
+            //    svnAuthorization.CreateGroup("GrupoDosFortes",
+            //                                 new String[] {"CodeGarten", "FaustinoLeiras", "SamirHafez"});
+            //    svnAuthorization.CreateGroup("GrupoDosFracos", new String[] {"ZeTestes"});
+            //    svnAuthorization.AddAllPermissionsToRepository("repository2", SVNPrivileges.r);
+            //    svnAuthorization.AddUserPermissionsToRepository("repository1", "Albertina", SVNPrivileges.r);
+            //    svnAuthorization.AddGroupPermissionsToRepository("repository1", "GrupoDosFortes", SVNPrivileges.rw);
+            //    svnAuthorization.AddGroupPermissionsToRepository("repository2", "GrupoDosFracos", SVNPrivileges.rw);
+            //}
         }
 
         [Test]

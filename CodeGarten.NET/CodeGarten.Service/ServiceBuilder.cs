@@ -12,22 +12,36 @@ namespace CodeGarten.Service
         {
         }
 
+        //TODO tratar de possiveis erros nos eventos dos serviços
         public event EventHandler<ContainerEventArgs> OnCreateContainer
         {
             add { ContainerManager.OnCreateContainer += value; }
             remove { ContainerManager.OnCreateContainer -= value; }
         }
 
-        public event EventHandler OnEnrollUser
+        public event EventHandler<EnrollEventArgs> OnEnrollUser
         {
             add { UserManager.OnEnrollUser += value; }
             remove { UserManager.OnEnrollUser += value; }
         }
 
-        public event EventHandler OnCreateUser
+        public event EventHandler<UserEventArgs> OnCreateUser
         {
             add { UserManager.OnCreateUser += value; }
             remove { UserManager.OnCreateUser -= value; }
+        }
+
+        public event EventHandler<EnrollEventArgs> OnDisenrollUser
+        {
+            add { UserManager.OnDisenrollUser += value; }
+            remove { UserManager.OnDisenrollUser -= value; }
+        }
+
+        public event EventHandler<ContainerEventArgs> OnDeleteContainer
+        {
+            //TODO
+            add{}
+            remove {}
         }
     }
 }

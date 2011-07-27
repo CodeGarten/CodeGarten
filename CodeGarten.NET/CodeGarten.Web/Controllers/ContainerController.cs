@@ -4,21 +4,22 @@ using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
-//using CodeGarten.Service;
+using CodeGarten.Data.ModelView;
+using CodeGarten.Service;
 using CodeGarten.Web.Attributes;
-using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     public sealed class ContainerController : Controller
     {
+        private readonly Context _context = new Context();
+
         public ActionResult Index(long id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var container = _context.Containers.Find(id);
 
-            var container = dataBaseManager.Container.Get(id);
-
-            ViewBag.Enroll = dataBaseManager.User.Enrolls(User.Identity.Name, id);
+            ViewBag.Enroll =
+                _context.Enrolls.FirstOrDefault(e => e.UserName == User.Identity.Name && e.ContainerId == id);
 
             return View(container);
         }
@@ -39,7 +40,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Create(structureId, container.Name, parent);
+                dataBaseManager.Container.Create(container, structureId, parent);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -62,13 +63,13 @@ namespace CodeGarten.Web.Controllers
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Delete(long structureId, long id, ContainerView containerView)
+        public ActionResult Delete(long structureId, long id, ContainerView containerView, FormCollection formCollection)
         {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Delete(id);
+                dataBaseManager.Container.Delete(containerView);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -80,44 +81,50 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Leave(long structureId, long containerId, string roleTypeName)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            try
+            {
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            dataBaseManager.User.Leave(User.Identity.Name, containerId);
+                dataBaseManager.User.Disenroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-            return RedirectToAction("Index", "Structure", new {id = structureId});
+                return RedirectToAction("Index", "User");
+            }catch
+            {
+                return RedirectToAction("Index", "Container", new{id = containerId});
+            }
         }
 
-        //public ActionResult Enroll(long structureId, long containerId)
-        //{
-        //    var enroll = new EnrollView();
+        public ActionResult Enroll(long structureId, long containerId)
+        {
+            var enroll = new EnrollView();
 
-        //    var container = dataBaseManager.Container.Get(containerId);
+            var container = _context.Containers.Find(containerId);
 
-        //    ViewBag.RoleTypes =
-        //        _context.Roles.Where(
-        //            r =>
-        //            r.ContainerPrototype.StructureId == structureId &&
-        //            r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
-        //            ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
+            ViewBag.RoleTypes =
+                _context.Roles.Where(
+                    r =>
+                    r.ContainerPrototype.StructureId == structureId &&
+                    r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
+                    ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
 
-        //    return View(enroll);
-        //}
+            return View(enroll);
+        }
 
-        //[HttpPost]
-        //public ActionResult Enroll(long structureId, long containerId, string roleTypeName)
-        //{
-        //    try
-        //    {
-        //        var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+        [HttpPost]
+        public ActionResult Enroll(long structureId, long containerId, string roleTypeName)
+        {
+            try
+            {
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-        //        dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName);
+                dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-        //        return RedirectToAction("Index", new {id = containerId});
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return View();
-        //    }
-        //}
+                return RedirectToAction("Index", new {id = containerId});
+            }
+            catch (Exception)
+            {
+                return View();
+            }
+        }
     }
 }

@@ -27,12 +27,12 @@ namespace CodeGarten.Data.Access
             return Encoding.ASCII.GetString(sha1.ComputeHash(Encoding.ASCII.GetBytes(plainText)));
         }
 
-        public bool Authenticate(string user, string passwordEncrypt)
+        public bool Authenticate(string user, string passwordPlainText)
         {
             var userObj = _dbContext.Users.Find(user);
             if (user == null) throw new Exception();
 
-            return userObj.Password == EncryptPassword(passwordEncrypt);
+            return userObj.Password == EncryptPassword(passwordPlainText);
         }
     }
 }
