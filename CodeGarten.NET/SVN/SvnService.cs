@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.Interfaces;
-using CodeGarten.Data.ModelView;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
 
@@ -54,7 +53,7 @@ namespace SVN
         {
             using (var svnAuthorization = new SVNAuthorization(_filesPath, _authFileName))
             {
-                foreach (var workSpaceType in e.Container.ContainerPrototype.WorkSpaceTypes)
+                foreach (var workSpaceType in e.Container.Prototype.Bindings.Select(b => b.WorkSpaceType))
                 {
                     var instanceName = e.Container.UniqueInstanceName(workSpaceType);
 
@@ -65,7 +64,7 @@ namespace SVN
                         continue; //TODO Servicelogger;
 
                     var instance = svnAuthorization.CreateInstance(instanceName);
-                    foreach (var role in e.Container.ContainerPrototype.Roles)
+                    foreach (var role in e.Container.Prototype.Bindings.SelectMany(binding => binding.Roles))
                     {
                         var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                         foreach (var rule in role.Rules)

@@ -78,7 +78,7 @@ namespace Trac
                     continue;//TODO service logger
 
                 var tracPermissions = new TracPermissionManager(tracEnvironment.EnvironmentPath);
-                foreach (var role in e.Container.ContainerPrototype.Roles)
+                foreach (var role in e.Container.Prototype.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                     foreach (var rule in role.Rules)
