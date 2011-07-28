@@ -36,8 +36,10 @@ namespace CodeGarten.Service
 
             foreach (var service in serviceEngine.Services)
             {
-                if (service.IsInstaled)
-                    service.OnServiceCreating(Builder);
+                if (!service.IsInstaled)
+                    service.OnServiceInstall();
+                
+                service.OnServiceCreating(Builder);
                 Services.Add(service.Name, service);
             }
         }

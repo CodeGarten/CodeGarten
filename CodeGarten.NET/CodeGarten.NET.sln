@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apache", "Apache\Apache.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trac", "Trac\Trac.csproj", "{5A721AB2-496B-4D54-8064-C3CD7717F10E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVN.Tests", "SVN.Tests\SVN.Tests.csproj", "{993EEDAE-03C1-47E8-A111-38B27A40A488}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{5A721AB2-496B-4D54-8064-C3CD7717F10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A721AB2-496B-4D54-8064-C3CD7717F10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A721AB2-496B-4D54-8064-C3CD7717F10E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{993EEDAE-03C1-47E8-A111-38B27A40A488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{993EEDAE-03C1-47E8-A111-38B27A40A488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{993EEDAE-03C1-47E8-A111-38B27A40A488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{993EEDAE-03C1-47E8-A111-38B27A40A488}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

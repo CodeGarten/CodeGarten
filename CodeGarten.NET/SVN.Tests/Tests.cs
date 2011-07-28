@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using NUnit.Framework;
 
-namespace SVN
+namespace SVN.Tests
 {
     [TestFixture]
-    internal class SVNAuthorizationTests
+    public class SVNAuthorizationTests
     {
         [Test]
         public void ShouldCreateSNVAuthorizationFile()
@@ -39,17 +34,16 @@ namespace SVN
                 @"C:\CodeGarten\svn\repositories",
                 "repo4"
                 );
+
             Assert.IsNotNull(repository);
             Assert.True(Directory.Exists(path));
             Assert.True(repository.Initialize());
         }
 
         [Test]
-        public void ShouldConvertStringToSVNPrivileges()
+        public void ShouldGetConfigurtions()
         {
-            SVNPrivileges privileges;
-            if (Enum.TryParse<SVNPrivileges>("r", out privileges))
-                ;
+            
         }
     }
 }

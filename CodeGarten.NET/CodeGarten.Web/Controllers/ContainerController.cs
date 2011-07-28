@@ -4,24 +4,25 @@ using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.ModelView;
-using CodeGarten.Service;
 using CodeGarten.Web.Attributes;
+using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
     public sealed class ContainerController : Controller
     {
-        private readonly Context _context = new Context();
 
+        //TODO rever o controller 
         public ActionResult Index(long id)
         {
-            var container = _context.Containers.Find(id);
+            //var container = _context.Containers.Find(id);
 
-            ViewBag.Enroll =
-                _context.Enrolls.FirstOrDefault(e => e.UserName == User.Identity.Name && e.ContainerId == id);
+            //ViewBag.Enroll =
+            //    _context.Enrolls.FirstOrDefault(e => e.UserName == User.Identity.Name && e.ContainerId == id);
 
-            return View(container);
+            //return View();
+
+            return RedirectToAction("Index", "Container", new { id = id });
         }
 
         [StructureOwner("structureId")]
@@ -40,7 +41,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Create(container, structureId, parent);
+                dataBaseManager.Container.Create(structureId, container.Name, container.Description, parent);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -69,7 +70,8 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Delete(containerView);
+
+                dataBaseManager.Container.Delete(id);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
@@ -87,7 +89,7 @@ namespace CodeGarten.Web.Controllers
 
                 dataBaseManager.User.Disenroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Container", new { id = containerId });
             }catch
             {
                 return RedirectToAction("Index", "Container", new{id = containerId});
@@ -96,18 +98,19 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Enroll(long structureId, long containerId)
         {
-            var enroll = new EnrollView();
+            //var enroll = new EnrollView();
 
-            var container = _context.Containers.Find(containerId);
+            //var container = _context.Containers.Find(containerId);
 
-            ViewBag.RoleTypes =
-                _context.Roles.Where(
-                    r =>
-                    r.ContainerPrototype.StructureId == structureId &&
-                    r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
-                    ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
+            //ViewBag.RoleTypes =
+            //    _context.Roles.Where(
+            //        r =>
+            //        r.ContainerPrototype.StructureId == structureId &&
+            //        r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
+            //        ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
 
-            return View(enroll);
+            //return View();
+            return RedirectToAction("Index", "Container", new { id = containerId });
         }
 
         [HttpPost]
@@ -123,7 +126,7 @@ namespace CodeGarten.Web.Controllers
             }
             catch (Exception)
             {
-                return View();
+                return RedirectToAction("Index", "Container", new { id = containerId });
             }
         }
     }
