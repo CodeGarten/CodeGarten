@@ -9,29 +9,52 @@
         My Structures</h2>
     <div class="clear">
     </div>
+    @Html.ActionLink("Create new", "Create")
 </div>
-
 <div id="structure_tabs">
-	<ul>
-		<li><a href="#active">Active</a></li>
-		<li><a href="#ud">Developing</a></li>
-	</ul>
-	<div id="active">
-		@foreach (var structure in Model.Where(s => !s.Developing))
+    <ul>
+        <li><a href="#active">Active (@Model.Count(s => !s.Developing))</a></li>
+        <li><a href="#ud">Developing (@Model.Count(s => s.Developing))</a></li>
+    </ul>
+    <div id="active">
+        @foreach (var structure in Model.Where(s => !s.Developing))
         {
-            @Html.ActionLink(structure.Name, "Index", new { id = structure.Id })
+            <div class="structure_widget">
+                <div>
+                    @{string description = structure.Description ?? "No description";}
+                    <h3 class="name">@Html.ActionLink(structure.Name, "Index", new{id = structure.Id})</h3>
+                    <p class="description">
+                        Description: @description</p>
+                    <div class="actions">
+                        @Html.ActionLink("Delete", "Delete", new { id = structure.Id })
+                    </div>
+                </div>
+            </div>
         }
-	</div>
-	<div id="ud">
-		@foreach (var structure in Model.Where(s => s.Developing))
+    </div>
+    <div id="ud">
+        @foreach (var structure in Model.Where(s => s.Developing))
         {
-            @Html.ActionLink(structure.Name, "Index", new { id = structure.Id })
+            <div class="structure_widget">
+                <div>
+                    @{string description = structure.Description ?? "No description";}
+                    <h3 class="name">@Html.ActionLink(structure.Name, "Index", new{id = structure.Id})</h3>
+                    <p class="description">
+                        Description: @description</p>
+                    <div class="actions">
+                        @Html.ActionLink("Delete", "Delete", new { id = structure.Id })
+                    </div>
+                </div>
+            </div>
         }
-	</div>
+    </div>
 </div>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#structure_tabs").tabs();
-        });
-    </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#structure_tabs").tabs();
+        $(".title a").button({ icons: { primary: "ui-icon-plus"} });
+        $(".structure_widget .actions").children().button(/*{disabled: true}*/);
+        $(".structure_widget .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
+        //        $(".structure_widget").hover(function () { $(this).find(".actions").children().button("option", "disabled", false); }, function () { $(this).find(".actions").children().button("option", "disabled", true); });
+    });
+</script>

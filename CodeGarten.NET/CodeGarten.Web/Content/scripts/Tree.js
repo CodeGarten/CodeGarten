@@ -194,7 +194,7 @@ var TreeModel = new (function () {
         this.AddRoleType(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.RoleBarrier);
 
         for (var v in role.Rules)
-            this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.Rules[v].Name);
+            this.AddRule(role.ContainerPrototypeName, role.WorkSpaceTypeName, role.RoleTypeName, role.Rules[v]);
     };
 
     this.GetContainerPrototypes = function () {

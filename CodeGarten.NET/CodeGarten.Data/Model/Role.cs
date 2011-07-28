@@ -55,7 +55,7 @@ namespace CodeGarten.Data.Model
 
         public string WorkSpaceTypeName { get; internal set; }
 
-        public ICollection<Rule> Rules { get; internal set; }
+        public virtual ICollection<Rule> Rules { get; internal set; }
 
         public int Barrier { get; private set; }
         public RoleBarrier RoleBarrier { get { return (RoleBarrier)Barrier; } internal set { Barrier = (int)value; } }

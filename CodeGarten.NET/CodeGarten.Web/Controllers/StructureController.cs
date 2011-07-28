@@ -19,7 +19,8 @@ namespace CodeGarten.Web.Controllers
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => new { rule.Name }), rl.RoleBarrier });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name) , rl.RoleBarrier });
+
             var Bindings =
                 dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => cp.Bindings).Select(
                     bl => bl.Select(b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName })).SingleOrDefault();

@@ -55,7 +55,7 @@ var RoleTypeView = new (function () {
         var stopTop = $("<a href='#' title='Block inheritance from above' class='ui-icon ui-icon-arrowthickstop-1-s ui-state-disabled'/>");
         var stopBottom = $("<a href='#' title='Block inheritance from below' class='ui-icon ui-icon-arrowthickstop-1-n ui-state-disabled'/>");
 
-        switch (roleType.Block) {
+        switch (roleType.RoleBarrier) {
             case 1:
                 {
                     stopTop.removeClass("ui-state-disabled");

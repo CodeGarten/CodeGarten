@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using CodeGarten.Data.Model;
 
@@ -28,7 +29,8 @@ namespace CodeGarten.Data.Access
                            };
 
             if (rules != null)
-                role.Rules.Concat(rules.Select(r => RuleManager.Get(_dbContext, structure, r)));
+                foreach(var r in rules.Select(e => RuleManager.Get(_dbContext, structure, e)))
+                    role.Rules.Add(r);
 
             _dbContext.Roles.Add(role);
             _dbContext.SaveChanges();

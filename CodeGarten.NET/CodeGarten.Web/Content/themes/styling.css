@@ -147,6 +147,14 @@ h1 { padding: .2em; margin: 0;}
 .title img { width: 60px;height: 60px;float: left;}
 .title h2 {display: inline-block; font-size: large;margin-left: 5px;}
 .title .clear { clear: both;}
+.title a { left: 60px;margin-left: 5px;top: -20px;}
+
+/* structure widget
+-----------------------------------------------------------*/
+.structure_widget { padding: 10px; border-bottom:1px solid #CCCCCC;}
+.structure_widget:hover { background-color:#e8e8e8;}
+.structure_widget .description, .structure_widget .name { padding-left: 5px;}
+.structure_widget .actions { padding-left: 5px;padding-bottom: 5px;}
 
 
 /* Styles for validation helpers

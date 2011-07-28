@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Attributes;
@@ -16,6 +17,12 @@ namespace CodeGarten.Web.Controllers
         {
             if (!ModelState.IsValid)
                 return FormValidationResponse.Error(ModelState);
+
+            if(services == null || services.Count() == 0)
+            {
+                ModelState.AddGlobalError("A workspace must have at least one service.");
+                return FormValidationResponse.Error(ModelState);
+            }
 
             try
             {
@@ -44,6 +51,12 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("structureId")]
         public JsonResult Edit(long structureId, string name, IEnumerable<string> services)
         {
+            if (services == null || services.Count() == 0)
+            {
+                ModelState.AddGlobalError("A workspace must have at least one service.");
+                return FormValidationResponse.Error(ModelState);
+            }
+
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             dataBaseManager.WorkSpaceType.Edit(structureId, name, services);

@@ -29,13 +29,19 @@
         @foreach (var service in ViewBag.Services as IEnumerable<Service>)
         {
             <div id="@service.Name">
-                @foreach (var permission in service.Permissions)
-                {
-                    var permissionId = service.Name + "_" + permission.Name;
-                    var permissionValue = service.Name + " " + permission.Name;
-                    <label for="@permissionId">@permission.Name</label>
-                    <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
-                }
+                <ul>
+                    @foreach (var permission in service.Permissions)
+                    {
+                        <li>
+                            @{
+                                var permissionId = service.Name + "_" + permission.Name;
+                                var permissionValue = service.Name + " " + permission.Name;
+                            }
+                            <label for="@permissionId">@permission.Name</label>
+                            <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
+                        </li>
+                    }
+                </ul>
             </div>
         }
     </div>

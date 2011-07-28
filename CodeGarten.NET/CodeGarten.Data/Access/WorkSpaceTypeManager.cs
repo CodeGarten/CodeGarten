@@ -17,9 +17,8 @@ namespace CodeGarten.Data.Access
         {
             var workspace = new WorkSpaceType { StructureId = structureId, Name = name };
 
-            if (services != null)
-                foreach (var service in services)
-                    workspace.Services.Add(_dbContext.Services.Find(service));
+            foreach (var service in services)
+                workspace.Services.Add(_dbContext.Services.Find(service));
 
             _dbContext.WorkSpaceTypes.Add(workspace);
             _dbContext.SaveChanges();
@@ -38,9 +37,8 @@ namespace CodeGarten.Data.Access
 
             workspace.Services.Clear();
 
-            if (services != null)
-                foreach (var service in services)
-                    workspace.Services.Add(_dbContext.Services.Find(service));
+            foreach (var service in services)
+                workspace.Services.Add(_dbContext.Services.Find(service));
 
             _dbContext.SaveChanges();
 

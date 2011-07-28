@@ -25,6 +25,7 @@ namespace CodeGarten.Data.Access
         public void Delete(long structureId, string name)
         {
             _dbContext.RoleTypes.Remove(Get(structureId, name));
+            _dbContext.SaveChanges();
         }
 
         public IQueryable<RoleType> GetAll(long structureId)

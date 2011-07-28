@@ -17,13 +17,12 @@ namespace CodeGarten.Data.Access
         {
             var rule = new Rule { Name = name, StructureId = structureId };
 
-            if (permissions != null)
-                foreach (var permission in permissions.Select(p => p.Split(' ')))
-                {
-                    var serviceName = permission[0];
-                    var permissionName = permission[1];
-                    rule.Permissions.Add(_dbContext.ServicePermissions.Find(permissionName, serviceName));
-                }
+            foreach (var permission in permissions.Select(p => p.Split(' ')))
+            {
+                var serviceName = permission[0];
+                var permissionName = permission[1];
+                rule.Permissions.Add(_dbContext.ServicePermissions.Find(permissionName, serviceName));
+            }
 
             _dbContext.Rules.Add(rule);
             _dbContext.SaveChanges();

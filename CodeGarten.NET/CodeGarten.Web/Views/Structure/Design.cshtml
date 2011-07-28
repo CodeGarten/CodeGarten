@@ -48,6 +48,8 @@
     </div>
     <div id="actions">
         <button>
+            Back to My Structures</button>
+        <button>
             Save</button>
         <button>
             Publish</button>
@@ -138,6 +140,10 @@
                 window.location = "/Structure/Index/" + @Model.Id ;
             });
         });
+    });
+    
+        $("#actions button:contains(Back to My Structures)").button("option", "icons", { primary: "ui-icon-arrowthick-1-w" }).click(function() {
+            document.location = '@Url.Action("Index", "Structure")' ;
     });
 
     DialogConfirmView.init("#dialog_confirm");
