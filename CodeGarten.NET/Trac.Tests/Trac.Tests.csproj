@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{993EEDAE-03C1-47E8-A111-38B27A40A488}</ProjectGuid>
+    <ProjectGuid>{674B1BD7-6EA9-4613-81A4-E8B65EB83BC9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SVN.Tests</RootNamespace>
-    <AssemblyName>SVN.Tests</AssemblyName>
+    <RootNamespace>Trac.Tests</RootNamespace>
+    <AssemblyName>Trac.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -39,12 +39,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests.cs" />
+    <Compile Include="Trac.test.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SVN\SVN.csproj">
-      <Project>{2FE0E103-3481-4DD8-A8BA-9BDF6EECA5AC}</Project>
-      <Name>SVN</Name>
+    <ProjectReference Include="..\CodeGarten.Service\CodeGarten.Service.csproj">
+      <Project>{52AC5E24-7D95-457F-B900-2E5AC5644490}</Project>
+      <Name>CodeGarten.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trac\Trac.csproj">
+      <Project>{5A721AB2-496B-4D54-8064-C3CD7717F10E}</Project>
+      <Name>Trac</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

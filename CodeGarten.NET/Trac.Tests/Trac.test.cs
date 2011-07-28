@@ -7,7 +7,7 @@ using System.Text;
 using CodeGarten.Service.Utils;
 using NUnit.Framework;
 
-namespace Trac
+namespace Trac.Tests
 {
     [TestFixture]
     class TracAdminTests

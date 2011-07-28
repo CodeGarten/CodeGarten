@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Trac
 {
-    static class TracAdmin
+    public static class TracAdmin
     {
         private struct Response
         {
@@ -20,7 +20,10 @@ namespace Trac
 
         static TracAdmin ()
         {
-            TracAdminPath = ConfigurationManager.AppSettings["TracAdminLocation"];
+            var fileMap = new ExeConfigurationFileMap();
+            fileMap.ExeConfigFilename = @"Trac.dll.config";
+            var assemblyConfig = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+            TracAdminPath = assemblyConfig.AppSettings.Settings["TracAdminLocation"].Value;
         }
 
         public static bool Add(String userName, String envPath, String permissionOrGroup)

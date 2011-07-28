@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Security;
 using System.Text;
 
@@ -20,8 +21,10 @@ namespace SVN
 
         static SVNAdmin()
         {
-            //ConfigurationManager.OpenExeConfiguration("SVN.dll.config");
-            SvnAdminPath = ConfigurationManager.AppSettings["SvnAdminLocation"];
+            var fileMap = new ExeConfigurationFileMap();
+            fileMap.ExeConfigFilename = @"SVN.dll.config";
+            var assemblyConfig = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+            SvnAdminPath = assemblyConfig.AppSettings.Settings["SvnAdminLocation"].Value;
         }
 
         public static bool CreateRepositoy(String svnRepoPath)

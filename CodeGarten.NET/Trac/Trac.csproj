@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Core\Trac.test.cs" />
     <Compile Include="Core\TracAdmin.cs" />
     <Compile Include="Core\TracEnvironmentManager.cs" />
     <Compile Include="Core\TracPermissionManager.cs" />
