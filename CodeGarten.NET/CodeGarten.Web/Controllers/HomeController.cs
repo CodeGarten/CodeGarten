@@ -12,7 +12,7 @@ namespace CodeGarten.Web.Controllers
             //ViewBag.RecentStructures =
             //    _context.Structures.OrderByDescending(s => s.CreatedOn).Take(10);
 
-            return View();
+            return User.Identity.IsAuthenticated ? View("AuthenticatedHome") : View();
         }
     }
 }

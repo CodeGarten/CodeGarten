@@ -3,10 +3,35 @@
 @{
     ViewBag.Title = "Structures";
 }
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/Structures.png")" alt="Structures" />
+    <h2>
+        My Structures</h2>
+    <div class="clear">
+    </div>
+</div>
 
-<h2>Structures</h2>
+<div id="structure_tabs">
+	<ul>
+		<li><a href="#active">Active</a></li>
+		<li><a href="#ud">Developing</a></li>
+	</ul>
+	<div id="active">
+		@foreach (var structure in Model.Where(s => !s.Developing))
+        {
+            @Html.ActionLink(structure.Name, "Index", new { id = structure.Id })
+        }
+	</div>
+	<div id="ud">
+		@foreach (var structure in Model.Where(s => s.Developing))
+        {
+            @Html.ActionLink(structure.Name, "Index", new { id = structure.Id })
+        }
+	</div>
+</div>
 
-@foreach (var structure in Model)
-{
-    @Html.ActionLink(structure.Name, "Index", "Structure", new { id = structure.Id }, null)
-}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#structure_tabs").tabs();
+        });
+    </script>

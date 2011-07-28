@@ -67,6 +67,8 @@ h1 { padding: .2em; margin: 0;}
     margin-top: -8px;
     margin-left: -10px;
     margin-right: -10px;
+    background-image: url(http://jqueryui.com/themeroller/images/?new=e6e6e6&w=1&h=100&f=png&q=100&fltr[]=over|textures/03_highlight_soft.png|0|0|75);
+    background-repeat: repeat-x;
 }
 
 #top > div
@@ -136,8 +138,15 @@ h1 { padding: .2em; margin: 0;}
 -----------------------------------------------------------*/
 #auth_user_actions { text-align: center;}
 .action { display: inline-block;margin: 10px;text-align: center;font-size: large;padding-left: 20px;padding-right: 20px; }
-.action > img { width: 125px;height: 125px;}
+.action > img { width: 115px;height: 115px;}
 .action:hover { cursor: pointer;}
+
+/* titles
+-----------------------------------------------------------*/
+.title { padding-bottom: 20px;}
+.title img { width: 60px;height: 60px;float: left;}
+.title h2 {display: inline-block; font-size: large;margin-left: 5px;}
+.title .clear { clear: both;}
 
 
 /* Styles for validation helpers

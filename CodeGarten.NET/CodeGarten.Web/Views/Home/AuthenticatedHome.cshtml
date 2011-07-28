@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Structured collaborative development";
+}
+<div class="ui-widget">
+    <div class="ui-widget-header ui-corner-top ui-state-default">
+        <h2>
+            Welcome to CodeGarten</h2>
+    </div>
+    <div class="ui-widget-content">
+        <div id="auth_user_actions">
+            <div class="action ui-corner-all ui-state-default">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/Search.png")" alt="Search" title="Search for users, structures and projects" />
+                <div>
+                    Search</div>
+            </div>
+            <div class="action ui-corner-all ui-state-default"  onclick='javascript:document.location = @Url.Action("Index", "Structure")/' title="Manage your structures">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/Structures.png")" alt="Structures" />
+                <div>
+                    My Structures</div>
+            </div>
+            <div class="action ui-corner-all ui-state-default">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/Projects.png")" alt="Structures" title="Manage your enrolled projects" />
+                <div>
+                    Enrolls</div>
+            </div>
+            <div class="action ui-corner-all ui-state-default">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/User.png")" alt="Profile" title="Edit your information" />
+                <div>
+                    Profile</div>
+            </div>
+            <div class="action ui-corner-all ui-state-default">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/Help.png")" alt="Help" title="Learn more about how to use CodeGarten" />
+                <div>
+                    Help</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".action").hover(function () { $(this).toggleClass("ui-state-default").toggleClass("ui-state-highlight"); });
+    });
+</script>

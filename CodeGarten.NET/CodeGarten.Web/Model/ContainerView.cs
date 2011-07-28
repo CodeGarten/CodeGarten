@@ -9,6 +9,7 @@ namespace CodeGarten.Web.Model
         [MaxLength(64, ErrorMessage = "Maximum length: 64")]
         public string Name { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [MaxLength(256, ErrorMessage = "Maximum length: 256")]
         public string Description { get; set; }
     }

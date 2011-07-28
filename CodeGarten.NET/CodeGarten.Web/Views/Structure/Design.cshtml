@@ -91,9 +91,10 @@
                         async: false,
                         success: function(response) {
                             $("#main").unmask(); 
-                            if (response.Success)
-                                if(callback)
+                            if (response.Success) {
+                                if (callback)
                                     callback();
+                            }
                             else
                                 EventController.LocalError("#actions", response.Errors[0].Error);
                         }

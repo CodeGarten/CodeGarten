@@ -12,18 +12,8 @@ namespace CodeGarten.Data.Model
         public long StructureId { get; internal set; }
 
 
-        public virtual ICollection<Enroll> Enrolls { get; internal set; }
-
-        public virtual ICollection<Role> Roles { get; internal set; }
-
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; internal set; }
-
-
-        public RoleType()
-        {
-            Enrolls = new LinkedList<Enroll>();
-        }
     }
 
     public class Rule
@@ -39,13 +29,11 @@ namespace CodeGarten.Data.Model
 
 
         public virtual ICollection<ServicePermission> Permissions { get; internal set; }
-        public virtual ICollection<Role> Roles { get; internal set; }
 
 
         public Rule()
         {
             Permissions = new LinkedList<ServicePermission>();
-            Roles = new LinkedList<Role>();
         }
     }
 

@@ -106,7 +106,10 @@
     <Content Include="Content\scripts\Tree.js" />
     <Content Include="Content\scripts\Workspace.js" />
     <Content Include="Content\themes\jquery.loadmask.css" />
+    <Content Include="Content\themes\smoothness\images\Help.png" />
     <Content Include="Content\themes\smoothness\images\loading.gif" />
+    <Content Include="Content\themes\smoothness\images\Projects.png" />
+    <Content Include="Content\themes\smoothness\images\Search.png" />
     <Content Include="Content\themes\smoothness\images\Structures.png" />
     <Content Include="Content\themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -121,6 +124,7 @@
     <Content Include="Content\themes\smoothness\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\smoothness\images\User.png" />
     <Content Include="Content\themes\smoothness\jquery-ui-1.8.14.custom.css" />
     <Content Include="Content\themes\styling.css" />
     <Content Include="Global.asax" />
@@ -218,6 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Structure\Structures.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\AuthenticatedHome.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
