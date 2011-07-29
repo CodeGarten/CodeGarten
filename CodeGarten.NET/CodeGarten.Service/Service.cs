@@ -65,8 +65,6 @@ namespace CodeGarten.Service
         #region ControllerFactoryMembers
 
         public IController CreateController(RequestContext requestContext, string controllerName)
-            //TODO TESTE
-            //public IController CreateController(string controllerName)
         {
             var lazyController = _compositionContainer.GetExports<IController, IControllerMetadata>().
                 Where(
