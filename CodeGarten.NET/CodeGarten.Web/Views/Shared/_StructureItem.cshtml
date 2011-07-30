@@ -1,0 +1,33 @@
+﻿@using CodeGarten.Data.Model
+@model Structure
+@{
+    var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+}
+<div class="item">
+    @{
+        string description = Model.Description ?? "No description";
+        string visibility = Model.Public ? "Public" : "Private";
+    }
+    @if (owner)
+    {
+        <div class="actions">
+            @Html.ActionLink("Delete", "Delete", "Structure", new { id = Model.Id }, null)
+        </div>
+    }
+    <h3 class="name">@Html.ActionLink(Model.Name, "Index", "Structure", new { id = Model.Id }, null)</h3>
+    <div class="info">
+        <p>
+            Description: @description</p>
+        <p>
+            Created on: @Model.CreatedOn</p>
+        @if (owner)
+        {
+            <p>
+                Visibility: @visibility</p>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(".item .actions").children().button();
+    $(".item .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
+</script>

@@ -1,0 +1,16 @@
+﻿@using CodeGarten.Data.Model
+@model Container
+<div class="item">
+    <div class="actions">
+        @Html.ActionLink(String.Format("@{0}", @Model.Prototype.Structure.Name), "Index", "Structure", new { id = Model.Prototype.StructureId }, null)
+        @Html.ActionLink(String.Format("Childs ({0})", Model.Childs.Count), "Index", "Container", null, null, "childs", new { id = Model.Id }, null)
+    </div>
+    <h3 class="name">@Html.ActionLink(Model.Name, "Index", "Container", new { id = Model.Id }, null)</h3>
+    <div class="info">
+        <p>
+            Description: @Model.Description</p>
+    </div>
+</div>
+<script type="text/javascript">
+    $(".item .actions").children().button();
+</script>

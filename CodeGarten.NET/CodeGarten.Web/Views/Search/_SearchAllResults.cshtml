@@ -1,0 +1,4 @@
+﻿@using CodeGarten.Data.Model
+@Html.Partial("_SearchResults", ViewBag.Users as IEnumerable<User>)
+@Html.Partial("_SearchResults", ViewBag.Structures as IEnumerable<Structure>)
+@Html.Partial("_SearchResults", ViewBag.Projects as IEnumerable<Container>)

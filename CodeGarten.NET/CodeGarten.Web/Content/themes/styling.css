@@ -4,7 +4,7 @@
     width: 920px;
 }
 
-body{ font: 62.5% "Trebuchet MS", sans-serif;line-height: 1.4;}
+body{ font: 62.5% "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;}
 		
 h1 { padding: .2em; margin: 0;}
 
@@ -130,6 +130,14 @@ h1 { padding: .2em; margin: 0;}
 -----------------------------------------------------------*/
 #signup_form input[type=text], #signup_form input[type=password] { text-align: center;}
 
+/* Search form
+-----------------------------------------------------------*/
+.search_title .name { display: inline-block;}
+#search_form { display: inline-block;padding-left: 5px; }
+#search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 690px;top: -54px;}
+#search_form .query input[type=Submit] { left: -8px;height: 30px;top: -4px;}
+#search_form .query input[type=text] { font-size:large;width: 716px;}
+
 /* top user actions
 -----------------------------------------------------------*/
 #user_actions { float: right;padding: 10px;}
@@ -149,12 +157,14 @@ h1 { padding: .2em; margin: 0;}
 .title .clear { clear: both;}
 .title a { left: 60px;margin-left: 5px;top: -20px;}
 
-/* structure widget
+/* item
 -----------------------------------------------------------*/
-.structure_widget { padding: 10px; border-bottom:1px solid #CCCCCC;}
-.structure_widget:hover { background-color:#e8e8e8;}
-.structure_widget .description, .structure_widget .name { padding-left: 5px;}
-.structure_widget .actions { padding-left: 5px;padding-bottom: 5px;}
+.item { border-bottom:1px solid #CCCCCC; border-top:1px solid #CCCCCC;}
+.item:hover { background-color:#e8e8e8;}
+.item .info, .item .name { padding-left: 5px;}
+.item .actions { padding-left: 5px;padding-top: 3px; float: right;}
+
+.multi-line { width: 300px;}
 
 
 /* Styles for validation helpers

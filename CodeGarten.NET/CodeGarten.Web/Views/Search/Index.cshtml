@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Search";
+}
+<div class="search_title title">
+    <div class="name">
+        <img src="@Url.Content("~/Content/themes/smoothness/images/Search.png")" alt="Structures" />
+        <h2>
+            Search</h2>
+    </div>
+    <div id="search_form">
+        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "results" }))
+        {
+            <div class="query">
+                @Html.TextBox("query")
+                <input type="submit" value="Search" />
+            </div>
+        
+            <div class="type">
+                @Html.RadioButton("type", "user", new { id = "user" })
+                @Html.Label("user", "User")
+                @Html.RadioButton("type", "structure", new { id = "structure" })
+                @Html.Label("structure", "Structure")
+                @Html.RadioButton("type", "project", new { id = "project" })
+                @Html.Label("project", "Project")
+                @Html.RadioButton("type", "all", true, new { id = "all" })
+                @Html.Label("all", "All")
+            </div>
+            <img src="@Url.Content("~/Content/themes/smoothness/images/loading.gif")" alt="Loading"/>
+        }
+    </div>
+</div>
+<div id="results">
+</div>
+<script type="text/javascript">
+    var type;
+    $(document).ready(function () {
+        $(".type").buttonset();
+
+        $("form").ajaxStart(function () {
+            $("#results").hide();
+            //            $("#results").fadeOut('fast', function () {
+            $("#search_form img[alt=Loading]").fadeIn('fast');
+            //            });
+        });
+        $("form").ajaxStop(function () {
+            $("#search_form img[alt=Loading]").fadeOut('fast', function () {
+                $("#results").fadeIn('fast');
+            });
+        });
+
+        $("#search_form img[alt=Loading]").hide();
+
+        $("#search_form .query input[type=text]").focus();
+    });
+
+    //    Update = function (response) {
+    //        $("#results").fadeOut('fast', function () {
+    //            $("#results").html(response);
+    //            $("#results").fadeIn();
+    //        });
+    //    };
+</script>

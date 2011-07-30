@@ -83,5 +83,10 @@ namespace CodeGarten.Data.Access
             structure.Developing = false;
             _dbContext.SaveChanges();
         }
+
+        public IQueryable<Structure> Search(string query)
+        {
+            return _dbContext.Structures.Where(s => s.Name.StartsWith(query.Trim()));
+        }
     }
 }

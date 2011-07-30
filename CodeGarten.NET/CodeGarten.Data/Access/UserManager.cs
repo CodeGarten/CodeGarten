@@ -342,5 +342,10 @@ namespace CodeGarten.Data.Access
         {
             return _dbContext.Users;
         }
+ 
+        public IQueryable<User> Search(string query)
+        {
+            return _dbContext.Users.Where(u => u.Name.StartsWith(query.Trim()));
+        }
     }
 }

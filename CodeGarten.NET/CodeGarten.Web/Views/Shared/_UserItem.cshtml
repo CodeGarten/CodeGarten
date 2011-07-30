@@ -1,0 +1,19 @@
+﻿@using CodeGarten.Data.Model
+@model User
+<div class="item">
+    <div class="actions">
+        @Html.ActionLink("Profile", "Index", "Profile", new { name = Model.Name }, null)
+        @Html.ActionLink(String.Format("Structures ({0})",Model.Structures.Count(s => !s.Developing && s.Public)), "Index", "Profile", null, null, "structures", new { name = Model.Name }, null)
+        @Html.ActionLink(String.Format("Enrolls ({0})", Model.Enrolls.Count), "Index", "Profile", null, null, "enrolls", new { name = Model.Name }, null)
+    </div>
+    <h3 class="name">@Model.Name</h3>
+    <div class="info">
+        <p>
+            Email: @Model.Email</p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".item .actions").children().button();
+    $(".item .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
+</script>

@@ -140,5 +140,10 @@ namespace CodeGarten.Data.Access
         }
 
         #endregion
+
+        public IQueryable<Container> Search(string query)
+        {
+            return _dbContext.Containers.Where(c => c.Name.StartsWith(query.Trim()));
+        }
     }
 }

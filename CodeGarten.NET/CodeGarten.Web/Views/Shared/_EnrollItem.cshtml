@@ -1,0 +1,21 @@
+﻿@using CodeGarten.Data.Model
+@model Enroll
+<div class="item">
+    <div class="actions">
+        @Html.ActionLink(String.Format("@{0}", @Model.Container.Prototype.Structure.Name), "Index", "Structure", new { id = Model.StructureId }, null)
+        @Html.ActionLink(String.Format("Childs ({0})", Model.Container.Childs.Count), "Index", "Container", null, null, "childs", new { id = Model.ContainerId }, null)
+    </div>
+    <h3 class="name">@Html.ActionLink(Model.Container.Name, "Index", "Container", new { id = Model.ContainerId }, null)</h3>
+    <div class="info">
+        <p>
+            Description: @Model.Container.Description</p>
+        <p>
+            @{
+                var inherited = Model.Inherited ? "Inherited" : "Enrolled";
+            }
+            Role: @Model.RoleTypeName (@inherited)</p>
+    </div>
+</div>
+<script type="text/javascript">
+    $(".item .actions").children().button();
+</script>
