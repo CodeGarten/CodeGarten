@@ -17,35 +17,29 @@
         <li><a href="#ud">Developing (@Model.Count(s => s.Developing))</a></li>
     </ul>
     <div id="active">
-        @foreach (var structure in Model.Where(s => !s.Developing))
+        @if (Model.Count(m => !m.Developing) > 0)
         {
-            <div class="structure_widget">
-                <div>
-                    @{string description = structure.Description ?? "No description";}
-                    <h3 class="name">@Html.ActionLink(structure.Name, "Index", new{id = structure.Id})</h3>
-                    <p class="description">
-                        Description: @description</p>
-                    <div class="actions">
-                        @Html.ActionLink("Delete", "Delete", new { id = structure.Id })
-                    </div>
-                </div>
-            </div>
+            foreach (var structure in Model.Where(s => !s.Developing))
+            {
+                @Html.Partial("_StructureItem", structure)
+            }
+        }
+        else
+        {
+            <p>Structures that have already been published will be shown here.</p>   
         }
     </div>
     <div id="ud">
-        @foreach (var structure in Model.Where(s => s.Developing))
+        @if (Model.Count(m => m.Developing) > 0)
         {
-            <div class="structure_widget">
-                <div>
-                    @{string description = structure.Description ?? "No description";}
-                    <h3 class="name">@Html.ActionLink(structure.Name, "Index", new{id = structure.Id})</h3>
-                    <p class="description">
-                        Description: @description</p>
-                    <div class="actions">
-                        @Html.ActionLink("Delete", "Delete", new { id = structure.Id })
-                    </div>
-                </div>
-            </div>
+            foreach (var structure in Model.Where(s => s.Developing))
+            {
+                @Html.Partial("_StructureItem", structure)
+            }
+        }
+        else
+        {
+            <p>Structures that have not yet been published will be shown here.</p>   
         }
     </div>
 </div>
@@ -53,8 +47,5 @@
     $(document).ready(function () {
         $("#structure_tabs").tabs();
         $(".title a").button({ icons: { primary: "ui-icon-plus"} });
-        $(".structure_widget .actions").children().button(/*{disabled: true}*/);
-        $(".structure_widget .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
-        //        $(".structure_widget").hover(function () { $(this).find(".actions").children().button("option", "disabled", false); }, function () { $(this).find(".actions").children().button("option", "disabled", true); });
     });
 </script>

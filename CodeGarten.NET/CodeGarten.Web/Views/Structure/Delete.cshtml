@@ -1,0 +1,21 @@
+﻿@using CodeGarten.Data.Model
+@model Structure
+@{
+    ViewBag.Title = "Delete " + Model.Name;
+}
+<div class="ui-widget">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <div class="ui-widget-header ui-corner-top ui-state-default">
+            <h2>
+                Delete @Model.Name</h2>
+        </div>
+        <div class="ui-widget-content ui-state-highlight">
+            <p>Under construction...</p>
+            <p>
+                <input type="submit" value="Delete" />
+            </p>
+        </div>
+    }
+</div>
