@@ -99,7 +99,9 @@ function FormDialog() {
         _callback = callback;
         _obj = obj;
         _dialog.dialog("open");
-        $(_dialog).children("form").find(".editor-field").children("input").removeClass("input-validation-error").addClass("valid");
+        $(_dialog).children("form").find(".editor-field").children("input").first().removeClass("input-validation-error").addClass("valid");
+        $(_dialog).children("form").find(".editor-field").children("input").first().next("span").addClass("field-validation-valid").removeClass("field-validation-error").empty();
+
     };
 
     this.OnSuccessCallBack = function (result) {
