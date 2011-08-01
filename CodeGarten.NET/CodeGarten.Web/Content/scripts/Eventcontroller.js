@@ -75,7 +75,7 @@ var EventController = new (function () {
     };
 
     this.Placeholder = function (msg, size) {
-        return "<div class='ui-state-highlight ui-corner-all'><" + size + "><span class='ui-icon ui-icon-info'/>" + msg + "</" + size + "></div>";
+        return "<div class='ui-state-highlight ui-corner-all placeholder'><" + size + "><span class='ui-icon ui-icon-info'/>" + msg + "</" + size + "></div>";
     };
 
 })();

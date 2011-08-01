@@ -13,7 +13,8 @@ h1 { padding: .2em; margin: 0;}
 
 .ui-icon-trash, .ui-icon-plus { float:right; }
 
-.ui-state-highlight { text-align:center;}
+/*.ui-state-highlight { text-align:center;}*/
+.placeholder { text-align: center;}
 
 #error { width: 74%;float: left; }
 
@@ -25,8 +26,8 @@ h1 { padding: .2em; margin: 0;}
 #containerPrototypeDesign .RoleType .ui-icon-arrowthickstop-1-s { float: left;}
 #containerPrototypeDesign .RoleType .ui-icon-arrowthickstop-1-n { float: left;}
 
-.Workspace > .ui-widget-header, .Workspace_link { background-image: url(http://jqueryui.com/themeroller/images/?new=cccccc&w=40&h=40&f=png&q=100&fltr[]=over|textures/08_diagonals_thick.png|0|0|75);}
-.RoleType > .ui-widget-header, .RoleType_link { background-image:url(http://jqueryui.com/themeroller/images/?new=cccccc&w=40&h=40&f=png&q=100&fltr[]=over|textures/07_diagonals_medium.png|0|0|75);}
+/*.Workspace > .ui-widget-header, .Workspace_link { background-image: url(http://jqueryui.com/themeroller/images/?new=cccccc&w=40&h=40&f=png&q=100&fltr[]=over|textures/08_diagonals_thick.png|0|0|75);}
+.RoleType > .ui-widget-header, .RoleType_link { background-image:url(http://jqueryui.com/themeroller/images/?new=cccccc&w=40&h=40&f=png&q=100&fltr[]=over|textures/07_diagonals_medium.png|0|0|75);}*/
 
 #containerPrototypeDesign .ui-widget-header .ui-icon { margin-top: 5px; }
 
@@ -77,8 +78,6 @@ h1 { padding: .2em; margin: 0;}
     width: 920px;
 }
 
-#action_clear { clear: both;padding-bottom: 5px;}
-
 #actions { margin-bottom: 10px;border-top: 1px solid #CCCCCC;}
 
 #actions > button { margin-top: 5px;}
@@ -94,14 +93,8 @@ h1 { padding: .2em; margin: 0;}
 
 /* Styles Structure Container Prototype
 -----------------------------------------------------------*/
-#container_structure{  }
-
-.container .container { min-width:184px;display: inline-block;vertical-align: top;}
-
-.container
-{
-    width: inherit;
-}
+/*.container_childs .container {display: -moz-inline-stack; display: inline-block;min-width: 184px;max-width: 184px;}*/
+.container_childs .container { float: left;min-width: 184px;}
 			
 .container_header
 {
@@ -125,18 +118,20 @@ h1 { padding: .2em; margin: 0;}
 /* Login form
 -----------------------------------------------------------*/
 #login_form input[type=text], #login_form input[type=password] { text-align: center;font-size: 150%;}
+#login_form { text-align: center;}
 
 /* Signup form
 -----------------------------------------------------------*/
 #signup_form input[type=text], #signup_form input[type=password] { text-align: center;}
+#signup_form { text-align: center;}
 
 /* Search form
 -----------------------------------------------------------*/
-.search_title .name { display: inline-block;}
+.search_title .name { display: inline-block;vertical-align: top;}
 #search_form { display: inline-block;padding-left: 5px; }
-#search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 690px;top: -54px;}
+#search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 685px;top: -54px;}
 #search_form .query input[type=Submit] { left: -8px;height: 30px;top: -4px;}
-#search_form .query input[type=text] { font-size:large;width: 716px;}
+#search_form .query input[type=text] { font-size:large;width: 710px;}
 
 /* top user actions
 -----------------------------------------------------------*/
@@ -154,7 +149,6 @@ h1 { padding: .2em; margin: 0;}
 .title { padding-bottom: 20px;}
 .title img { width: 60px;height: 60px;float: left;}
 .title h2 {display: inline-block; font-size: large;margin-left: 5px;}
-.title .clear { clear: both;}
 .title a { left: 60px;margin-left: 5px;top: -20px;}
 
 /* item
@@ -165,6 +159,7 @@ h1 { padding: .2em; margin: 0;}
 .item .actions { padding-left: 5px;padding-top: 3px; float: right;}
 
 .multi-line { width: 300px;}
+.clear { clear: both;padding-bottom: 5px;}
 
 
 /* Styles for validation helpers
