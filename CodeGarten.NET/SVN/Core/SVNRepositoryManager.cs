@@ -33,5 +33,14 @@ namespace SVN
             Directory.CreateDirectory(path);
             return new SVNRepositoryManager(parentPath, repoName);
         }
+
+        public static bool Delete(String parentPath, String repoName)
+        {
+            var path = Path.Combine(parentPath, repoName);
+            if (!Directory.Exists(path))
+                return false;
+            Directory.Delete(path, true);
+            return true;
+        }
     }
 }
