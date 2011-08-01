@@ -31,7 +31,7 @@ h1 { padding: .2em; margin: 0;}
 #containerPrototypeDesign .ui-widget-header .ui-icon { margin-top: 5px; }
 
 #components {width: 25%;float: right;}
-#components .item {margin-bottom:1em; cursor:pointer; font-size:medium;}
+#components .components_item {margin-bottom:1em; cursor:pointer; font-size:medium;}
 #components .item_options {margin-left:1em;}
 #components .page_add {width:100%;}
 

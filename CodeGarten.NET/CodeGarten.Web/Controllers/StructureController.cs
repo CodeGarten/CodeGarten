@@ -22,8 +22,8 @@ namespace CodeGarten.Web.Controllers
             var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name) , rl.RoleBarrier });
 
             var Bindings =
-                dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => cp.Bindings).Select(
-                    bl => bl.Select(b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName })).SingleOrDefault();
+                dataBaseManager.ContainerPrototype.GetAll(id).SelectMany(cp => cp.Bindings).Select(
+                    b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName });
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });

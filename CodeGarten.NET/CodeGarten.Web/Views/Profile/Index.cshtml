@@ -1,0 +1,29 @@
+﻿@using CodeGarten.Data.Model
+@model User
+@{
+    ViewBag.Title = Model.Name;
+}
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/User.png")" alt="Profile" />
+    <h2>
+        @Model.Name</h2>
+    <div class="clear">
+    </div>
+    @if (Model.Name == User.Identity.Name)
+    {
+        @Html.ActionLink("Edit", "Edit", new { userName = Model.Name }, null)
+    }
+</div>
+<div id="enrolls">
+    <h3>
+        Enrolls</h3>
+    @foreach (var enroll in Model.Enrolls)
+    {
+        @Html.Partial("_EnrollItem", enroll)
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".title a").button({ icons: { primary: "ui-icon-pencil"} });
+    });
+</script>

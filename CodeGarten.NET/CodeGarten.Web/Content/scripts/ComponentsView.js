@@ -29,7 +29,7 @@ var ComponentsView = new (function () {
     this.AddItem = function (page, item) {
         var pageTag = $(content).find(".page_link:contains('" + page + "s')");
 
-        var itemTag = $("<div class='" + page + " item'>" + item + "<span class='item_options'/></div>");
+        var itemTag = $("<div class='" + page + " components_item'>" + item + "<span class='item_options'/></div>");
         $(itemTag).hide();
 
         var buttonEdit = $("<button onclick='javascript:" + page + "Controller.Edit(\"" + item + "\");' title='Edit'/>").button({ icons: { primary: "ui-icon-gear" }, text: false });
