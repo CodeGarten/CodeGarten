@@ -223,3 +223,23 @@ h1 { padding: .2em; margin: 0;}
 }
 
 .ui-widget-header { text-align: center;}
+
+/* Styles for Profile
+----------------------------------------------------------*/
+
+.edit
+{
+    padding: 5px;
+    border-bottom: 1px solid;    
+}
+
+.edit>.info>h3
+{
+    float: left;
+    margin-right: 100px;
+}
+
+.edit>.info>p
+{
+    display: inline;
+}
