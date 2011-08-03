@@ -30,6 +30,19 @@ namespace CodeGarten.Data.Access
             return rule;
         }
 
+        public Rule Create(long structureId, string name, IEnumerable<KeyValuePair<string, string>> permissions)
+        {
+            var rule = new Rule { Name = name, StructureId = structureId };
+
+            foreach (var permission in permissions)
+                rule.Permissions.Add(_dbContext.ServicePermissions.Find(permission.Value, permission.Key));
+            
+            _dbContext.Rules.Add(rule);
+            _dbContext.SaveChanges();
+
+            return rule;
+        }
+
         internal static Rule Get(Context db, long structureId, string name)
         {
             return db.Rules.Find(name, structureId);

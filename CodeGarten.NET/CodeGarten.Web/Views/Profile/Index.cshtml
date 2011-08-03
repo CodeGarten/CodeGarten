@@ -11,16 +11,14 @@
     </div>
     @if (Model.Name == User.Identity.Name)
     {
-        @Html.ActionLink("Edit", "Edit", new { userName = Model.Name }, null)
+        @Html.ActionLink("Profile", "Edit", new { userName = Model.Name }, null)
     }
 </div>
-<div id="enrolls">
-    <h3>
-        Enrolls</h3>
-    @foreach (var enroll in Model.Enrolls)
-    {
-        @Html.Partial("_EnrollItem", enroll)
-    }
+<div id="userInfo">
+
+    <h3>email: </h3>
+    <p>@Model.Email</p>
+
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

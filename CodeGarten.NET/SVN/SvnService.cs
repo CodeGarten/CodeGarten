@@ -23,7 +23,6 @@ namespace SVN
         public SvnService()
             : base(new ServiceModel("Svn", "System Version Control", EnumExtensions.ToEnumerable<SVNPrivileges>()))
         {
-            //TODO
             _filesPath = Path.Combine(PathService, "etc");
             Directory.CreateDirectory(_filesPath);
             _authFileName = "auth_file";

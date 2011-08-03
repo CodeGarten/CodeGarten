@@ -51,7 +51,7 @@ namespace CodeGarten.Data.Access
             _dbContext.SaveChanges();
         }
 
-        public ContainerPrototype AddWorkSpace(long structureId, string name, string workSpaceName)
+        public ContainerPrototype AddWorkSpaceType(long structureId, string name, string workSpaceName)
         {
             var cp = Get(structureId, name);
 

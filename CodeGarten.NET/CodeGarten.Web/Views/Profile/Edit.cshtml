@@ -1,0 +1,105 @@
+﻿@model CodeGarten.Web.Model.UserView
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/User.png")" alt="Profile" />
+    <h2>
+        @Model.Name</h2>
+    <div class="clear">
+    <div>
+        @Html.ActionLink("Back", "Index")
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+<div class="edit">
+    <div class="info">
+        <h3>
+            Email:
+        </h3>
+        <p>
+            @Model.Email
+        </p>
+        <button>Edit</button>
+    </div>
+    <div class="form">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+    
+            <div class="editor-hidden">
+                <input type="hidden" name="Name" value=@Model.Name />
+            </div>
+                        
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Email)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        }
+    </div>  
+</div>
+<div class="edit">
+    <div class="info">
+        <h3>
+            Password:
+        </h3>
+        <button>Change Password</button>
+    </div>
+    
+    <div class="form">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            
+            <div class="editor-hidden">
+                <input type="hidden" name="Name" value=@Model.Name />
+            </div>
+            
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Password)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PasswordConfirm)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PasswordConfirm)
+                @Html.ValidationMessageFor(model => model.PasswordConfirm)
+            </div>
+    
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        }
+    </div>  
+</div>
+<script type="text/javascript">
+    
+        $(".title a").button({ icons: { primary: "ui-icon-arrowreturnthick-1-w"} });
+        $(".info > button").button({ icons: { primary: "ui-icon-pencil"} }).click(function () {
+            $(".form").hide();
+            $(".info").show();
+            $(this).parent().hide();
+            $(this).parent().parent().children(".form").show();
+        });
+        $(".form").hide();
+    
+</script>
+

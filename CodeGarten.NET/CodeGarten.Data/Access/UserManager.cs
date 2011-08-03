@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
 
@@ -264,18 +265,17 @@ namespace CodeGarten.Data.Access
             if (!ExisteRole(containerObj, roleTypeObj))
                 return false; // throw exception
 
-            var enroll = _dbContext.Enrolls.Find(user, container, roleType, structure);
+            var pass = _dbContext.EnrollPassWords.Find(container, roleType, structure);
+            if (pass != null)
+                if (password == null || pass.Password != AuthenticationManager.EncryptPassword(password))
+                    return false;
 
+            var enroll = _dbContext.Enrolls.Find(user, container, roleType, structure);
             if (enroll != null)
             {
                 if (!enroll.Inherited)
                     return false; // throw exception 
 
-                var pass = _dbContext.EnrollPassWords.Find(container, roleType, structure);
-                if (pass != null)
-                    if (password==null || pass.Password != AuthenticationManager.EncryptPassword(password))
-                        return false;
-                
                 enroll.Inherited = false;
             }else
             {
@@ -299,7 +299,7 @@ namespace CodeGarten.Data.Access
 
             return _dbContext.SaveChanges() != 0;
         }
-
+        
         internal static User Get(Context db, string user)
         {
             return db.Users.Where((u) => u.Name == user).SingleOrDefault();
