@@ -1,1439 +1,1005 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using CodeGarten.Data.Access;
-//using CodeGarten.Data.ModelView;
-//using CodeGarten.Data.Tests.ClassTests;
-//using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using CodeGarten.Data.Access;
+using CodeGarten.Data.Tests.ClassTests;
+using NUnit.Framework;
 
-//namespace CodeGarten.Data.Tests
-//{
-//    [TestFixture]
-//    internal class Data
-//    {
-//        [Test]
-//        public void DeleteStructure()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.Structure.Delete(dbman.Structure.Get(1));
-//        }
+namespace CodeGarten.Data.Tests
+{
+    [TestFixture]
+    internal class Data
+    {
+        [Test]
+        public void DeleteStructure()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.Structure.Delete(1);
+        }
 
-//        [Test]
-//        public void DeleteRoleType()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.RoleType.Delete(dbman.RoleType.Get(1, "studant"), 1);
-//        }
+        [Test]
+        public void DeleteRoleType()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.RoleType.Delete(1, "studant");
+            
+        }
 
-//        [Test]
-//        public void DeleteWorkSpaceType()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.WorkSpaceType.Delete(dbman.WorkSpaceType.Get(1, "public"), 1);
-//        }
+        [Test]
+        public void DeleteWorkSpaceType()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.WorkSpaceType.Delete(1, "public");
+        }
 
-//        [Test]
-//        public void DeleteRule()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.Rule.Delete(dbman.Rule.Get(1, "studant"), 1);
-//        }
+        [Test]
+        public void DeleteRule()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.Rule.Delete(1, "studant");
+        }
 
-//        [Test]
-//        public void DeleteContainerPrototype()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.ContainerPrototype.Delete(dbman.ContainerPrototype.Get(1, "Course"), 1);
-//        }
+        [Test]
+        public void DeleteContainerPrototype()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.ContainerPrototype.Delete(1, "Course");
+        }
 
-//        [Test]
-//        public void DeleteContainer()
-//        {
-//            using (var dbman = new DataBaseManager())
-//                dbman.Container.Delete(dbman.Container.Get(2).Convert());
-//        }
+        [Test]
+        public void DeleteContainer()
+        {
+            using (var dbman = new DataBaseManager())
+                dbman.Container.Delete(2);
+        }
 
-//        [Test]
-//        public void Drop()
-//        {
-//            using (var dataBaseManager = new DataBaseManager())
-//                dataBaseManager.DbContext.Database.Delete();
-//        }
+        //[Test]
+        //public void Drop()
+        //{
+        //    using (var dataBaseManager = new DataBaseManager())
+        //        dataBaseManager.DbContext.Database.Delete();
+        //}
 
-//        [Test]
-//        public void Create()
-//        {
-//            DataBaseManager.Initializer();
-//        }
+        //[Test]
+        //public void Create()
+        //{
+        //    DataBaseManager.Initializer();
+        //}
 
-//        [Test]
-//        public void ShouldTestBasicFeatures()
-//        {
-//            DataBaseManager.Initializer();
-//            using (var dataBaseManager = new DataBaseManager())
-//            {
-//                #region CREATE_SERVICES
+        [Test]
+        public void ShouldTestBasicFeatures()
+        {
+            using (var dataBaseManager = new DataBaseManager())
+            {
+                #region CREATE_SERVICES
 
-//                var serviceManager = new ServiceManager(dataBaseManager);
+                var serviceManager = dataBaseManager.Service;
 
-//                var serviceGit = serviceManager.Create("Git","System Version Control (decentralized)", new[] {"r", "rw"});
+                var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
+
+                var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] { "r", "rw" });
+
+                var serviceTrac = serviceManager.Create("Trac", "WIKI system", new[] { "TRAC_ADMIN" });
+
+                #endregion
+
+                #region CREATE_USERS
+
+                var userManager = dataBaseManager.User;
+
+                var userFaustino = userManager.Create("FaustinoLeiras", "FaustinoLeiras12345", "FaustinoLeiras@gmail.com");
+
+                var userSamir = userManager.Create("SamirHafez", "SamirHafez12345", "SamirHafez@gmail.com");
+
+                var userRicardo = userManager.Create("Ricardo", "Ricardo12345", "Ricardo@gmail.com");
+
+                var userGeada = userManager.Create("Gueada", "Gueada12345", "Gueada@gmail.com");
+
+                var userFelix = userManager.Create("Felix", "Felix12345", "Felix@gmail.com");
+
+                var userGuedes = userManager.Create("Guedes", "Guedes12345", "Guedes@gmail.com");
+
+                #endregion
+
+                #region CREATE_STRUCTURE
+
+                var structureManager = dataBaseManager.Structure;
+
+                var structure = structureManager.Create("AcademicStructure", "My Academic Structure :)", true, userFaustino.Name);
                 
-//                var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] {"r", "rw"});
+                #endregion
 
-//                var serviceTrac = serviceManager.Create("Trac", "WIKI system", new []{"TRAC_ADMIN"});
+                #region CREATE_WORKSPACE_TYPE
 
-//                #endregion
+                var workspaceType = dataBaseManager.WorkSpaceType;
 
-//                #region CREATE_USERS
+                var workspacePublic = workspaceType.Create(structure.Id, "public", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//                var userManager = new UserManager(dataBaseManager);
+                var workspacePrivate = workspaceType.Create(structure.Id, "private", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//                var userFaustino = new UserView()
-//                                       {
-//                                           Name = "FaustinoLeiras",
-//                                           Email = "FaustinoLeiras@gmail.com",
-//                                           Password = "FaustinoLeiras12345"
-//                                       };
+                #endregion
 
-//                userManager.Create(userFaustino);
+                #region CREATE_CONTAINER_PROTOTYPE
 
-//                var userSamir = new UserView()
-//                                    {
-//                                        Name = "SamirHafez",
-//                                        Email = "SamirHafez@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                var containerPrototype = dataBaseManager.ContainerPrototype;
 
-//                userManager.Create(userSamir);
+                var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
-//                var userRicardo = new UserView()
-//                                      {
-//                                          Name = "Ricardo",
-//                                          Email = "Ricardo@gmail.com",
-//                                          Password = "12345678Ab"
-//                                      };
+                var prototypeCourse = containerPrototype.Create(structure.Id, "Course", prototypeGraduation.Name);
 
-//                userManager.Create(userRicardo);
 
-//                var userGeada = new UserView()
-//                                    {
-//                                        Name = "Gueada",
-//                                        Email = "Gueada@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                var prototypeClass = containerPrototype.Create(structure.Id, "Class", prototypeCourse.Name);
 
-//                userManager.Create(userGeada);
+                var prototypeGroup = containerPrototype.Create(structure.Id, "Group", prototypeClass.Name);
 
-//                var userFelix = new UserView()
-//                                    {
-//                                        Name = "Felix",
-//                                        Email = "Felix@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                #endregion
 
-//                userManager.Create(userFelix);
+                #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
 
-//                var userGuedes = new UserView()
-//                                     {
-//                                         Name = "Guedes",
-//                                         Email = "Guedes@gmail.com",
-//                                         Password = "12345678Ab"
-//                                     };
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGraduation.Name, workspacePublic.Name);
 
-//                userManager.Create(userGuedes);
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
 
-//                #endregion
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
 
-//                #region CREATE_STRUCTURE
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
 
-//                var structureManager = new StructureManager(dataBaseManager);
+                #endregion
 
-//                var structure = new StructureView()
-//                                    {
-//                                        Name = "AcademicStructure",
-//                                        Description = "My Academic Structure :)"
-//                                    };
+                #region CREATE_ROLETYPE
 
-//                structureManager.Create(structure, userFaustino.Name);
+                var roleType = dataBaseManager.RoleType;
 
-//                #endregion
+                var roleTypeTeacher = roleType.Create(structure.Id, "teacher");
 
-//                #region CREATE_WORKSPACE_TYPE
+                var roleTypeDirector = roleType.Create(structure.Id, "director");
 
-//                var workspaceType = new WorkSpaceTypeManager(dataBaseManager);
+                var roleTypeStudant = roleType.Create(structure.Id, "studant");
 
-//                var workspacePublic = new WorkSpaceTypeView()
-//                                          {
-//                                              Name = "public"
-//                                          };
+                #endregion
 
-//                workspaceType.Create(workspacePublic, structure.Id, new[] {serviceGit.Name, serviceSvn.Name, serviceTrac.Name});
+                #region CREATE_RULE
 
-//                var workspacePrivate = new WorkSpaceTypeView()
-//                                           {
-//                                               Name = "private"
-//                                           };
+                var rule = dataBaseManager.Rule;
 
-//                workspaceType.Create(workspacePrivate, structure.Id, new[] {serviceGit.Name, serviceSvn.Name, serviceTrac.Name});
+                var ruleReaders = rule.Create(structure.Id, "readers", new[]
+                                                           {
+                                                               new KeyValuePair<string, string>(serviceGit.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceTrac.Name, "TRAC_ADMIN")
+                                                           });
 
-//                #endregion
+                var ruleReadersAndWriters = rule.Create(structure.Id, "ReadersAndWriters", new[]
+                                                                     {
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceGit.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceSvn.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceTrac.Name,
+                                                                             "TRAC_ADMIN")
+                                                                     });
 
-//                #region CREATE_CONTAINER_PROTOTYPE
+                #endregion
 
-//                var containerPrototype = new ContainerPrototypeManager(dataBaseManager);
+                #region CREATE_ROLE
 
-//                var prototypeGraduation = new ContainerPrototypeView()
-//                                              {
-//                                                  Name = "Graduation"
-//                                              };
+                var role = dataBaseManager.Role;
 
-//                containerPrototype.Create(prototypeGraduation, structure.Id);
+                #region ADD_ROLES_GRADUATION_WORKSPACE_PUBLIC
 
-//                var prototypeCourse = new ContainerPrototypeView()
-//                                          {
-//                                              Name = "Course"
-//                                          };
+                role.Create(
+                    structure.Id,
+                    prototypeGraduation.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
 
-//                containerPrototype.Create(prototypeCourse, structure.Id, prototypeGraduation.Name);
+                #endregion
 
+                #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
 
-//                var prototypeClass = new ContainerPrototypeView()
-//                                         {
-//                                             Name = "Class"
-//                                         };
-
-//                containerPrototype.Create(prototypeClass, structure.Id, prototypeCourse.Name);
-
-//                var prototypeGroup = new ContainerPrototypeView()
-//                                         {
-//                                             Name = "Group"
-//                                         };
-
-//                containerPrototype.Create(prototypeGroup, structure.Id, prototypeClass.Name);
-
-//                #endregion
-
-//                #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
-
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGraduation.Name, workspacePublic.Name);
-
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
-
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
-
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
-
-//                #endregion
-
-//                #region CREATE_ROLETYPE
-
-//                var roleType = new RoleTypeManager(dataBaseManager);
-
-//                var roleTypeTeacher = new RoleTypeView()
-//                                          {
-//                                              Name = "teacher"
-//                                          };
-
-//                roleType.Create(roleTypeTeacher, structure.Id);
-
-//                var roleTypeDirector = new RoleTypeView()
-//                                           {
-//                                               Name = "director"
-//                                           };
-
-//                roleType.Create(roleTypeDirector, structure.Id);
-
-//                var roleTypeStudant = new RoleTypeView()
-//                                          {
-//                                              Name = "studant"
-//                                          };
-
-//                roleType.Create(roleTypeStudant, structure.Id);
-
-//                #endregion
-
-//                #region CREATE_RULE
-
-//                var rule = new RuleManager(dataBaseManager);
-
-//                var ruleReaders = new RuleView()
-//                                      {
-//                                          Name = "readers"
-//                                      };
-
-//                rule.Create(ruleReaders, structure.Id, new[]
-//                                                           {
-//                                                               new KeyValuePair<string, string>(serviceGit.Name, "r"),
-//                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r"),
-//                                                               new KeyValuePair<string, string>(serviceTrac.Name, "TRAC_ADMIN")
-//                                                           });
-
-//                var ruleReadersAndWriters = new RuleView()
-//                                                {
-//                                                    Name = "ReadersAndWriters"
-//                                                };
-
-//                rule.Create(ruleReadersAndWriters, structure.Id, new[]
-//                                                                     {
-//                                                                         new KeyValuePair<string, string>(
-//                                                                             serviceGit.Name,
-//                                                                             "rw"),
-//                                                                         new KeyValuePair<string, string>(
-//                                                                             serviceSvn.Name,
-//                                                                             "rw"),
-//                                                                         new KeyValuePair<string, string>(
-//                                                                             serviceTrac.Name,
-//                                                                             "TRAC_ADMIN")
-//                                                                     });
-
-//                #endregion
-
-//                #region CREATE_ROLE
-
-//                var role = new RoleManager(dataBaseManager);
-
-//                #region ADD_ROLES_GRADUATION_WORKSPACE_PUBLIC
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGraduation.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                #endregion
-
-//                #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                #endregion
-
-//                #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                #endregion
-
-//                #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePrivate.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePrivate.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                #endregion
-
-//                #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
-
-//                #endregion
-
-//                #endregion
-
-//                #region CREATE_CONTAINERS
-
-//                var container = new ContainerManager(dataBaseManager);
-
-//                var containerLeic = new ContainerView()
-//                                        {
-//                                            Name = "LEIC",
-//                                            Description = "Licencitura Egenharia informatica e de computadores"
-//                                        };
-
-//                container.Create(containerLeic, structure.Id, prototypeGraduation.Name);
-
-//                #region CREATE_COURSE_MPD
-
-//                var containerMpd = new ContainerView()
-//                                       {
-//                                           Name = "MPD",
-//                                           Description = "Modelo de padoes de desenho"
-//                                       };
-
-//                container.Create(containerMpd, structure.Id, prototypeCourse.Name, containerLeic.Id);
-
-//                var containerMpdLi31D = new ContainerView()
-//                                            {
-//                                                Name = "LI31D",
-//                                                Description = "Turma 1 de terceiro semestre diurno"
-//                                            };
-
-//                container.Create(containerMpdLi31D, structure.Id, prototypeClass.Name, containerMpd.Id);
-
-//                var containerMpdG1 = new ContainerView()
-//                                         {
-//                                             Name = "Grupo1",
-//                                             Description = "Grupo de MPD"
-//                                         };
-
-//                container.Create(containerMpdG1, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
-
-//                var containerMpdG2 = new ContainerView()
-//                                         {
-//                                             Name = "Grupo2",
-//                                             Description = "Grupo de MPD"
-//                                         };
-
-//                container.Create(containerMpdG2, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
-
-//                #endregion
-
-//                #region CREATE_COURSE_SD
-
-//                var containerSd = new ContainerView()
-//                                      {
-//                                          Name = "SD",
-//                                          Description = "Sistemas distribuidos"
-//                                      };
-
-//                container.Create(containerSd, structure.Id, prototypeCourse.Name, containerLeic.Id);
-
-//                var containerSdLi31D = new ContainerView()
-//                                           {
-//                                               Name = "LI31D",
-//                                               Description = "Turma 1 de terceiro semestre diurno"
-//                                           };
-
-//                container.Create(containerSdLi31D, structure.Id, prototypeClass.Name, containerSd.Id);
-
-//                var containerSdG1 = new ContainerView()
-//                                        {
-//                                            Name = "Grupo1",
-//                                            Description = "Grupo de SD"
-//                                        };
-
-//                container.Create(containerSdG1, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
-
-//                var containerSdG2 = new ContainerView()
-//                                        {
-//                                            Name = "Grupo2",
-//                                            Description = "Grupo de SD"
-//                                        };
-
-//                container.Create(containerSdG2, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
-
-//                #endregion
-
-//                #endregion
-
-//                #region ENROLL_USER
-
-//                userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
-
-//                userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
-//                userManager.Enroll(userGuedes.Name, structure.Id, containerSd.Id, roleTypeDirector.Name);
-
-//                userManager.Enroll(userFelix.Name, structure.Id, containerSdLi31D.Id, roleTypeTeacher.Name);
-//                userManager.Enroll(userGuedes.Name, structure.Id, containerMpdLi31D.Id, roleTypeTeacher.Name);
-
-//                userManager.Enroll(userFaustino.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
-//                userManager.Enroll(userSamir.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
-
-//                userManager.Enroll(userRicardo.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
-//                userManager.Enroll(userGeada.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
-
-//                userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
-//                userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
-
-//                userManager.Enroll(userGeada.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
-//                userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
-
-//                #endregion
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                #endregion
+
+                #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
+
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                #endregion
+
+                #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
+
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePrivate.Name,
+                    roleTypeDirector.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePrivate.Name,
+                    roleTypeTeacher.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
+
+                #endregion
+
+                #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
+
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new [] {ruleReaders.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
+
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new [] {ruleReadersAndWriters.Name}
+                    );
+
+                #endregion
+
+                #endregion
+
+                #region CREATE_CONTAINERS
+
+                var container = dataBaseManager.Container;
+
+                var containerLeic = container.Create(structure.Id, "LEIC", "Licencitura Egenharia informatica e de computadores", null);
                 
-//                //AuthorizationTestes aut = new AuthorizationTestes();
-//                //AuthorizationManager authorizationManager = new AuthorizationManager(dataBaseManager);
+                #region CREATE_COURSE_MPD
 
-//                //authorizationManager.CreateServiceAuthorizationStruct(aut, serviceSvn.Name);
-//            }
-//        }
+                var containerMpd = container.Create(structure.Id, "MPD", "Modelo de padoes de desenho", containerLeic.Id);
 
-//        [Test]
-//        public void ShouldTestDisentoll()
-//        {
-//            DataBaseManager.Initializer();
-//            using (var dataBaseManager = new DataBaseManager())
-//            {
+                var containerMpdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerMpd.Id);
 
-//                #region CREATE_SERVICES
+                var containerMpdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de MPD", containerMpdLi31D.Id);
 
-//                var serviceManager = new ServiceManager(dataBaseManager);
+                var containerMpdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de MPD", containerMpdLi31D.Id);
 
-//                var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
+                #endregion
 
-//                var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] { "r", "rw" });
+                #region CREATE_COURSE_SD
 
-//                #endregion
+                var containerSd = container.Create(structure.Id, "SD", "Sistemas distribuidos", containerLeic.Id);
 
-//                #region CREATE_USERS
+                var containerSdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerSd.Id);
 
-//                var userManager = new UserManager(dataBaseManager);
+                var containerSdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de SD", containerSdLi31D.Id);
 
-//                var userFaustino = new UserView()
-//                                       {
-//                                           Name = "FaustinoLeiras",
-//                                           Email = "FaustinoLeiras@gmail.com",
-//                                           Password = "FaustinoLeiras12345"
-//                                       };
+                var containerSdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de SD", containerSdLi31D.Id);
 
-//                userManager.Create(userFaustino);
+                #endregion
 
-//                var userSamir = new UserView()
-//                                    {
-//                                        Name = "SamirHafez",
-//                                        Email = "SamirHafez@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                #endregion
 
-//                userManager.Create(userSamir);
+                #region ENROLL_USER
 
-//                var userRicardo = new UserView()
-//                                      {
-//                                          Name = "Ricardo",
-//                                          Email = "Ricardo@gmail.com",
-//                                          Password = "12345678Ab"
-//                                      };
+                userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
 
-//                userManager.Create(userRicardo);
+                userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
+                userManager.Enroll(userGuedes.Name, structure.Id, containerSd.Id, roleTypeDirector.Name);
 
-//                var userGeada = new UserView()
-//                                    {
-//                                        Name = "Gueada",
-//                                        Email = "Gueada@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                userManager.Enroll(userFelix.Name, structure.Id, containerSdLi31D.Id, roleTypeTeacher.Name);
+                userManager.Enroll(userGuedes.Name, structure.Id, containerMpdLi31D.Id, roleTypeTeacher.Name);
 
-//                userManager.Create(userGeada);
+                userManager.Enroll(userFaustino.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
+                userManager.Enroll(userSamir.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
 
-//                var userFelix = new UserView()
-//                                    {
-//                                        Name = "Felix",
-//                                        Email = "Felix@gmail.com",
-//                                        Password = "12345678Ab"
-//                                    };
+                userManager.Enroll(userRicardo.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
+                userManager.Enroll(userGeada.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
 
-//                userManager.Create(userFelix);
+                userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
+                userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
 
-//                var userGuedes = new UserView()
-//                                     {
-//                                         Name = "Guedes",
-//                                         Email = "Guedes@gmail.com",
-//                                         Password = "12345678Ab"
-//                                     };
+                userManager.Enroll(userGeada.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
+                userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
 
-//                userManager.Create(userGuedes);
+                #endregion
 
-//                #endregion
+                //AuthorizationTestes aut = new AuthorizationTestes();
+                //AuthorizationManager authorizationManager = new AuthorizationManager(dataBaseManager);
 
-//                #region CREATE_STRUCTURE
+                //authorizationManager.CreateServiceAuthorizationStruct(aut, serviceSvn.Name);
+            }
+        }
 
-//                var structureManager = new StructureManager(dataBaseManager);
+        [Test]
+        public void ShouldTestDisentoll()
+        {
 
-//                var structure = new StructureView()
-//                                    {
-//                                        Name = "AcademicStructure",
-//                                        Description = "My Academic Structure :)"
-//                                    };
+            using (var dataBaseManager = new DataBaseManager())
+            {
 
-//                structureManager.Create(structure, userFaustino.Name);
+                #region CREATE_SERVICES
 
-//                #endregion
+                var serviceManager = dataBaseManager.Service;
 
-//                #region CREATE_WORKSPACE_TYPE
+                var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
 
-//                var workspaceType = new WorkSpaceTypeManager(dataBaseManager);
+                var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] { "r", "rw" });
 
-//                var workspacePublic = new WorkSpaceTypeView()
-//                                          {
-//                                              Name = "public"
-//                                          };
+                var serviceTrac = serviceManager.Create("Trac", "WIKI system", new[] { "TRAC_ADMIN" });
 
-//                workspaceType.Create(workspacePublic, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+                #endregion
 
-//                var workspacePrivate = new WorkSpaceTypeView()
-//                                           {
-//                                               Name = "private"
-//                                           };
+                #region CREATE_USERS
 
-//                workspaceType.Create(workspacePrivate, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+                var userManager = dataBaseManager.User;
 
-//                #endregion
+                var userFaustino = userManager.Create("FaustinoLeiras", "FaustinoLeiras12345", "FaustinoLeiras@gmail.com");
 
-//                #region CREATE_CONTAINER_PROTOTYPE
+                var userSamir = userManager.Create("SamirHafez", "SamirHafez12345", "SamirHafez@gmail.com");
 
-//                var containerPrototype = new ContainerPrototypeManager(dataBaseManager);
+                var userRicardo = userManager.Create("Ricardo", "Ricardo12345", "Ricardo@gmail.com");
 
-//                var prototypeGraduation = new ContainerPrototypeView()
-//                                              {
-//                                                  Name = "Graduation"
-//                                              };
+                var userGeada = userManager.Create("Gueada", "Gueada12345", "Gueada@gmail.com");
 
-//                containerPrototype.Create(prototypeGraduation, structure.Id);
+                var userFelix = userManager.Create("Felix", "Felix12345", "Felix@gmail.com");
 
-//                var prototypeCourse = new ContainerPrototypeView()
-//                                          {
-//                                              Name = "Course"
-//                                          };
+                var userGuedes = userManager.Create("Guedes", "Guedes12345", "Guedes@gmail.com");
 
-//                containerPrototype.Create(prototypeCourse, structure.Id, prototypeGraduation.Name);
+                #endregion
 
+                #region CREATE_STRUCTURE
 
-//                var prototypeClass = new ContainerPrototypeView()
-//                                         {
-//                                             Name = "Class"
-//                                         };
+                var structureManager = dataBaseManager.Structure;
 
-//                containerPrototype.Create(prototypeClass, structure.Id, prototypeCourse.Name);
+                var structure = structureManager.Create("AcademicStructure", "My Academic Structure :)", true, userFaustino.Name);
 
-//                var prototypeGroup = new ContainerPrototypeView()
-//                                         {
-//                                             Name = "Group"
-//                                         };
+                #endregion
 
-//                containerPrototype.Create(prototypeGroup, structure.Id, prototypeClass.Name);
+                #region CREATE_WORKSPACE_TYPE
 
-//                #endregion
+                var workspaceType = dataBaseManager.WorkSpaceType;
 
-//                #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
+                var workspacePublic = workspaceType.Create(structure.Id, "public", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGraduation.Name, workspacePublic.Name);
+                var workspacePrivate = workspaceType.Create(structure.Id, "private", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
+                #endregion
 
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
+                #region CREATE_CONTAINER_PROTOTYPE
 
-//                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
+                var containerPrototype = dataBaseManager.ContainerPrototype;
 
-//                #endregion
+                var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
-//                #region CREATE_ROLETYPE
+                var prototypeCourse = containerPrototype.Create(structure.Id, "Course", prototypeGraduation.Name);
 
-//                var roleType = new RoleTypeManager(dataBaseManager);
 
-//                var roleTypeTeacher = new RoleTypeView()
-//                                          {
-//                                              Name = "teacher"
-//                                          };
+                var prototypeClass = containerPrototype.Create(structure.Id, "Class", prototypeCourse.Name);
 
-//                roleType.Create(roleTypeTeacher, structure.Id);
+                var prototypeGroup = containerPrototype.Create(structure.Id, "Group", prototypeClass.Name);
 
-//                var roleTypeDirector = new RoleTypeView()
-//                                           {
-//                                               Name = "director"
-//                                           };
+                #endregion
 
-//                roleType.Create(roleTypeDirector, structure.Id);
+                #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
 
-//                var roleTypeStudant = new RoleTypeView()
-//                                          {
-//                                              Name = "studant"
-//                                          };
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGraduation.Name, workspacePublic.Name);
 
-//                roleType.Create(roleTypeStudant, structure.Id);
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
 
-//                #endregion
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
 
-//                #region CREATE_RULE
+                containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
 
-//                var rule = new RuleManager(dataBaseManager);
+                #endregion
 
-//                var ruleReaders = new RuleView()
-//                                      {
-//                                          Name = "readers"
-//                                      };
+                #region CREATE_ROLETYPE
 
-//                rule.Create(ruleReaders, structure.Id, new[]
-//                                                           {
-//                                                               new KeyValuePair<string, string>(serviceGit.Name, "r"),
-//                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r")
-//                                                           });
+                var roleType = dataBaseManager.RoleType;
 
-//                var ruleReadersAndWriters = new RuleView()
-//                                                {
-//                                                    Name = "ReadersAndWriters"
-//                                                };
+                var roleTypeTeacher = roleType.Create(structure.Id, "teacher");
 
-//                rule.Create(ruleReadersAndWriters, structure.Id, new[]
-//                                                                     {
-//                                                                         new KeyValuePair<string, string>(
-//                                                                             serviceGit.Name,
-//                                                                             "rw"),
-//                                                                         new KeyValuePair<string, string>(
-//                                                                             serviceSvn.Name,
-//                                                                             "rw")
-//                                                                     });
+                var roleTypeDirector = roleType.Create(structure.Id, "director");
 
-//                #endregion
+                var roleTypeStudant = roleType.Create(structure.Id, "studant");
 
-//                #region CREATE_ROLE
+                #endregion
 
-//                var role = new RoleManager(dataBaseManager);
+                #region CREATE_RULE
 
-//                #region ADD_ROLES_GRADUATION_WORKSPACE_PUBLIC
+                var rule = dataBaseManager.Rule;
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGraduation.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                var ruleReaders = rule.Create(structure.Id, "readers", new[]
+                                                           {
+                                                               new KeyValuePair<string, string>(serviceGit.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceTrac.Name, "TRAC_ADMIN")
+                                                           });
 
-//                #endregion
+                var ruleReadersAndWriters = rule.Create(structure.Id, "ReadersAndWriters", new[]
+                                                                     {
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceGit.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceSvn.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceTrac.Name,
+                                                                             "TRAC_ADMIN")
+                                                                     });
 
-//                #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
+                #endregion
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                #region CREATE_ROLE
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReaders.Name
-//                    );
+                var role = dataBaseManager.Role;
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeCourse.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReaders.Name
-//                    );
+                #region ADD_ROLES_GRADUATION_WORKSPACE_PUBLIC
 
-//                #endregion
+                role.Create(
+                    structure.Id,
+                    prototypeGraduation.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
+                #endregion
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
+                #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReaders.Name
-//                    );
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                #endregion
+                role.Create(
+                    structure.Id,
+                    prototypeCourse.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
+                #endregion
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePrivate.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
+                #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeClass.Name,
-//                    workspacePrivate.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                #endregion
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeDirector.Name,
-//                    ruleReaders.Name
-//                    );
+                #endregion
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeTeacher.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
 
-//                role.Create(
-//                    structure.Id,
-//                    prototypeGroup.Name,
-//                    workspacePublic.Name,
-//                    roleTypeStudant.Name,
-//                    ruleReadersAndWriters.Name
-//                    );
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePrivate.Name,
+                    roleTypeDirector.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                #endregion
+                role.Create(
+                    structure.Id,
+                    prototypeClass.Name,
+                    workspacePrivate.Name,
+                    roleTypeTeacher.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                #endregion
+                #endregion
 
-//                #region CREATE_CONTAINERS
+                #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
 
-//                var container = new ContainerManager(dataBaseManager);
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeDirector.Name,
+                    new[] { ruleReaders.Name }
+                    );
 
-//                var containerLeic = new ContainerView()
-//                                        {
-//                                            Name = "LEIC",
-//                                            Description = "Licencitura Egenharia informatica e de computadores"
-//                                        };
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeTeacher.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                container.Create(containerLeic, structure.Id, prototypeGraduation.Name);
+                role.Create(
+                    structure.Id,
+                    prototypeGroup.Name,
+                    workspacePublic.Name,
+                    roleTypeStudant.Name,
+                    new[] { ruleReadersAndWriters.Name }
+                    );
 
-//                #region CREATE_COURSE_MPD
+                #endregion
 
-//                var containerMpd = new ContainerView()
-//                                       {
-//                                           Name = "MPD",
-//                                           Description = "Modelo de padoes de desenho"
-//                                       };
+                #endregion
 
-//                container.Create(containerMpd, structure.Id, prototypeCourse.Name, containerLeic.Id);
+                #region CREATE_CONTAINERS
 
-//                var containerMpdLi31D = new ContainerView()
-//                                            {
-//                                                Name = "LI31D",
-//                                                Description = "Turma 1 de terceiro semestre diurno"
-//                                            };
+                var container = dataBaseManager.Container;
 
-//                container.Create(containerMpdLi31D, structure.Id, prototypeClass.Name, containerMpd.Id);
+                var containerLeic = container.Create(structure.Id, "LEIC", "Licencitura Egenharia informatica e de computadores", null);
 
-//                var containerMpdG1 = new ContainerView()
-//                                         {
-//                                             Name = "Grupo1",
-//                                             Description = "Grupo de MPD"
-//                                         };
+                #region CREATE_COURSE_MPD
 
-//                container.Create(containerMpdG1, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
+                var containerMpd = container.Create(structure.Id, "MPD", "Modelo de padoes de desenho", containerLeic.Id);
 
-//                var containerMpdG2 = new ContainerView()
-//                                         {
-//                                             Name = "Grupo2",
-//                                             Description = "Grupo de MPD"
-//                                         };
+                var containerMpdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerMpd.Id);
 
-//                container.Create(containerMpdG2, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
+                var containerMpdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de MPD", containerMpdLi31D.Id);
 
-//                #endregion
+                var containerMpdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de MPD", containerMpdLi31D.Id);
 
-//                #region CREATE_COURSE_SD
+                #endregion
 
-//                var containerSd = new ContainerView()
-//                                      {
-//                                          Name = "SD",
-//                                          Description = "Sistemas distribuidos"
-//                                      };
+                #region CREATE_COURSE_SD
 
-//                container.Create(containerSd, structure.Id, prototypeCourse.Name, containerLeic.Id);
+                var containerSd = container.Create(structure.Id, "SD", "Sistemas distribuidos", containerLeic.Id);
 
-//                var containerSdLi31D = new ContainerView()
-//                                           {
-//                                               Name = "LI31D",
-//                                               Description = "Turma 1 de terceiro semestre diurno"
-//                                           };
+                var containerSdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerSd.Id);
 
-//                container.Create(containerSdLi31D, structure.Id, prototypeClass.Name, containerSd.Id);
+                var containerSdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de SD", containerSdLi31D.Id);
 
-//                var containerSdG1 = new ContainerView()
-//                                        {
-//                                            Name = "Grupo1",
-//                                            Description = "Grupo de SD"
-//                                        };
+                var containerSdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de SD", containerSdLi31D.Id);
 
-//                container.Create(containerSdG1, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
+                #endregion
 
-//                var containerSdG2 = new ContainerView()
-//                                        {
-//                                            Name = "Grupo2",
-//                                            Description = "Grupo de SD"
-//                                        };
+                #endregion
 
-//                container.Create(containerSdG2, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
+                #region ENROLL_USER
 
-//                #endregion
+                userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
 
-//                #endregion
+                userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
 
-//                #region ENROLL_USER
+                #endregion
 
-//                userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
+                #region DISENROLL_USER
 
-//                userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
+                userManager.Disenroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
 
-//                #endregion
+                userManager.Disenroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
 
-//                #region DISENROLL_USER
+                #endregion
 
-//                userManager.Disenroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
+            }
+        }
 
-//                userManager.Disenroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
+        [Test]
+        public void ShouldTestBasicFeaturesWithoutCache()
+        {
+            
+            var dataBaseManager = new DataBaseManager();
 
-//                #endregion
+            #region CREATE_SERVICES
 
-//            }
-//        }
+            var serviceManager = dataBaseManager.Service;
 
-//        [Test]
-//        public void ShouldTestBasicFeaturesWithoutCache()
-//        {
-//            DataBaseManager.DropAndCreate();
+            var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
 
-//            DataBaseManager dataBaseManager;
-//            dataBaseManager = new DataBaseManager();
+            var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] { "r", "rw" });
 
-//            #region CREATE_SERVICES
+            var serviceTrac = serviceManager.Create("Trac", "WIKI system", new[] { "TRAC_ADMIN" });
 
-//            var serviceManager = new ServiceManager(dataBaseManager);
+            #endregion
 
-//            var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            var serviceSvn = serviceManager.Create("Svn", "System Version Control (Centralized)", new[] { "r", "rw" });
+            #region CREATE_USERS
 
-//            #endregion
+            var userManager = dataBaseManager.User;
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            var userFaustino = userManager.Create("FaustinoLeiras", "FaustinoLeiras12345", "FaustinoLeiras@gmail.com");
 
-//            #region CREATE_USERS
+            var userSamir = userManager.Create("SamirHafez", "SamirHafez12345", "SamirHafez@gmail.com");
 
-//            var userManager = new UserManager(dataBaseManager);
+            var userRicardo = userManager.Create("Ricardo", "Ricardo12345", "Ricardo@gmail.com");
 
-//            var userFaustino = new UserView()
-//                                   {
-//                                       Name = "FaustinoLeiras",
-//                                       Email = "FaustinoLeiras@gmail.com",
-//                                       Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                   };
+            var userGeada = userManager.Create("Gueada", "Gueada12345", "Gueada@gmail.com");
 
-//            userManager.Create(userFaustino);
+            var userFelix = userManager.Create("Felix", "Felix12345", "Felix@gmail.com");
 
-//            var userSamir = new UserView()
-//                                {
-//                                    Name = "SamirHafez",
-//                                    Email = "SamirHafez@gmail.com",
-//                                    Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                };
+            var userGuedes = userManager.Create("Guedes", "Guedes12345", "Guedes@gmail.com");
 
-//            userManager.Create(userSamir);
+            #endregion
 
-//            var userRicardo = new UserView()
-//                                  {
-//                                      Name = "Ricardo",
-//                                      Email = "Ricardo@gmail.com",
-//                                      Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                  };
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            userManager.Create(userRicardo);
+            #region CREATE_STRUCTURE
 
-//            var userGeada = new UserView()
-//                                {
-//                                    Name = "Gueada",
-//                                    Email = "Gueada@gmail.com",
-//                                    Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                };
+            var structureManager = dataBaseManager.Structure;
 
-//            userManager.Create(userGeada);
+            var structure = structureManager.Create("AcademicStructure", "My Academic Structure :)", true, userFaustino.Name);
 
-//            var userFelix = new UserView()
-//                                {
-//                                    Name = "Felix",
-//                                    Email = "Felix@gmail.com",
-//                                    Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                };
+            #endregion
 
-//            userManager.Create(userFelix);
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            var userGuedes = new UserView()
-//                                 {
-//                                     Name = "Guedes",
-//                                     Email = "Guedes@gmail.com",
-//                                     Password = AuthenticationManager.EncryptPassword("12345678Ab")
-//                                 };
+            #region CREATE_WORKSPACE_TYPE
 
-//            userManager.Create(userGuedes);
+            var workspaceType = dataBaseManager.WorkSpaceType;
 
-//            #endregion
+            var workspacePublic = workspaceType.Create(structure.Id, "public", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            var workspacePrivate = workspaceType.Create(structure.Id, "private", new[] { serviceGit.Name, serviceSvn.Name, serviceTrac.Name });
 
-//            #region CREATE_STRUCTURE
+            #endregion
 
-//            var structureManager = new StructureManager(dataBaseManager);
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            var structure = new StructureView()
-//                                {
-//                                    Name = "AcademicStructure",
-//                                    Description = "My Academic Structure :)"
-//                                };
+            #region CREATE_CONTAINER_PROTOTYPE
 
-//            structureManager.Create(structure, userFelix.Name);
+            var containerPrototype = dataBaseManager.ContainerPrototype;
 
-//            #endregion
+            var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            var prototypeCourse = containerPrototype.Create(structure.Id, "Course", prototypeGraduation.Name);
 
-//            #region CREATE_WORKSPACE_TYPE
 
-//            var workspaceType = new WorkSpaceTypeManager(dataBaseManager);
+            var prototypeClass = containerPrototype.Create(structure.Id, "Class", prototypeCourse.Name);
 
-//            var workspacePublic = new WorkSpaceTypeView()
-//                                      {
-//                                          Name = "public"
-//                                      };
+            var prototypeGroup = containerPrototype.Create(structure.Id, "Group", prototypeClass.Name);
 
-//            workspaceType.Create(workspacePublic, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+            #endregion
 
-//            var workspacePrivate = new WorkSpaceTypeView()
-//                                       {
-//                                           Name = "private"
-//                                       };
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            workspaceType.Create(workspacePrivate, structure.Id, new[] {serviceGit.Name, serviceSvn.Name});
+            #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
 
-//            #endregion
+            containerPrototype.AddWorkSpaceType(structure.Id, prototypeGraduation.Name, workspacePublic.Name);
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
 
-//            #region CREATE_CONTAINER_PROTOTYPE
+            containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
+            containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
 
-//            var containerPrototype = new ContainerPrototypeManager(dataBaseManager);
+            containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
 
-//            var prototypeCourse = new ContainerPrototypeView()
-//                                      {
-//                                          Name = "Course"
-//                                      };
+            #endregion
 
-//            containerPrototype.Create(prototypeCourse, structure.Id);
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            var prototypeClass = new ContainerPrototypeView()
-//                                     {
-//                                         Name = "Class"
-//                                     };
+            #region CREATE_ROLETYPE
 
-//            containerPrototype.Create(prototypeClass, structure.Id, prototypeCourse.Name);
+            var roleType = dataBaseManager.RoleType;
 
-//            var prototypeGroup = new ContainerPrototypeView()
-//                                     {
-//                                         Name = "Group"
-//                                     };
+            var roleTypeTeacher = roleType.Create(structure.Id, "teacher");
 
-//            containerPrototype.Create(prototypeGroup, structure.Id, prototypeClass.Name);
+            var roleTypeDirector = roleType.Create(structure.Id, "director");
 
-//            #endregion
+            var roleTypeStudant = roleType.Create(structure.Id, "studant");
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            #endregion
 
-//            #region ADD_WORKSPACE_TYPES_INTO_CONTAINER_PROTOTYPE
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            containerPrototype = new ContainerPrototypeManager(dataBaseManager);
+            #region CREATE_RULE
 
-//            containerPrototype.AddWorkSpaceType(structure.Id, prototypeCourse.Name, workspacePublic.Name);
+            var rule = dataBaseManager.Rule;
 
-//            containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePublic.Name);
-//            containerPrototype.AddWorkSpaceType(structure.Id, prototypeClass.Name, workspacePrivate.Name);
+            var ruleReaders = rule.Create(structure.Id, "readers", new[]
+                                                           {
+                                                               new KeyValuePair<string, string>(serviceGit.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceSvn.Name, "r"),
+                                                               new KeyValuePair<string, string>(serviceTrac.Name, "TRAC_ADMIN")
+                                                           });
 
-//            containerPrototype.AddWorkSpaceType(structure.Id, prototypeGroup.Name, workspacePublic.Name);
+            var ruleReadersAndWriters = rule.Create(structure.Id, "ReadersAndWriters", new[]
+                                                                     {
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceGit.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceSvn.Name,
+                                                                             "rw"),
+                                                                         new KeyValuePair<string, string>(
+                                                                             serviceTrac.Name,
+                                                                             "TRAC_ADMIN")
+                                                                     });
 
-//            #endregion
+            #endregion
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            #region CREATE_ROLETYPE
+            #region CREATE_ROLE
 
-//            var roleType = new RoleTypeManager(dataBaseManager);
+            var role = dataBaseManager.Role;
 
-//            var roleTypeTeacher = new RoleTypeView()
-//                                      {
-//                                          Name = "teacher"
-//                                      };
+            #region ADD_ROLES_GRADUATION_WORKSPACE_PUBLIC
 
-//            roleType.Create(roleTypeTeacher, structure.Id);
+            role.Create(
+                structure.Id,
+                prototypeGraduation.Name,
+                workspacePublic.Name,
+                roleTypeDirector.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            var roleTypeDirector = new RoleTypeView()
-//                                       {
-//                                           Name = "director"
-//                                       };
+            #endregion
 
-//            roleType.Create(roleTypeDirector, structure.Id);
+            #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
 
-//            var roleTypeStudant = new RoleTypeView()
-//                                      {
-//                                          Name = "studant"
-//                                      };
+            role.Create(
+                structure.Id,
+                prototypeCourse.Name,
+                workspacePublic.Name,
+                roleTypeDirector.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            roleType.Create(roleTypeStudant, structure.Id);
+            role.Create(
+                structure.Id,
+                prototypeCourse.Name,
+                workspacePublic.Name,
+                roleTypeTeacher.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            #endregion
+            role.Create(
+                structure.Id,
+                prototypeCourse.Name,
+                workspacePublic.Name,
+                roleTypeStudant.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            #endregion
 
-//            #region CREATE_RULE
+            #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
 
-//            var rule = new RuleManager(dataBaseManager);
+            role.Create(
+                structure.Id,
+                prototypeClass.Name,
+                workspacePublic.Name,
+                roleTypeDirector.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            var ruleReaders = new RuleView()
-//                                  {
-//                                      Name = "readers"
-//                                  };
+            role.Create(
+                structure.Id,
+                prototypeClass.Name,
+                workspacePublic.Name,
+                roleTypeTeacher.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            rule.Create(ruleReaders, structure.Id, new[]
-//                                                       {
-//                                                           new KeyValuePair<string, string>(serviceGit.Name, "r"),
-//                                                           new KeyValuePair<string, string>(serviceSvn.Name, "r")
-//                                                       });
+            role.Create(
+                structure.Id,
+                prototypeClass.Name,
+                workspacePublic.Name,
+                roleTypeStudant.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            var ruleReadersAndWriters = new RuleView()
-//                                            {
-//                                                Name = "ReadersAndWriters"
-//                                            };
+            #endregion
 
-//            rule.Create(ruleReadersAndWriters, structure.Id, new[]
-//                                                                 {
-//                                                                     new KeyValuePair<string, string>(
-//                                                                         serviceGit.Name,
-//                                                                         "rw"),
-//                                                                     new KeyValuePair<string, string>(
-//                                                                         serviceSvn.Name,
-//                                                                         "rw")
-//                                                                 });
+            #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
 
-//            #endregion
+            role.Create(
+                structure.Id,
+                prototypeClass.Name,
+                workspacePrivate.Name,
+                roleTypeDirector.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            role.Create(
+                structure.Id,
+                prototypeClass.Name,
+                workspacePrivate.Name,
+                roleTypeTeacher.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            #region CREATE_ROLE
+            #endregion
 
-//            var role = new RoleManager(dataBaseManager);
+            #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
 
-//            #region ADD_ROLES_COURSE_WORKSPACE_PUBLIC
+            role.Create(
+                structure.Id,
+                prototypeGroup.Name,
+                workspacePublic.Name,
+                roleTypeDirector.Name,
+                new[] { ruleReaders.Name }
+                );
 
-//            role.Create(
-//                structure.Id,
-//                prototypeCourse.Name,
-//                workspacePublic.Name,
-//                roleTypeDirector.Name,
-//                ruleReadersAndWriters.Name
-//                );
+            role.Create(
+                structure.Id,
+                prototypeGroup.Name,
+                workspacePublic.Name,
+                roleTypeTeacher.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            role.Create(
-//                structure.Id,
-//                prototypeCourse.Name,
-//                workspacePublic.Name,
-//                roleTypeTeacher.Name,
-//                ruleReaders.Name
-//                );
+            role.Create(
+                structure.Id,
+                prototypeGroup.Name,
+                workspacePublic.Name,
+                roleTypeStudant.Name,
+                new[] { ruleReadersAndWriters.Name }
+                );
 
-//            role.Create(
-//                structure.Id,
-//                prototypeCourse.Name,
-//                workspacePublic.Name,
-//                roleTypeStudant.Name,
-//                ruleReaders.Name
-//                );
+            #endregion
 
-//            #endregion
+            #endregion
 
-//            #region ADD_ROLES_CLASS_WORKSPACE_PUBLIC
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            role.Create(
-//                structure.Id,
-//                prototypeClass.Name,
-//                workspacePublic.Name,
-//                roleTypeDirector.Name,
-//                ruleReaders.Name
-//                );
+            #region CREATE_CONTAINERS
 
-//            role.Create(
-//                structure.Id,
-//                prototypeClass.Name,
-//                workspacePublic.Name,
-//                roleTypeTeacher.Name,
-//                ruleReadersAndWriters.Name
-//                );
+            var container = dataBaseManager.Container;
 
-//            role.Create(
-//                structure.Id,
-//                prototypeClass.Name,
-//                workspacePublic.Name,
-//                roleTypeStudant.Name,
-//                ruleReaders.Name
-//                );
+            var containerLeic = container.Create(structure.Id, "LEIC", "Licencitura Egenharia informatica e de computadores", null);
 
-//            #endregion
+            #region CREATE_COURSE_MPD
 
-//            #region ADD_ROLES_CLASS_WORKSPACE_PRIVATE
+            var containerMpd = container.Create(structure.Id, "MPD", "Modelo de padoes de desenho", containerLeic.Id);
 
-//            role.Create(
-//                structure.Id,
-//                prototypeClass.Name,
-//                workspacePrivate.Name,
-//                roleTypeDirector.Name,
-//                ruleReaders.Name
-//                );
+            var containerMpdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerMpd.Id);
 
-//            role.Create(
-//                structure.Id,
-//                prototypeClass.Name,
-//                workspacePrivate.Name,
-//                roleTypeTeacher.Name,
-//                ruleReadersAndWriters.Name
-//                );
+            var containerMpdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de MPD", containerMpdLi31D.Id);
 
-//            #endregion
+            var containerMpdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de MPD", containerMpdLi31D.Id);
 
-//            #region ADD_ROLES_GROUP_WORKSPACE_PUBLIC
+            #endregion
 
-//            role.Create(
-//                structure.Id,
-//                prototypeGroup.Name,
-//                workspacePublic.Name,
-//                roleTypeDirector.Name,
-//                ruleReaders.Name
-//                );
+            #region CREATE_COURSE_SD
 
-//            role.Create(
-//                structure.Id,
-//                prototypeGroup.Name,
-//                workspacePublic.Name,
-//                roleTypeTeacher.Name,
-//                ruleReadersAndWriters.Name
-//                );
+            var containerSd = container.Create(structure.Id, "SD", "Sistemas distribuidos", containerLeic.Id);
 
-//            role.Create(
-//                structure.Id,
-//                prototypeGroup.Name,
-//                workspacePublic.Name,
-//                roleTypeStudant.Name,
-//                ruleReadersAndWriters.Name
-//                );
+            var containerSdLi31D = container.Create(structure.Id, "LI31D", "Turma 1 de terceiro semestre diurno", containerSd.Id);
 
-//            #endregion
+            var containerSdG1 = container.Create(structure.Id, "Grupo1", "Grupo 1 de SD", containerSdLi31D.Id);
 
-//            #endregion
+            var containerSdG2 = container.Create(structure.Id, "Grupo2", "Grupo 2 de SD", containerSdLi31D.Id);
 
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
+            #endregion
 
-//            #region CREATE_CONTAINERS
+            #endregion
 
-//            var container = new ContainerManager(dataBaseManager);
+            dataBaseManager.Dispose();
+            dataBaseManager = new DataBaseManager();
 
-//            #region CREATE_COURSE_MPD
+            #region ENROLL_USER
 
-//            var containerMpd = new ContainerView()
-//                                   {
-//                                       Name = "MPD",
-//                                       Description = "Modelo de padoes de desenho"
-//                                   };
+            userManager.Enroll(userFelix.Name, structure.Id, containerLeic.Id, roleTypeDirector.Name);
 
-//            container.Create(containerMpd, structure.Id, prototypeCourse.Name);
+            userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
+            userManager.Enroll(userGuedes.Name, structure.Id, containerSd.Id, roleTypeDirector.Name);
 
-//            var containerMpdLi31D = new ContainerView()
-//                                        {
-//                                            Name = "LI31D",
-//                                            Description = "Turma 1 de terceiro semestre diurno"
-//                                        };
+            userManager.Enroll(userFelix.Name, structure.Id, containerSdLi31D.Id, roleTypeTeacher.Name);
+            userManager.Enroll(userGuedes.Name, structure.Id, containerMpdLi31D.Id, roleTypeTeacher.Name);
 
-//            container.Create(containerMpdLi31D, structure.Id, prototypeClass.Name, containerMpd.Id);
+            userManager.Enroll(userFaustino.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
+            userManager.Enroll(userSamir.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
 
-//            var containerMpdG1 = new ContainerView()
-//                                     {
-//                                         Name = "Grupo1",
-//                                         Description = "Grupo de MPD"
-//                                     };
+            userManager.Enroll(userRicardo.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
+            userManager.Enroll(userGeada.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
 
-//            container.Create(containerMpdG1, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
+            userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
+            userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
 
-//            var containerMpdG2 = new ContainerView()
-//                                     {
-//                                         Name = "Grupo2",
-//                                         Description = "Grupo de MPD"
-//                                     };
+            userManager.Enroll(userGeada.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
+            userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
 
-//            container.Create(containerMpdG2, structure.Id, prototypeGroup.Name, containerMpdLi31D.Id);
+            #endregion
 
-//            #endregion
+            dataBaseManager.Dispose();
+            //using (dataBaseManager = new DataBaseManager())
+            //{
+            //    AuthorizationTestes aut = new AuthorizationTestes();
+            //    AuthorizationManager authorizationManager = new AuthorizationManager(dataBaseManager);
 
-//            #region CREATE_COURSE_SD
+            //    authorizationManager.CreateServiceAuthorizationStruct(aut, serviceSvn.Name);
+            //}
+        }
 
-//            var containerSd = new ContainerView()
-//                                  {
-//                                      Name = "SD",
-//                                      Description = "Sistemas distribuidos"
-//                                  };
-
-//            container.Create(containerSd, structure.Id, prototypeCourse.Name);
-
-//            var containerSdLi31D = new ContainerView()
-//                                       {
-//                                           Name = "LI31D",
-//                                           Description = "Turma 1 de terceiro semestre diurno"
-//                                       };
-
-//            container.Create(containerSdLi31D, structure.Id, prototypeClass.Name, containerSd.Id);
-
-//            var containerSdG1 = new ContainerView()
-//                                    {
-//                                        Name = "Grupo1",
-//                                        Description = "Grupo de SD"
-//                                    };
-
-//            container.Create(containerSdG1, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
-
-//            var containerSdG2 = new ContainerView()
-//                                    {
-//                                        Name = "Grupo2",
-//                                        Description = "Grupo de SD"
-//                                    };
-
-//            container.Create(containerSdG2, structure.Id, prototypeGroup.Name, containerSdLi31D.Id);
-
-//            #endregion
-
-//            #endregion
-
-//            dataBaseManager.Dispose();
-//            dataBaseManager = new DataBaseManager();
-
-//            #region ENROLL_USER
-
-//            userManager = new UserManager(dataBaseManager);
-
-//            userManager.Enroll(userFelix.Name, structure.Id, containerMpd.Id, roleTypeDirector.Name);
-//            userManager.Enroll(userGuedes.Name, structure.Id, containerSd.Id, roleTypeDirector.Name);
-
-//            userManager.Enroll(userFelix.Name, structure.Id, containerSdLi31D.Id, roleTypeTeacher.Name);
-//            userManager.Enroll(userGuedes.Name, structure.Id, containerMpdLi31D.Id, roleTypeTeacher.Name);
-
-//            userManager.Enroll(userFaustino.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
-//            userManager.Enroll(userSamir.Name, structure.Id, containerMpdG1.Id, roleTypeStudant.Name);
-
-//            userManager.Enroll(userRicardo.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
-//            userManager.Enroll(userGeada.Name, structure.Id, containerMpdG2.Id, roleTypeStudant.Name);
-
-//            userManager.Enroll(userFaustino.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
-//            userManager.Enroll(userRicardo.Name, structure.Id, containerSdG1.Id, roleTypeStudant.Name);
-
-//            userManager.Enroll(userGeada.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
-//            userManager.Enroll(userSamir.Name, structure.Id, containerSdG2.Id, roleTypeStudant.Name);
-
-//            #endregion
-
-//            dataBaseManager.Dispose();
-//            //using (dataBaseManager = new DataBaseManager())
-//            //{
-//            //    AuthorizationTestes aut = new AuthorizationTestes();
-//            //    AuthorizationManager authorizationManager = new AuthorizationManager(dataBaseManager);
-
-//            //    authorizationManager.CreateServiceAuthorizationStruct(aut, serviceSvn.Name);
-//            //}
-//        }
-
-//    }
-//}
+    }
+}
