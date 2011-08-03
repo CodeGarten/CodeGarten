@@ -13,4 +13,6 @@
 </div>
 <script type="text/javascript">
     $(".item .actions").children().button();
+    $(".item .actions").hide();
+    $(".item").hover(function () { $(this).children(".actions").fadeIn('fast'); }, function () { $(this).children(".actions").fadeOut('fast'); });
 </script>

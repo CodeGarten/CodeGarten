@@ -114,6 +114,13 @@ h1 { padding: .2em; margin: 0;}
 			
 .container_header > a { cursor: pointer;}
 
+/* structure create form
+-----------------------------------------------------------*/
+#structure_create_form { text-align: center;}
+
+/* container create form
+-----------------------------------------------------------*/
+#container_create_form { text-align: center;}
 
 /* Login form
 -----------------------------------------------------------*/
@@ -158,7 +165,7 @@ h1 { padding: .2em; margin: 0;}
 .item .info, .item .name { padding-left: 5px;}
 .item .actions { padding-left: 5px;padding-top: 3px; float: right;}
 
-.multi-line { width: 300px;}
+.multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}
 
 

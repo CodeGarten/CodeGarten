@@ -102,6 +102,9 @@ namespace CodeGarten.Web.Controllers
             if (structure.Developing)
                 return RedirectToAction("Design", new { id });
 
+            ViewBag.Instances = dataBaseManager.Container.GetInstances(id.Value).Where(c => c.Parent == null);
+            ViewBag.TopInstanceName = dataBaseManager.ContainerPrototype.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
+
             return View(structure);
         }
 

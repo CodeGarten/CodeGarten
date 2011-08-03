@@ -145,5 +145,10 @@ namespace CodeGarten.Data.Access
         {
             return _dbContext.Containers.Where(c => c.Name.StartsWith(query.Trim()));
         }
+
+        public IQueryable<Container> GetInstances(long structureId)
+        {
+            return _dbContext.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
+        }
     }
 }

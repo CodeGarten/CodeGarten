@@ -1,0 +1,9 @@
+﻿@using CodeGarten.Data.Model
+@model Container
+
+@{
+    ViewBag.Title = string.Format("{0} @ {1}", Model.Name, Model.Prototype.Structure.Name);
+}
+
+<h2>@Model.Name</h2>
+@Html.ActionLink("Enroll", "Enroll", new{structureId = Model.Prototype.StructureId, containerId = Model.Id})

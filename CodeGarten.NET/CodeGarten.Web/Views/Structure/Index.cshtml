@@ -5,3 +5,9 @@
 }
 
 <h2>@Model.Name</h2>
+
+<h3>Childs @Html.ActionLink("Create new instance", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)</h3>
+@foreach(var container in ViewBag.Instances as IEnumerable<Container>)
+{
+    @Html.ActionLink(container.Name, "Index", "Container", new {id = container.Id}, null) <br/>
+}

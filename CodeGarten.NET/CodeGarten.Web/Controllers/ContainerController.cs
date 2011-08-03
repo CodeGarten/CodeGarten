@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Mvc;
@@ -15,40 +16,41 @@ namespace CodeGarten.Web.Controllers
         //TODO rever o controller 
         public ActionResult Index(long id)
         {
-            //var container = _context.Containers.Find(id);
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            //ViewBag.Enroll =
-            //    _context.Enrolls.FirstOrDefault(e => e.UserName == User.Identity.Name && e.ContainerId == id);
-
-            //return View();
-
-            return RedirectToAction("Index", "Container", new { id = id });
+            return View(dataBaseManager.Container.Get(id));
         }
 
         [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, long? parent)
+        public ActionResult Create(long structureId, string prototypeName, long? parent)
         {
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
             var container = new ContainerView();
+
+            ViewBag.Prototype = dataBaseManager.ContainerPrototype.Get(structureId, prototypeName);
 
             return View(container);
         }
 
         [HttpPost]
         [StructureOwner("structureId")]
-        public ActionResult Create(long structureId, long? parent, ContainerView container)
+        public ActionResult Create(long structureId, string prototypeName, long? parent, ContainerView container)
         {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Create(structureId, container.Name, container.Description, parent);
+                var createContainer = dataBaseManager.Container.Create(structureId, container.Name, container.Description, parent);
+
+                foreach(var password in container.Passwords.Where(p => !string.IsNullOrEmpty(p.Password)))
+                    dataBaseManager.Container.AddPassword(structureId, createContainer.Id, password.RoleType, password.Password);
 
                 return RedirectToAction("Index", "Structure", new {id = structureId});
             }
             catch (Exception)
             {
-                //return View();
-                throw;
+                return View();
             }
         }
 
@@ -110,23 +112,32 @@ namespace CodeGarten.Web.Controllers
             //        ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
 
             //return View();
-            return RedirectToAction("Index", "Container", new { id = containerId });
+
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            ViewBag.DataBaseManager = dataBaseManager;
+
+            return View(dataBaseManager.Container.Get(containerId));
         }
 
         [HttpPost]
-        public ActionResult Enroll(long structureId, long containerId, string roleTypeName)
+        public ActionResult Enroll(long structureId, long containerId, string roleTypeName, string password)
         {
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName);
+                if(!dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName, password))
+                {
+                    ModelState.AddModelError("password", "Incorrect password");
+                    return View(new {structureId, containerId});
+                }
 
                 return RedirectToAction("Index", new {id = containerId});
             }
             catch (Exception)
             {
-                return RedirectToAction("Index", "Container", new { id = containerId });
+                throw;
             }
         }
     }

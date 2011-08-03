@@ -1,0 +1,44 @@
+﻿@using CodeGarten.Data.Access
+@using CodeGarten.Data.Model
+@model Container
+@{
+    ViewBag.Title = string.Format("Enroll in {0}", Model.Name);
+}
+<h2>
+    Enroll in @Model.Name</h2>
+<div id="roleType_tabs">
+    <ul>
+        @foreach (var roleTypeName in Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
+        {
+            <li><a href="#@roleTypeName">@roleTypeName</a></li>   
+        }
+    </ul>
+    @foreach (var roleTypeName in Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
+    {
+        <div id="@roleTypeName">
+            @using (Html.BeginForm())
+            {
+                <input name="roleTypeName" value="@roleTypeName" type="hidden"/>
+                if ((ViewBag.DataBaseManager as DataBaseManager).Container.HasPassword(Model.Prototype.StructureId, Model.Id, roleTypeName))
+                {
+                @Html.Label("password", "This roletype requires a password")
+                @Html.Password("password")
+                @Html.ValidationMessage("password")
+                }
+                else
+                {
+                @Html.Label("password", "This role type does not require a password.")
+                }
+                <p>
+                    <input type="submit" value="Enroll" />
+                </p>
+            }
+        </div>
+    }
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#roleType_tabs").tabs();
+    });
+</script>

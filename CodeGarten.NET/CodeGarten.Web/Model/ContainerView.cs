@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodeGarten.Web.Model
 {
@@ -12,5 +13,13 @@ namespace CodeGarten.Web.Model
         [DataType(DataType.MultilineText)]
         [MaxLength(256, ErrorMessage = "Maximum length: 256")]
         public string Description { get; set; }
+
+        public ICollection<PasswordView> Passwords { get; set; }
+    }
+
+    public class PasswordView
+    {
+        public string RoleType { get; set; }
+        public string Password { get; set; }
     }
 }
