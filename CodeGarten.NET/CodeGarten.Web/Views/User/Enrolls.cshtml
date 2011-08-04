@@ -1,0 +1,48 @@
+﻿@using CodeGarten.Data.Model;
+@{
+    ViewBag.Title = "Enrolls";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/Projects.png")" alt="Profile" />
+    <h2>Enrolls</h2>
+    <div class="clear"></div>
+</div>
+
+<div id="structureAccordion">
+@foreach (IGrouping<Structure, Enroll> structureEnrolls in Model)
+{
+    <h3>
+        @Html.ActionLink(structureEnrolls.Key.Name, "Index", "Structure", new {id = structureEnrolls.Key.Id}, null)
+    </h3>
+    <div>
+        <table class="ui-widget ui-widget-content">
+		    <thead>
+			    <tr class="ui-widget-header ">
+				    <th>Project</th>
+				    <th>Roletype</th>
+			    </tr>
+		    </thead>
+		    <tbody>
+    @foreach (Enroll enroll in structureEnrolls)
+    {        
+                <tr>
+				    <td><a href='@Url.Action("Index", "Container", new { id = enroll.ContainerId })' title='@enroll.Container.Description'  >@enroll.Container.Name</a>
+                    
+                    </td>
+				    <td>@enroll.RoleTypeName</td>
+			    </tr>
+    }
+            </tbody>
+	    </table>
+    </div>
+}
+</div>
+
+<script type="text/javascript">
+    $("#structureAccordion").accordion({
+        autoHeight: false,
+        navigation: true
+    });
+</script>

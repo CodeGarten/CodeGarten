@@ -310,6 +310,11 @@ namespace CodeGarten.Data.Access
             return Get(_dbContext, user);
         }
 
+        public IEnumerable<IGrouping<Structure, Enroll>> GetEnrolls(string userName)
+        {
+            return _dbContext.Enrolls.Where(e => e.UserName == userName).GroupBy(e => e.RoleType.Structure);
+        }
+
         #region InvokeEvents
         
         private void InvokeOnCreateUser(User user)

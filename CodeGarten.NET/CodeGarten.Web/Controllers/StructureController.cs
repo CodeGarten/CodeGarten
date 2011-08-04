@@ -23,7 +23,7 @@ namespace CodeGarten.Web.Controllers
 
             var Bindings =
                 dataBaseManager.ContainerPrototype.GetAll(id).SelectMany(cp => cp.Bindings).Select(
-                    b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName });
+                    b => new {b.ContainerPrototypeName, b.WorkSpaceTypeName});
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });

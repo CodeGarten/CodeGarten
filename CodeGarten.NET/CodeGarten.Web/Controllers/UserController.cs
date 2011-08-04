@@ -13,5 +13,12 @@ namespace CodeGarten.Web.Controllers
 
         //    return View(user);
         //}
+
+        public ActionResult Enrolls()
+        {
+            var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            return View(databaseManager.User.GetEnrolls(User.Identity.Name));
+        }
     }
 }

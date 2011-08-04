@@ -243,3 +243,20 @@ h1 { padding: .2em; margin: 0;}
 {
     display: inline;
 }
+
+/* Styles for Enrolls
+----------------------------------------------------------*/
+
+#structureAccordion table  
+{
+    margin: 1em 0; 
+    border-collapse: collapse; 
+    width: 50%; 
+}
+
+#structureAccordion table td, #structureAccordion table th  
+{
+    border: 1px solid #eee; 
+    padding: .6em 10px; 
+    text-align: left; 
+}
