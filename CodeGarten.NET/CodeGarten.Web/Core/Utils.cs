@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -40,6 +41,21 @@ namespace CodeGarten.Web.Core
         public static void AddGlobalError(this ModelStateDictionary modelState, string msg)
         {
             modelState.AddModelError("form", msg);
+        }
+
+
+        public static bool IsValidField(this ModelStateDictionary modelSate, string key, IValidatableObject validatableObject)
+        {
+            if (!modelSate.IsValidField(key)) return false;
+
+            var validationResults = validatableObject.Validate(new ValidationContext(validatableObject, null, null));
+            foreach (var validationResult in validationResults)
+                if (validationResult.MemberNames.Contains(key))
+                {
+                    modelSate.AddModelError(key, validationResult.ErrorMessage);
+                    return false;
+                }
+            return true;
         }
     }
 }

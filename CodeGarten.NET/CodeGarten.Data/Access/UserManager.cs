@@ -87,11 +87,26 @@ namespace CodeGarten.Data.Access
             return user;
         }
 
+        public void ChangeEmail(string name, string newEmail)
+        {
+            Get(_dbContext, name).Email = newEmail;
+
+            _dbContext.SaveChanges();
+        }
+
+        public void ChangePassword(string name, string oldPassword, string newPassword)
+        {
+            var user = Get(_dbContext, name);
+            if (user.Password != oldPassword) return;
+            
+            user.Password = newPassword;
+
+            _dbContext.SaveChanges();
+        }
+
         public void Delete(string user)
         {
             _dbContext.Users.Remove(Get(user));
-
-
         }
 
         private bool PermissionToEnroll(Container container, RoleType roleType, RoleBarrier roleBarrier)

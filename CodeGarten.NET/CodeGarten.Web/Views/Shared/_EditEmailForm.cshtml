@@ -1,0 +1,22 @@
+﻿@model CodeGarten.Web.Model.UserView
+           
+@using (Ajax.BeginForm("ChangeEmail", new AjaxOptions() { UpdateTargetId = "_EditEmailForm" }))
+{
+    @Html.ValidationSummary(true)
+    
+    <div class="editor-hidden">
+        <input type="hidden" name="Name" value=@Model.Name />
+    </div>
+                        
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Email)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Email)
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+
+    <p>
+        <input type="submit" value="Save" />
+    </p>
+}

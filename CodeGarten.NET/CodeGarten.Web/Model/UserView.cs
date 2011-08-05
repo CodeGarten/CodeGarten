@@ -24,6 +24,7 @@ namespace CodeGarten.Web.Model
         [Compare("Password", ErrorMessage = "Mismatch")]
         public string PasswordConfirm { get; set; }
 
+        
         [Required(ErrorMessage = "Required")]
         [DataType(DataType.EmailAddress)]
         [RegularExpression(@"^(([^<>()[\]\\.,;:\s@\""]+"

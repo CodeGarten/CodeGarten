@@ -22,6 +22,7 @@
 			    <tr class="ui-widget-header ">
 				    <th>Project</th>
 				    <th>Roletype</th>
+                    <th></th>
 			    </tr>
 		    </thead>
 		    <tbody>
@@ -32,6 +33,13 @@
                     
                     </td>
 				    <td>@enroll.RoleTypeName</td>
+                    <td>@if(enroll.Inherited) 
+                        {
+                            <text>Iherited</text>
+                        }else{
+                            <a class='buttonLeave' href='@Url.Action("Leave", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Leave</a>
+                        }
+                    </td>
 			    </tr>
     }
             </tbody>
@@ -45,4 +53,6 @@
         autoHeight: false,
         navigation: true
     });
+
+    $(".buttonLeave").button();
 </script>
