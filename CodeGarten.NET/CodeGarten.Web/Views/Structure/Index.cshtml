@@ -3,11 +3,42 @@
 @{
     ViewBag.Title = Model.Name;
 }
-
-<h2>@Model.Name</h2>
-
-<h3>Childs @Html.ActionLink("Create new instance", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)</h3>
-@foreach(var container in ViewBag.Instances as IEnumerable<Container>)
-{
-    @Html.ActionLink(container.Name, "Index", "Container", new {id = container.Id}, null) <br/>
-}
+<h1>@Model.Name</h1>
+<h3>@Model.Description</h3>
+<div id="instance_tabs">
+    <ul>
+        <li><a href="#all">Instances</a></li>
+        <li><a href="#design">Design</a></li>
+    </ul>
+    <div id="all">
+        @foreach (var container in ViewBag.Instances as IEnumerable<Container>)
+        {
+            @Html.Partial("_ContainerItem", container)
+        }
+        <div class="actions">
+            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)
+        </div>
+    </div>
+    <div id="design">
+        <p>
+            Not yet implemented.</p>
+    </div>
+</div>
+@*  <div id="instances" class="childs">
+    <div class="title">
+        <h3>
+            Instances</h3>
+        <span class="actions">
+            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)
+        </span>
+    </div>
+    @foreach (var container in ViewBag.Instances as IEnumerable<Container>)
+    {
+        @Html.Partial("_ContainerItem", container)
+    }
+</div>*@
+<script type="text/javascript">
+    //    $("#instances .title .actions").children().first().button({ icons: { primary: "ui-icon-plus"} });
+    $("#instance_tabs").tabs();
+    $(".actions").children().button();
+</script>

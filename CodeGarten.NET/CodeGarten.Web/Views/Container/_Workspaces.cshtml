@@ -1,0 +1,76 @@
+﻿@using CodeGarten.Data.Access
+@using CodeGarten.Data.Model
+@model Container
+@{
+    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
+    var userEnroll = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
+    var inheritedEnrolls = dbMan.User.Get(User.Identity.Name).Enrolls.Where(e => e.ContainerId == Model.Id && e.Inherited);
+}
+<div>
+    @if (userEnroll != null)
+    {
+        <h2>
+            Enrolled as @userEnroll.RoleTypeName @Html.ActionLink("Disenroll", "Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" })</h2>
+        <div id="container_workspaces" class="tabs">
+            <ul>
+                @foreach (var binding in Model.Prototype.Bindings.Where(b => b.Roles.Any(r => r.RoleTypeName == userEnroll.RoleTypeName)))
+                {
+                    <li><a href="#@binding.WorkSpaceTypeName">@binding.WorkSpaceTypeName</a></li>
+                }
+            </ul>
+            @foreach (var binding in Model.Prototype.Bindings.Where(b => b.Roles.Any(r => r.RoleTypeName == userEnroll.RoleTypeName)))
+            {
+                <div id="@binding.WorkSpaceTypeName">
+                    <div class="accordion">
+                        @foreach (var service in binding.WorkSpaceType.Services)
+                        {
+                            <h3>
+                                <a href="#">@service.Name</a></h3>
+                            <div>
+                                @*Service/{service}/{structureId}/{containerId}/{workspaceTypeName}*@
+                                @*@Html.RenderAction("Index", string.Format("Service/{0}", service.Name), new { structureId = Model.Prototype.StructureId, containerId = Model.Id, workspaceTypeName = binding.WorkSpaceTypeName })*@
+                                @*Service ajax view in here...*@
+                                @*@Ajax.ActionLink(service.Name as string, "Index", "Service/" + service.Name as string, new { structureId = Model.Prototype.StructureId, containerId = Model.Id, workspaceTypeName = binding.WorkSpaceTypeName}, new AjaxOptions { UpdateTargetId = "service" })*@
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (inheritedEnrolls.Count() > 0)
+    {
+        <div id="container_workspaces_inherited">
+            <h2>
+                Inherited permissions
+            </h2>
+            <div id="inherited_container_workspaces" class="tabs">
+                <ul>
+                    @foreach (var binding in Model.Prototype.Bindings.Where(b => b.Roles.Any(r => inheritedEnrolls.Select(ie => ie.RoleTypeName).Contains(r.RoleTypeName))))
+                    {
+                        <li><a href="#@(binding.WorkSpaceTypeName)_inherited">@binding.WorkSpaceTypeName</a></li>
+                    }
+                </ul>
+                @foreach (var binding in Model.Prototype.Bindings.Where(b => b.Roles.Any(r => inheritedEnrolls.Select(ie => ie.RoleTypeName).Contains(r.RoleTypeName))))
+                {
+                    <div id="@(binding.WorkSpaceTypeName)_inherited">
+                        <div class="accordion">
+                            @foreach (var service in binding.WorkSpaceType.Services)
+                            {
+                                <h3>
+                                    <a href="#">@service.Name</a></h3>
+                                <div>
+                                    Service ajax view in here...
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(".tabs").tabs();
+    $(".accordion").accordion();
+</script>

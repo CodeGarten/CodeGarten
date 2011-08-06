@@ -83,6 +83,32 @@ namespace CodeGarten.Data.Access
             return container;
         }
 
+        public Container Create(long structure, string containerName, string description, long? parent, string prototypeName)
+        {
+            var container = new Container
+                                {
+                                    Prototype =
+                                        ContainerPrototypeManager.Get(_dbContext, structure, prototypeName),
+                                    Description = description,
+                                    Name = containerName,
+                                    Parent = parent == null ? null : Get(_dbContext, parent.Value)
+                                };
+            _dbContext.Containers.Add(container);
+
+            _dbContext.SaveChanges();
+
+            try
+            {
+                InvokeOnCreateContainer(container);
+            }
+            catch
+            {
+                //TODO DataLogger
+            }
+
+            return container;
+        }
+
         public void Delete(long containerId)
         {
             _dbContext.Containers.Remove(_dbContext.Containers.Find(containerId));
@@ -99,12 +125,12 @@ namespace CodeGarten.Data.Access
                                          StructureId = structure,
                                          Password = AuthenticationManager.EncryptPassword(password)
                                      };
-            
+
             _dbContext.EnrollPassWords.Add(enrollPassword);
 
             _dbContext.SaveChanges();
         }
-        
+
         public bool HasPassword(long structure, long container, string roletype)
         {
             return _dbContext.EnrollPassWords.Find(container, roletype, structure) != null;

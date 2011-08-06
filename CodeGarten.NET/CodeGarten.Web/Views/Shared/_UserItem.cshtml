@@ -15,7 +15,6 @@
 
 <script type="text/javascript">
     $(".item .actions").children().button();
-    $(".item .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
     $(".item .actions").hide();
     $(".item").hover(function () { $(this).children(".actions").fadeIn('fast'); }, function () { $(this).children(".actions").fadeOut('fast'); });
 </script>

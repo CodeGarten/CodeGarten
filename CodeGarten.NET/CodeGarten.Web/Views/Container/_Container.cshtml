@@ -1,0 +1,31 @@
+﻿@using CodeGarten.Data.Access
+@using CodeGarten.Data.Model
+@model Container
+@{
+    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
+
+    var enrolled = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
+}
+<div>
+    <div id="container">
+        <div>
+            <h1>@Model.Name</h1>
+        </div>
+        @Html.Partial("_StructurePath", Model)
+        @if (Model.Prototype.Childs.Any())
+        {
+            @Html.Partial("_Childs", Model)
+        }
+        @if (enrolled == null)
+        {
+            <div>
+                Enroll to gain access to this container features.
+                @Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" })
+            </div>
+        }
+        @Html.Partial("_Workspaces", Model)
+    </div>
+</div>
+<script type="text/javascript">
+    $(".button").button();
+</script>

@@ -8,12 +8,12 @@
         string description = Model.Description ?? "No description";
         string visibility = Model.Public ? "Public" : "Private";
     }
-    @if (owner)
-    {
-        <div class="actions">
-            @Html.ActionLink("Delete", "Delete", "Structure", new { id = Model.Id }, null)
-        </div>
-    }
+    <div class="actions">
+        @if (owner)
+        {
+            @Html.ActionLink("Delete", "Delete", "Structure", new { id = Model.Id }, new { @class = "delete_button" })
+        }
+    </div>
     <h3 class="name">@Html.ActionLink(Model.Name, "Index", "Structure", new { id = Model.Id }, null)</h3>
     <div class="info">
         <p>
@@ -29,7 +29,7 @@
 </div>
 <script type="text/javascript">
     $(".item .actions").children().button();
-    $(".item .actions").children("a:contains(Delete)").button("option", "icons", { primary: 'ui-icon-trash' });
+    $(".delete_button").button("option", "icons", { primary: 'ui-icon-trash' });
     $(".item .actions").hide();
     $(".item").hover(function () { $(this).children(".actions").fadeIn('fast'); }, function () { $(this).children(".actions").fadeOut('fast'); });
 </script>

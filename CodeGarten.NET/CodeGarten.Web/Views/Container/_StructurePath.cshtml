@@ -1,0 +1,25 @@
+﻿@using CodeGarten.Data.Model
+@model Container
+@{
+    var fullPath = new LinkedList<Container>();
+    var auxModel = Model;
+
+    fullPath.AddFirst(auxModel);
+
+    while ((auxModel = auxModel.Parent) != null)
+    {
+        fullPath.AddFirst(auxModel);
+    }
+}
+<div id="structure_path">
+    @Html.ActionLink(Model.Prototype.Structure.Name, "Index", "Structure", new { id = Model.Prototype.StructureId }, null)
+    |
+    @foreach (var container in fullPath)
+    {
+        @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "fader_left" })
+    }
+</div>
+<script type="text/javascript">
+    $("#structure_path").children().button();
+    $("#structure_path").children("a:not(:last-child)").button("option", "icons", { secondary: 'ui-icon-triangle-1-e' });
+</script>

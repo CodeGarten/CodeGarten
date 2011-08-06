@@ -1,9 +1,47 @@
 ﻿@using CodeGarten.Data.Model
 @model Container
-
 @{
     ViewBag.Title = string.Format("{0} @ {1}", Model.Name, Model.Prototype.Structure.Name);
 }
+@Html.Partial("_Container", Model)
+<script type="text/javascript">
 
-<h2>@Model.Name</h2>
-@Html.ActionLink("Enroll", "Enroll", new{structureId = Model.Prototype.StructureId, containerId = Model.Id})
+    $(document).ready(function () {
+        $(window).bind("popstate", function () {
+            if (!avoidFirst)
+                SwitchContainer(location.pathname, "left");
+            avoidFirst = false;
+        });
+    });
+
+    var avoidFirst = true;
+
+    var SwitchContainer = function (location, direction) {
+        $("#container").mask("Loading...", 100);
+        $.get(location, function (response) {
+            $("#container").unmask();
+            $("#container").fadeOut('fast', function () {
+                $("#container").html(response).show("slide", { direction: direction }, 'fast');
+                Reload();
+            });
+        });
+    };
+
+    var Reload = function () {
+        $(".fader_left").click(function () {
+            var url = this.href;
+            history.pushState({ path: this.path }, '', this.href);
+            SwitchContainer(url, "left");
+            return false;
+        });
+
+        $(".fader_right").click(function () {
+            var url = this.href;
+            history.pushState({ path: this.path }, '', this.href);
+            SwitchContainer(url, "right");
+            return false;
+        });
+    };
+
+    Reload();
+</script>

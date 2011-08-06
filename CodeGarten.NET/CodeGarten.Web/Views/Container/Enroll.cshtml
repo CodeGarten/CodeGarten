@@ -3,10 +3,11 @@
 @model Container
 @{
     ViewBag.Title = string.Format("Enroll in {0}", Model.Name);
+    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
 }
 <h2>
     Enroll in @Model.Name</h2>
-<div id="roleType_tabs">
+<div class="tabs">
     <ul>
         @foreach (var roleTypeName in Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
         {
@@ -19,7 +20,7 @@
             @using (Html.BeginForm())
             {
                 <input name="roleTypeName" value="@roleTypeName" type="hidden"/>
-                if ((ViewBag.DataBaseManager as DataBaseManager).Container.HasPassword(Model.Prototype.StructureId, Model.Id, roleTypeName))
+                if (dbMan.Container.HasPassword(Model.Prototype.StructureId, Model.Id, roleTypeName))
                 {
                 @Html.Label("password", "This roletype requires a password")
                 @Html.Password("password")
@@ -36,9 +37,11 @@
         </div>
     }
 </div>
+@Html.ActionLink("Back to " + @Model.Name, "Index","Container", new{id = Model.Id}, new{@class ="back_button"})
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $("#roleType_tabs").tabs();
+        $(".tabs").tabs();
+        $(".back_button").button({ icons: { primary: "ui-icon-arrowthick-1-w"} });
     });
 </script>

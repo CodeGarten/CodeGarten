@@ -9,9 +9,9 @@
         My Structures</h2>
     <div class="clear">
     </div>
-    @Html.ActionLink("Create new", "Create")
+    @Html.ActionLink("Create new", "Create",null, new{@class = "create_button"})
 </div>
-<div id="structure_tabs">
+<div class="tabs">
     <ul>
         <li><a href="#active">Active (@Model.Count(s => !s.Developing))</a></li>
         <li><a href="#ud">Developing (@Model.Count(s => s.Developing))</a></li>
@@ -43,9 +43,8 @@
         }
     </div>
 </div>
+
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#structure_tabs").tabs();
-        $(".title a").button({ icons: { primary: "ui-icon-plus"} });
-    });
+    $(".tabs").tabs();
+    $(".create_button").button({ icons: { primary: "ui-icon-plus"} });
 </script>

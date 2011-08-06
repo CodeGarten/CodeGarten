@@ -18,7 +18,12 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            return View(dataBaseManager.Container.Get(id));
+            var container = dataBaseManager.Container.Get(id);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("_Container", container);
+
+            return View(container);
         }
 
         [StructureOwner("structureId")]
@@ -41,16 +46,22 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                var createContainer = dataBaseManager.Container.Create(structureId, container.Name, container.Description, parent);
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Prototype = dataBaseManager.ContainerPrototype.Get(structureId, prototypeName);
+                    return View(container);
+                }
+
+                var createContainer = dataBaseManager.Container.Create(structureId, container.Name, container.Description, parent, prototypeName);
 
                 foreach(var password in container.Passwords.Where(p => !string.IsNullOrEmpty(p.Password)))
                     dataBaseManager.Container.AddPassword(structureId, createContainer.Id, password.RoleType, password.Password);
 
-                return RedirectToAction("Index", "Structure", new {id = structureId});
+                return RedirectToAction("Index", new {id = createContainer.Id});
             }
             catch (Exception)
             {
-                return View();
+                throw;
             }
         }
 
@@ -115,8 +126,6 @@ namespace CodeGarten.Web.Controllers
 
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            ViewBag.DataBaseManager = dataBaseManager;
-
             return View(dataBaseManager.Container.Get(containerId));
         }
 
@@ -130,12 +139,12 @@ namespace CodeGarten.Web.Controllers
                 if(!dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName, password))
                 {
                     ModelState.AddModelError("password", "Incorrect password");
-                    return View(new {structureId, containerId});
+                    return View(dataBaseManager.Container.Get(containerId));
                 }
 
                 return RedirectToAction("Index", new {id = containerId});
             }
-            catch (Exception)
+            catch
             {
                 throw;
             }
