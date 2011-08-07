@@ -15,9 +15,11 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            var user = string.IsNullOrEmpty(name)
+            var user = (ViewBag.isMe = string.IsNullOrEmpty(name))
                            ? dataBaseManager.User.Get(User.Identity.Name)
                            : dataBaseManager.User.Get(name);
+
+             
 
             return
                 View(new UserView() { Name = user.Name, Email = user.Email });
@@ -29,13 +31,13 @@ namespace CodeGarten.Web.Controllers
             if (User.Identity.Name != userView.Name)
                 return RedirectToAction("Index", new {name = userView.Name});
 
-            if(!ModelState.IsValidField("Email", userView))
+            if (!(ViewBag.success=ModelState.IsValidField("Email", userView)))
                 return PartialView("_EditEmailForm", userView);
 
             var databaseManager = (DataBaseManager) HttpContext.Items["DataBaseManager"];
 
             databaseManager.User.ChangeEmail(userView.Name, userView.Email);
-
+            
             return PartialView("_EditEmailForm", userView);
         }
 

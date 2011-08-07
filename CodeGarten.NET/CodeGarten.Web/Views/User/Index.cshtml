@@ -14,40 +14,67 @@
 </div>
 
 <div class="edit">
-    <div class="info">
-        <h3>
-            Email:
-        </h3>
-        <p>
-            @Model.Email
-        </p>
-        <button>Edit</button>
+    <h3>
+        Email:
+    </h3>
+    <div>
+        @if (ViewBag.isMe)
+        {
+            <div class="info">
+                <p>
+                    @Model.Email
+                </p>
+                <button>Edit</button>
+            </div>
+            <div id="_EditEmailForm" class="form" style="display: none;">
+                @Html.Partial("_EditEmailForm", Model)
+            </div> 
+            
+        }else{ 
+            <div class="info">
+                <p>
+                    @Model.Email
+                </p>
+            </div>
+        }
     </div>
-    <div id="_EditEmailForm" class="form" style="display: none;">
-        @Html.Partial("_EditEmailForm", Model)
-    </div>  
+     
 </div>
 <div class="edit">
-    <div class="info">
-        <h3>
-            Password:
-        </h3>
-        <button>Change Password</button>
-    </div>
-    
-    <div id="_EditPasswordForm" class="form" style="display: none;">
-        @Html.Partial("_EditPasswordForm", Model)
-    </div>  
-</div>
-<script type="text/javascript">
+    <h3>
+        Password:
+    </h3>
 
-    $(".title a").button({ icons: { primary: "ui-icon-arrowreturnthick-1-w"} });
-    $(".info > button").button({ icons: { primary: "ui-icon-pencil"} }).click(function () {
-        $(".form").hide();
-        $(".info").show();
-        $(this).parent().hide();
-        $(this).parent().parent().children(".form").show();
-    });
-    
-    
-</script>
+    <div>
+        @if (ViewBag.isMe)
+        {
+            <div class="info">
+                <button>Change Password</button>
+            </div>
+            <div id="_EditPasswordForm" class="form" style="display: none;">
+                @Html.Partial("_EditPasswordForm", Model)
+            </div> 
+        }
+    </div>     
+</div>
+@if (ViewBag.isMe)
+{
+    <script type="text/javascript">
+        $(".info > button").button({ icons: { primary: "ui-icon-pencil"} }).click(function () {
+            $(".form").hide();
+            $(".info").show();
+            $(this).parent().hide();
+            $(this).parent().parent().children(".form").show();
+        });
+
+        function success(e, info) {
+            $(".form").hide();
+
+            if (info != undefined)
+                e.parent().children(".info").children("p").html(info);
+
+            $(".info").show();
+        }
+
+    </script>
+}
