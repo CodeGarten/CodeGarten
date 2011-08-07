@@ -266,10 +266,10 @@
     <Content Include="Views\User\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_EditEmailForm.cshtml" />
+    <Content Include="Views\User\_EditEmailForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_EditPasswordForm.cshtml" />
+    <Content Include="Views\User\_EditPasswordForm.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -43,7 +43,6 @@ namespace CodeGarten.Web.Core
             modelState.AddModelError("form", msg);
         }
 
-
         public static bool IsValidField(this ModelStateDictionary modelSate, string key, IValidatableObject validatableObject)
         {
             if (!modelSate.IsValidField(key)) return false;

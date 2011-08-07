@@ -26,16 +26,36 @@ namespace CodeGarten.Web.Controllers
         [HttpPost]
         public ActionResult ChangeEmail(UserView userView)
         {
-            //TODO authorization
+            if (User.Identity.Name != userView.Name)
+                return RedirectToAction("Index", new {name = userView.Name});
 
             if(!ModelState.IsValidField("Email", userView))
                 return PartialView("_EditEmailForm", userView);
 
-            var databaseManager = (DataBaseManager) HttpContext.Items["dataBaseManager"];
+            var databaseManager = (DataBaseManager) HttpContext.Items["DataBaseManager"];
 
             databaseManager.User.ChangeEmail(userView.Name, userView.Email);
 
             return PartialView("_EditEmailForm", userView);
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(UserView userView, string currentPassword)
+        {
+            if(!ModelState.IsValidField("Password", userView))
+                return PartialView("_EditPasswordForm", userView);
+
+            var databaseManager = (DataBaseManager) HttpContext.Items["DataBaseManager"];
+
+            if (!databaseManager.Authentication.Authenticate(userView.Name, currentPassword))
+            {
+                ModelState.AddModelError("currentPassword", "");
+                return PartialView("_EditPasswordForm", userView);
+            }
+
+            databaseManager.User.ChangePassword(userView.Name, userView.Password);
+
+            return PartialView("_EditPasswordForm", new UserView(){Name = userView.Name});
         }
 
         public ActionResult Enrolls()

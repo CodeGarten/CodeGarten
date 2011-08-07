@@ -94,12 +94,9 @@ namespace CodeGarten.Data.Access
             _dbContext.SaveChanges();
         }
 
-        public void ChangePassword(string name, string oldPassword, string newPassword)
+        public void ChangePassword(string name, string newPassword)
         {
-            var user = Get(_dbContext, name);
-            if (user.Password != oldPassword) return;
-            
-            user.Password = newPassword;
+            Get(_dbContext, name).Password = AuthenticationManager.EncryptPassword(newPassword);
 
             _dbContext.SaveChanges();
         }
