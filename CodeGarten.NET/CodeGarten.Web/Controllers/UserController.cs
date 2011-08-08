@@ -49,7 +49,7 @@ namespace CodeGarten.Web.Controllers
 
             var databaseManager = (DataBaseManager) HttpContext.Items["DataBaseManager"];
 
-            if (!databaseManager.Authentication.Authenticate(userView.Name, currentPassword))
+            if (!(ViewBag.success=databaseManager.Authentication.Authenticate(userView.Name, currentPassword)))
             {
                 ModelState.AddModelError("currentPassword", "");
                 return PartialView("_EditPasswordForm", userView);

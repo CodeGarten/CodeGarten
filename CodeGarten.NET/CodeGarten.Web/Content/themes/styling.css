@@ -61,7 +61,7 @@ h1 { padding: .2em; margin: 0;}
 #top 
 {
     border-bottom: 1px solid #CCCCCC;
-    height: 90px;
+    height: 70px;
     background-color: #F1F1F1;
     margin-bottom: 20px;
     width: inherit;
@@ -70,6 +70,12 @@ h1 { padding: .2em; margin: 0;}
     margin-right: -10px;
     background-image: url(http://jqueryui.com/themeroller/images/?new=e6e6e6&w=1&h=100&f=png&q=100&fltr[]=over|textures/03_highlight_soft.png|0|0|75);
     background-repeat: repeat-x;
+}
+
+
+#top .logo > img
+{
+   margin-top:15px;
 }
 
 #top > div

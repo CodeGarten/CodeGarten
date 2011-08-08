@@ -13,7 +13,9 @@
 <body>
     <div id="top">
         <div>
-            @Html.ActionLink("CodeGarten", "Index", "Home")
+            <a class= "logo" href="@Url.Action("Index", "Home")">
+                <img src="@Url.Content("~/Content/themes/smoothness/images/CodeGarten.png")" alt="CodeGarten" />
+            </a>
             @{
                 <div id="user_actions" class="ui-widget-header ui-state-default ui-corner-bottom">
                     @if (!User.Identity.IsAuthenticated)

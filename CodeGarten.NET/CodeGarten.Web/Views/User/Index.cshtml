@@ -40,25 +40,24 @@
     </div>
      
 </div>
-<div class="edit">
-    <h3>
-        Password:
-    </h3>
 
-    <div>
-        @if (ViewBag.isMe)
-        {
+@if (ViewBag.isMe)
+{
+    <div class="edit">
+        <h3>
+            Password:
+        </h3>
+
+        <div>
             <div class="info">
                 <button>Change Password</button>
             </div>
             <div id="_EditPasswordForm" class="form" style="display: none;">
                 @Html.Partial("_EditPasswordForm", Model)
             </div> 
-        }
-    </div>     
-</div>
-@if (ViewBag.isMe)
-{
+        </div>     
+    </div>
+
     <script type="text/javascript">
         $(".info > button").button({ icons: { primary: "ui-icon-pencil"} }).click(function () {
             $(".form").hide();

@@ -107,6 +107,7 @@
     <Content Include="Content\scripts\Tree.js" />
     <Content Include="Content\scripts\Workspace.js" />
     <Content Include="Content\themes\jquery.loadmask.css" />
+    <Content Include="Content\themes\smoothness\images\CodeGarten.png" />
     <Content Include="Content\themes\smoothness\images\Help.png" />
     <Content Include="Content\themes\smoothness\images\loading.gif" />
     <Content Include="Content\themes\smoothness\images\Projects.png" />
