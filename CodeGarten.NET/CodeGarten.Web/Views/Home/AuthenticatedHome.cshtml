@@ -8,22 +8,22 @@
     </div>
     <div class="ui-widget-content">
         <div id="auth_user_actions">
-            <div class="action ui-corner-all ui-state-default" onclick='javascript:document.location = @Url.Action("Index", "Search")/'  title="Search for users, structures and projects" >
+            <div class="action ui-corner-all ui-state-default" onclick='javascript:document.location = "@Url.Action("Index", "Search")/"'  title="Search for users, structures and projects" >
                 <img src="@Url.Content("~/Content/themes/smoothness/images/Search.png")" alt="Search"/>
                 <div>
                     Search</div>
             </div>
-            <div class="action ui-corner-all ui-state-default"  onclick='javascript:document.location = @Url.Action("Index", "Structure")/' title="Manage your structures">
+            <div class="action ui-corner-all ui-state-default"  onclick='javascript:document.location = "@Url.Action("Index", "Structure")/"' title="Manage your structures">
                 <img src="@Url.Content("~/Content/themes/smoothness/images/Structures.png")" alt="Structures" />
                 <div>
                     My Structures</div>
             </div>
-            <div class="action ui-corner-all ui-state-default"  title="Manage your enrolled projects">
+            <div class="action ui-corner-all ui-state-default"  onclick='javascript:document.location = "@Url.Action("Enrolls", "User")/"' title="Manage your enrolled projects">
                 <img src="@Url.Content("~/Content/themes/smoothness/images/Projects.png")" alt="Enrolls" />
                 <div>
                     Enrolls</div>
             </div>
-            <div class="action ui-corner-all ui-state-default" onclick='javascript:document.location = @Url.Action("Index", "Profile")/'  title="Edit your information">
+            <div class="action ui-corner-all ui-state-default" onclick='javascript:document.location = "@Url.Action("Index", "User")/"'  title="Edit your information">
                 <img src="@Url.Content("~/Content/themes/smoothness/images/User.png")" alt="Profile" />
                 <div>
                     Profile</div>

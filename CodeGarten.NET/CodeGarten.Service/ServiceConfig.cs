@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CodeGarten.Service
 {
-    internal static class ServiceConfig
+    public static class ServiceConfig
     {
         public static String ServicesDllLocation { get; private set; }
         public static String ServicesResourceLibLocation { get; private set; }

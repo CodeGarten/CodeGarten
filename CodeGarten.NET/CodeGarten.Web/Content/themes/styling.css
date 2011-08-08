@@ -229,17 +229,50 @@ h1 { padding: .2em; margin: 0;}
 
 .edit
 {
+    min-height: 25px;
     padding: 5px;
     border-bottom: 1px solid;    
 }
 
-.edit>.info>h3
+.edit>h3
 {
     float: left;
-    margin-right: 100px;
+    position: absolute;
 }
 
-.edit>.info>p
+.edit .info>p
 {
-    display: inline;
+    margin-left: 100px;
+    float: left;
+    font-size: 120%;
+    padding: -5px;
+}
+
+.edit .form
+{
+    margin-left: 100px;
+    font-size: 120%;
+    padding: -5px;
+}
+
+.edit .info>button
+{
+    float: right;
+}
+
+/* Styles for Enrolls
+----------------------------------------------------------*/
+
+#structureAccordion table  
+{
+    margin: 1em 0; 
+    border-collapse: collapse; 
+    width: 50%; 
+}
+
+#structureAccordion table td, #structureAccordion table th  
+{
+    border: 1px solid #eee; 
+    padding: .6em 10px; 
+    text-align: left; 
 }

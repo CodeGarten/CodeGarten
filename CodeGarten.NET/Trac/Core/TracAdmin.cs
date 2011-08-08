@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using CodeGarten.Service;
 
 namespace Trac
 {
@@ -20,9 +22,8 @@ namespace Trac
 
         static TracAdmin ()
         {
-            var fileMap = new ExeConfigurationFileMap();
-            fileMap.ExeConfigFilename = @"Trac.dll.config";
-            var assemblyConfig = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+            var assemblyConfig = 
+                ConfigurationManager.OpenExeConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "Trac.dll"));
             TracAdminPath = assemblyConfig.AppSettings.Settings["TracAdminLocation"].Value;
         }
 

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Security;
 using System.Text;
+using CodeGarten.Service;
 
 namespace SVN
 {
@@ -21,9 +23,10 @@ namespace SVN
 
         static SVNAdmin()
         {
-            var fileMap = new ExeConfigurationFileMap();
-            fileMap.ExeConfigFilename = @"SVN.dll.config";
-            var assemblyConfig = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+
+            var assemblyConfig =
+                ConfigurationManager.OpenExeConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "SVN.dll"));
+            
             SvnAdminPath = assemblyConfig.AppSettings.Settings["SvnAdminLocation"].Value;
         }
 

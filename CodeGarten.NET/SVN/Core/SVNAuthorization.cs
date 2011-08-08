@@ -39,8 +39,9 @@ namespace SVN
 
             public override string ToString()
             {
-                return _instance.Append('\n').ToString();
+                return _instance.ToString();
             }
+
         }
 
         public sealed class SvnGroup
@@ -95,9 +96,9 @@ namespace SVN
             _fileInstance = Path.Combine(_path, String.Format(TmpFormat, "instances"));
             _fileOverride = Path.Combine(_path, String.Format(TmpFormat, _fileName));
             _file = Path.Combine(_path, fileName);
-
-            _instances = new WeakReference(new Dictionary<string, SvnInstance>());
-            _groups = new WeakReference(new Dictionary<string, SvnGroup>());
+            
+            _instances = new WeakReference(null);
+            _groups = new WeakReference(null);
             
         }
 
@@ -168,6 +169,9 @@ namespace SVN
             {
                 var returnInstance = new SvnInstance(instanceName);
                 instances.Add(instanceName, returnInstance);
+
+                SaveInstances(instances);
+
                 return returnInstance;
             }
 
@@ -183,6 +187,8 @@ namespace SVN
                 instances = (Dictionary<string, SvnInstance>)_instances.Target;
 
             instances.Remove(instanceName);
+
+            SaveInstances(instances);
         }
 
         public SvnGroup CreateOrGetGroup(string groupName)
@@ -198,10 +204,11 @@ namespace SVN
             {
                 var returnGroup = new SvnGroup(groupName);
                 groups.Add(groupName, returnGroup);
+
+                SaveGroups(groups);
+
                 return returnGroup;
             }
-
-            SaveGroups(groups);
 
             return groups[groupName];
         }
@@ -232,20 +239,20 @@ namespace SVN
         {
             using (TextWriter textWriter = new StreamWriter(_fileGroup))
                 foreach (var svnGroup in groups)
-                    textWriter.WriteLine(svnGroup.ToString());
+                    textWriter.WriteLine(svnGroup.Value.ToString());
         }
 
         private void SaveInstances(Dictionary<string, SvnInstance> instances)
         {
             using (TextWriter textWriter = new StreamWriter(_fileInstance))
                 foreach (var svnInstance in instances)
-                    textWriter.WriteLine(svnInstance.ToString());
+                    textWriter.WriteLine(svnInstance.Value+"\n");
         }
 
         public void Save()
         {
             
-            using(TextWriter textWriter = new StreamWriter(_fileOverride))
+            using(TextWriter textWriter = File.CreateText(_fileOverride))
             {
                 Dictionary<string, SvnGroup> groups;
                 if (!_groups.IsAlive)
