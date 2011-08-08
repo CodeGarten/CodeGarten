@@ -165,6 +165,23 @@ h1 { padding: .2em; margin: 0;}
 .item .info, .item .name { padding-left: 5px;}
 .item .actions { padding-left: 5px;padding-top: 3px; float: right;}
 
+/* container
+-----------------------------------------------------------*/
+#container .top { border-bottom: 1px solid #CCCCCC;padding-bottom: 5px; }
+#structure_path { padding-top: 10px;}
+#child_tabs { margin-top: 5px;}
+
+/* child_tabs
+-----------------------------------------------------------*/
+#child_tabs .create_button { margin-top: 5px;}
+
+	#child_tabs .child { list-style-type: none; margin: 0; padding: 0; }
+	#child_tabs .child .item { margin: 3px; padding: 1px;display: inline-block; width: 100px; text-align: center; }
+
+/* structure_tabs
+-----------------------------------------------------------*/
+#structure_tabs .create_button { margin-top: 5px;}
+
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}
 

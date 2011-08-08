@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Web.Mvc;
-using CodeGarten.Data;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Attributes;
 using CodeGarten.Web.Model;
@@ -12,8 +9,6 @@ namespace CodeGarten.Web.Controllers
 {
     public sealed class ContainerController : Controller
     {
-
-        //TODO rever o controller 
         public ActionResult Index(long id)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
@@ -59,9 +54,9 @@ namespace CodeGarten.Web.Controllers
 
                 return RedirectToAction("Index", new {id = createContainer.Id});
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return View(container);
             }
         }
 
@@ -82,7 +77,6 @@ namespace CodeGarten.Web.Controllers
             try
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
 
                 dataBaseManager.Container.Delete(id);
 
@@ -111,20 +105,10 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Enroll(long structureId, long containerId)
         {
-            //var enroll = new EnrollView();
-
-            //var container = _context.Containers.Find(containerId);
-
-            //ViewBag.RoleTypes =
-            //    _context.Roles.Where(
-            //        r =>
-            //        r.ContainerPrototype.StructureId == structureId &&
-            //        r.ContainerPrototypeName == container.ContainerPrototype.Name).Select(r => r.RoleType).
-            //        ToList().Select(rt => new SelectListItem {Text = rt.Name, Value = rt.Name});
-
-            //return View();
-
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            if (dataBaseManager.User.Get(User.Identity.Name).Enrolls.Any(e => e.ContainerId == containerId && !e.Inherited))
+                return RedirectToAction("Index", new {id = containerId});
 
             return View(dataBaseManager.Container.Get(containerId));
         }
@@ -136,6 +120,9 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
+                if (dataBaseManager.User.Get(User.Identity.Name).Enrolls.Any(e => e.ContainerId == containerId && !e.Inherited))
+                    return RedirectToAction("Index", new { id = containerId });
+
                 if(!dataBaseManager.User.Enroll(User.Identity.Name, structureId, containerId, roleTypeName, password))
                 {
                     ModelState.AddModelError("password", "Incorrect password");
@@ -146,7 +133,9 @@ namespace CodeGarten.Web.Controllers
             }
             catch
             {
-                throw;
+                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                ModelState.AddModelError("form", "An error occured. Please try again.");
+                return View(dataBaseManager.Container.Get(containerId));
             }
         }
     }

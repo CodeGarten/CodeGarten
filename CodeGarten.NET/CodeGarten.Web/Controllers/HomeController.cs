@@ -6,12 +6,6 @@ namespace CodeGarten.Web.Controllers
     {
         public ActionResult Index()
         {
-            //ViewBag.TopStructures =
-            //    _context.Structures.OrderBy(s => _context.Enrolls.Count(e => e.RoleTypeStructureId == s.Id)).Take(10);
-
-            //ViewBag.RecentStructures =
-            //    _context.Structures.OrderByDescending(s => s.CreatedOn).Take(10);
-
             return User.Identity.IsAuthenticated ? View("AuthenticatedHome") : View();
         }
     }

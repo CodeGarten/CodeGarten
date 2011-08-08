@@ -5,7 +5,7 @@
 }
 <h1>@Model.Name</h1>
 <h3>@Model.Description</h3>
-<div id="instance_tabs">
+<div id="structure_tabs" class="tabs">
     <ul>
         <li><a href="#all">Instances</a></li>
         <li><a href="#design">Design</a></li>
@@ -16,7 +16,7 @@
             @Html.Partial("_ContainerItem", container)
         }
         <div class="actions">
-            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)
+            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, new{@class = "create_button"})
         </div>
     </div>
     <div id="design">
@@ -24,21 +24,8 @@
             Not yet implemented.</p>
     </div>
 </div>
-@*  <div id="instances" class="childs">
-    <div class="title">
-        <h3>
-            Instances</h3>
-        <span class="actions">
-            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, null)
-        </span>
-    </div>
-    @foreach (var container in ViewBag.Instances as IEnumerable<Container>)
-    {
-        @Html.Partial("_ContainerItem", container)
-    }
-</div>*@
 <script type="text/javascript">
-    //    $("#instances .title .actions").children().first().button({ icons: { primary: "ui-icon-plus"} });
-    $("#instance_tabs").tabs();
+    $(".tabs").tabs();
     $(".actions").children().button();
+    $(".actions .create_button").button({ icons: { primary: "ui-icon-plus"} });
 </script>

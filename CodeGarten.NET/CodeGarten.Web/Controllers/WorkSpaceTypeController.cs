@@ -18,7 +18,7 @@ namespace CodeGarten.Web.Controllers
             if (!ModelState.IsValid)
                 return FormValidationResponse.Error(ModelState);
 
-            if(services == null || services.Count() == 0)
+            if(services == null || !services.Any())
             {
                 ModelState.AddGlobalError("A workspace must have at least one service.");
                 return FormValidationResponse.Error(ModelState);
@@ -39,6 +39,7 @@ namespace CodeGarten.Web.Controllers
             }
         }
 
+        [StructureOwner("structureId")]
         public PartialViewResult Edit(long structureId, string name)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
@@ -51,7 +52,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("structureId")]
         public JsonResult Edit(long structureId, string name, IEnumerable<string> services)
         {
-            if (services == null || services.Count() == 0)
+            if (services == null || !services.Any())
             {
                 ModelState.AddGlobalError("A workspace must have at least one service.");
                 return FormValidationResponse.Error(ModelState);

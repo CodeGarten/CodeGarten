@@ -23,12 +23,12 @@ namespace CodeGarten.Web.Controllers
                 case "structure":
                     return PartialView("_SearchResults", dataBaseManager.Structure.Search(query).Where(s => s.Public && !s.Developing));
                 case "project":
-                    return PartialView("_SearchResults", dataBaseManager.Container.Search(query));
+                    return PartialView("_SearchResults", dataBaseManager.Container.Search(query).Where(c => c.Prototype.Structure.Public));
                 case "all":
                     {
                         ViewBag.Users = dataBaseManager.User.Search(query);
                         ViewBag.Structures = dataBaseManager.Structure.Search(query).Where(s => s.Public && !s.Developing);
-                        ViewBag.Projects = dataBaseManager.Container.Search(query);
+                        ViewBag.Projects = dataBaseManager.Container.Search(query).Where(c => c.Prototype.Structure.Public);
                         return PartialView("_SearchAllResults");
                     }
             }

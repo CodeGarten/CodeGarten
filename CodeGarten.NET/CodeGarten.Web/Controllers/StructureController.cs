@@ -174,6 +174,9 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
+                if(!dataBaseManager.Structure.Get(id).Developing)
+                    return FormValidationResponse.Ok();
+
                 dataBaseManager.Structure.Publish(id);
 
                 return FormValidationResponse.Ok();

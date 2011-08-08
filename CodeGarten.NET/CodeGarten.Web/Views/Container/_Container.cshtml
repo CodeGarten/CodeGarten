@@ -8,20 +8,18 @@
 }
 <div>
     <div id="container">
-        <div>
+        <div class="top">
             <h1>@Model.Name</h1>
+            <div class="actions">
+                @(enrolled == null ?
+                Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" }) :
+                Html.ActionLink("Disenroll", "Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" }))
+            </div>
         </div>
         @Html.Partial("_StructurePath", Model)
         @if (Model.Prototype.Childs.Any())
         {
             @Html.Partial("_Childs", Model)
-        }
-        @if (enrolled == null)
-        {
-            <div>
-                Enroll to gain access to this container features.
-                @Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" })
-            </div>
         }
         @Html.Partial("_Workspaces", Model)
     </div>

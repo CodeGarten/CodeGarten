@@ -17,7 +17,7 @@
         <li><a href="#ud">Developing (@Model.Count(s => s.Developing))</a></li>
     </ul>
     <div id="active">
-        @if (Model.Count(m => !m.Developing) > 0)
+        @if (Model.Any(m => !m.Developing))
         {
             foreach (var structure in Model.Where(s => !s.Developing))
             {
@@ -30,7 +30,7 @@
         }
     </div>
     <div id="ud">
-        @if (Model.Count(m => m.Developing) > 0)
+        @if (Model.Any(m => m.Developing))
         {
             foreach (var structure in Model.Where(s => s.Developing))
             {

@@ -17,7 +17,7 @@
         </ul>
         @foreach (var cp in Model.Prototype.Childs)
         {
-            <div id="@cp.Name">
+            <div id="@cp.Name" class="child">
                 @{ var cp1 = cp; }
                 @foreach (var container in Model.Childs.Where(c => c.Prototype.Name == cp1.Name))
                 {

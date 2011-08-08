@@ -18,7 +18,7 @@ namespace CodeGarten.Web.Controllers
             if (!ModelState.IsValid)
                 return FormValidationResponse.Error(ModelState);
 
-            if (permissions == null || permissions.Count() == 0)
+            if (permissions == null || !permissions.Any())
             {
                 ModelState.AddGlobalError("A rule must have at least one service permission.");
                 return FormValidationResponse.Error(ModelState);
@@ -39,6 +39,7 @@ namespace CodeGarten.Web.Controllers
             }
         }
 
+        [StructureOwner("structureId")]
         public PartialViewResult Edit(long structureId, string name)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
@@ -51,7 +52,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("structureId")]
         public JsonResult Edit(long structureId, string name, IEnumerable<string> permissions)
         {
-            if (permissions == null || permissions.Count() == 0)
+            if (permissions == null || !permissions.Any())
             {
                 ModelState.AddGlobalError("A rule must have at least one service permission.");
                 return FormValidationResponse.Error(ModelState);

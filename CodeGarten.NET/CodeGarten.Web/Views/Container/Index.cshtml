@@ -6,20 +6,19 @@
 @Html.Partial("_Container", Model)
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $(window).bind("popstate", function () {
-            if (!avoidFirst)
-                SwitchContainer(location.pathname, "left");
-            avoidFirst = false;
-        });
-    });
+    window.onpopstate = function () {
+        if (!ignore) {
+            SwitchContainer(location.href, "left");
+        }
+        else {
+            ignore = false;
+        }
+    };
 
-    var avoidFirst = true;
+    var ignore = true;
 
     var SwitchContainer = function (location, direction) {
-        $("#container").mask("Loading...", 100);
         $.get(location, function (response) {
-            $("#container").unmask();
             $("#container").fadeOut('fast', function () {
                 $("#container").html(response).show("slide", { direction: direction }, 'fast');
                 Reload();
@@ -42,6 +41,13 @@
             return false;
         });
     };
+
+    $("#container").ajaxSend(function () {
+        $("#container").mask("Loading...", 150);
+    });
+    $("#container").ajaxComplete(function () {
+        $("#container").unmask();
+    });
 
     Reload();
 </script>

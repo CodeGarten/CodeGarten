@@ -4,21 +4,25 @@
 @{
     ViewBag.Title = string.Format("Enroll in {0}", Model.Name);
     var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
+    var distinctRoleTypeNames = Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct();
 }
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <h2>
     Enroll in @Model.Name</h2>
 <div class="tabs">
     <ul>
-        @foreach (var roleTypeName in Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
+        @foreach (var roleTypeName in distinctRoleTypeNames)
         {
             <li><a href="#@roleTypeName">@roleTypeName</a></li>   
         }
     </ul>
-    @foreach (var roleTypeName in Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
+    @foreach (var roleTypeName in distinctRoleTypeNames)
     {
         <div id="@roleTypeName">
             @using (Html.BeginForm())
             {
+                @Html.ValidationSummary(true)
                 <input name="roleTypeName" value="@roleTypeName" type="hidden"/>
                 if (dbMan.Container.HasPassword(Model.Prototype.StructureId, Model.Id, roleTypeName))
                 {
@@ -37,11 +41,8 @@
         </div>
     }
 </div>
-@Html.ActionLink("Back to " + @Model.Name, "Index","Container", new{id = Model.Id}, new{@class ="back_button"})
+@Html.ActionLink("Back to " + @Model.Name, "Index", "Container", new { id = Model.Id }, new { @class = "back_button" })
 <script type="text/javascript">
-
-    $(document).ready(function () {
-        $(".tabs").tabs();
-        $(".back_button").button({ icons: { primary: "ui-icon-arrowthick-1-w"} });
-    });
+    $(".tabs").tabs();
+    $(".back_button").button({ icons: { primary: "ui-icon-arrowthick-1-w"} });
 </script>
