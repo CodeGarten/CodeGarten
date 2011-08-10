@@ -47,24 +47,28 @@ namespace SVN
 
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
+            //TODO  remove groups
             foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
             {
                 var instanceName = e.Container.UniqueInstanceName(workSpaceType);
                 SVNRepositoryManager.Delete(_repoPath, instanceName);
                 _svnAuthorization.RemoveInstance(instanceName);
             }
+            _svnAuthorization.Save();
         }
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.RemoveUser(e.Enroll.UserName);
+            _svnAuthorization.Save();
         }
 
         private void OnUserEnroll(object sender, EnrollEventArgs e)
         {
-            var group = _svnAuthorization.CreateOrGetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
+            var group = _svnAuthorization.CreateGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.AddUser(e.Enroll.UserName);
+            _svnAuthorization.Save();
         }
 
         private void OnCreateContainer(object sender, ContainerEventArgs e)
@@ -79,7 +83,7 @@ namespace SVN
                 if (!repository.Initialize())
                     continue; //TODO Servicelogger;
 
-                var instance = _svnAuthorization.CreateOrGetInstance(instanceName);
+                var instance = _svnAuthorization.CreateInstance(instanceName);
                 foreach (var role in e.Container.Prototype.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
@@ -92,6 +96,8 @@ namespace SVN
                 }
 
             }
+
+            _svnAuthorization.Save();
             
         }
 

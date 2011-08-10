@@ -4,13 +4,14 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using CodeGarten.Service.Interfaces;
 
 namespace SVN.Controllers
 {
     [Authorize]
     [Export(typeof (IController)), ExportMetadata("ControllerName", "Home"),
      PartCreationPolicy(CreationPolicy.NonShared)]
-    public class HomeController : Controller //, IEntryPointController
+    public class HomeController : Controller, IServiceEntryPoint
     {
         //
         // GET: /Home/structureId/containerId/workspaceTypeName

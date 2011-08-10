@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVN.Tests", "SVN.Tests\SVN.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trac.Tests", "Trac.Tests\Trac.Tests.csproj", "{674B1BD7-6EA9-4613-81A4-E8B65EB83BC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Logger", "CodeGarten.Logger\CodeGarten.Logger.csproj", "{337CC1F6-D513-4A22-B5C5-65D22F0115F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Logger.Tests", "CodeGarten.Logger.Tests\CodeGarten.Logger.Tests.csproj", "{21278B3C-38CD-4FBC-B10B-1D4633F3A3D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,14 @@ Global
 		{674B1BD7-6EA9-4613-81A4-E8B65EB83BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{674B1BD7-6EA9-4613-81A4-E8B65EB83BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{674B1BD7-6EA9-4613-81A4-E8B65EB83BC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{337CC1F6-D513-4A22-B5C5-65D22F0115F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337CC1F6-D513-4A22-B5C5-65D22F0115F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337CC1F6-D513-4A22-B5C5-65D22F0115F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337CC1F6-D513-4A22-B5C5-65D22F0115F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21278B3C-38CD-4FBC-B10B-1D4633F3A3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21278B3C-38CD-4FBC-B10B-1D4633F3A3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21278B3C-38CD-4FBC-B10B-1D4633F3A3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21278B3C-38CD-4FBC-B10B-1D4633F3A3D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

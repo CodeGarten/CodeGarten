@@ -15,11 +15,11 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            var user = (ViewBag.isMe = string.IsNullOrEmpty(name))
+            var user = string.IsNullOrEmpty(name)
                            ? dataBaseManager.User.Get(User.Identity.Name)
                            : dataBaseManager.User.Get(name);
 
-             
+            ViewBag.isMe = user.Name == User.Identity.Name;
 
             return
                 View(new UserView() { Name = user.Name, Email = user.Email });
