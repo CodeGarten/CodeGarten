@@ -33,7 +33,7 @@ namespace Trac
             foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var envName = e.Container.UniqueInstanceName(workSpaceType);
-                if (!TracEnvironmentManager.Delete(PathService, envName))
+                if (!TracEnvironmentManager.Delete(_envPath, envName))
                 {
                     Logger.Log(String.Format("Service {0} -> Delete instance \"{1}\" fail", Name, envName));
                     continue;
@@ -45,15 +45,16 @@ namespace Trac
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
+
             foreach (var workSpaceType in e.Container.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
-                                                                                           e.Enroll.Container.
+                                                                                           e.Container.
                                                                                                UniqueInstanceName(
                                                                                                    workSpaceType)));
                 tracPermissions.RemoveGroupUser(e.Enroll.UserName,
-                                             e.Enroll.Container.UniqueGroupName(e.Enroll.RoleTypeName));
+                                             e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             }
 
         }
@@ -64,11 +65,11 @@ namespace Trac
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
-                                                                                           e.Enroll.Container.
+                                                                                           e.Container.
                                                                                                UniqueInstanceName(
                                                                                                    workSpaceType)));
                 tracPermissions.AddGroupUser(e.Enroll.UserName,
-                                             e.Enroll.Container.UniqueGroupName(e.Enroll.RoleTypeName));
+                                             e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             }
         }
 
