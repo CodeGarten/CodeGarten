@@ -4,26 +4,45 @@
 @{
     var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
 
+    var users = dbMan.User.GetAll().Where(u => u.Enrolls.Any(e => e.ContainerId == Model.Id));
+
     var enrolled = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
+
+    var description = Model.Description ?? "No description";
 }
 <div>
     <div id="container">
-        <div class="top">
-            <h1>@Model.Name</h1>
-            <div class="actions">
-                @(enrolled == null ?
-                Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" }) :
-                Html.ActionLink("Disenroll", "Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" }))
+        <h1>@Html.Partial("_StructurePath", Model)</h1>
+        <div class="left_panel">
+            <div class="info ui-corner-all ui-widget-content">
+                <label>
+                    Description:</label>
+                @description
+                <br />
+                <label>
+                    Prototype:</label>
+                @Model.Prototype.Name
+                <br />
+                <label>
+                    <a class="counter" href="javascript:Users()">@users.Count()</a></label>
+                enrolled user(s)
+                @if (enrolled != null)
+                {
+                    <text>Including you as </text><label>@enrolled.RoleTypeName</label>
+                }
             </div>
-        </div>
-        @Html.Partial("_StructurePath", Model)
-        @if (Model.Prototype.Childs.Any())
-        {
             @Html.Partial("_Childs", Model)
-        }
-        @Html.Partial("_Workspaces", Model)
+            @Html.Partial("_Users", Model)
+        </div>
+        <div class="right_panel">
+            @Html.Partial("_Actions", Model)
+            @Html.Partial("_Workspaces", Model)
+        </div>
+        <div class="clear">
+        </div>
     </div>
 </div>
 <script type="text/javascript">
     $(".button").button();
+    $(".delete_button").button({ icons: { primary: 'ui-icon-trash'} });
 </script>

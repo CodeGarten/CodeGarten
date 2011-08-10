@@ -4,7 +4,8 @@ using CodeGarten.Data.Access;
 
 namespace CodeGarten.Web.Controllers
 {
-    public class SearchController : Controller
+    [Authorize]
+    public sealed class SearchController : Controller
     {
         public ActionResult Index()
         {

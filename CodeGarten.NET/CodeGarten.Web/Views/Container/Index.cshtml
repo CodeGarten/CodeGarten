@@ -18,7 +18,7 @@
     var ignore = true;
 
     var SwitchContainer = function (location, direction) {
-        $.get(location, function (response) {
+        $.get(location + "?partial=true", function (response) {
             $("#container").fadeOut('fast', function () {
                 $("#container").html(response).show("slide", { direction: direction }, 'fast');
                 Reload();

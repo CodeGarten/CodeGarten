@@ -39,9 +39,8 @@ namespace CodeGarten.Service
 
         public event EventHandler<ContainerEventArgs> OnDeleteContainer
         {
-            //TODO
-            add{}
-            remove {}
+            add { ContainerManager.OnDeleteContainer += value; }
+            remove { ContainerManager.OnDeleteContainer -= value; }
         }
     }
 }

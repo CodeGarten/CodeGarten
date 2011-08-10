@@ -6,66 +6,28 @@
     var userEnroll = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
     var inheritedEnrolls = dbMan.User.Get(User.Identity.Name).Enrolls.Where(e => e.ContainerId == Model.Id && e.Inherited);
 }
-<div id="workspaces">
-    @if (userEnroll != null)
-    {
-        var query = Model.Prototype.Bindings.Where(b => b.Roles.Any(r => r.RoleTypeName == userEnroll.RoleTypeName));
-        <h2>
-            Enrolled as @userEnroll.RoleTypeName</h2>
-        <div id="container_workspaces" class="tabs">
-            <ul>
-                @foreach (var binding in query)
-                {
-                    <li><a href="#@binding.WorkSpaceTypeName">@binding.WorkSpaceTypeName</a></li>
-                }
-            </ul>
-            @foreach (var binding in query)
+<div class="ui-widget" id="workspaces_widget">
+    <div class="ui-widget-header">
+        <h3>
+            Workspaces</h3>
+    </div>
+    <div class="ui-widget-content">
+        <div class="accordion">
+            @foreach (var binding in Model.Prototype.Bindings)
             {
-                <div id="@binding.WorkSpaceTypeName">
-                    <div class="actions">
-                        @foreach (var service in binding.WorkSpaceType.Services)
-                        {
-                            @Ajax.ActionLink(service.Name, "Index", "Service/" + service.Name, new { containerId = Model.Id, structureId = Model.Prototype.StructureId, workspaceTypeName = binding.WorkSpaceTypeName }, new AjaxOptions { UpdateTargetId = binding.WorkSpaceTypeName + "_service" }, new { @class = "button" })
-                        }
-                    </div>
-                    <div id="@(binding.WorkSpaceTypeName)_service">
-                    </div>
-                </div>
+                <h3>
+                    <a href="#">@binding.WorkSpaceTypeName</a></h3>
+                <div>
+                    @foreach (var service in binding.WorkSpaceType.Services)
+                    {
+                        @Ajax.ActionLink(service.Name, "Index", "Service/" + service.Name, new { containerId = Model.Id, structureId = Model.Prototype.StructureId, workspaceTypeName = binding.WorkSpaceTypeName }, new AjaxOptions { UpdateTargetId = binding.WorkSpaceTypeName + "_service" }, new { @class = "button" })
+                    }
+                </div>   
             }
         </div>
-    }
-    @if (inheritedEnrolls.Any())
-    {
-        var queryInherited = Model.Prototype.Bindings.Where(b => b.Roles.Any(r => inheritedEnrolls.Select(ie => ie.RoleTypeName).Contains(r.RoleTypeName)));
-        <div id="container_workspaces_inherited">
-            <h2>
-                Inherited permissions
-            </h2>
-            <div id="inherited_container_workspaces" class="tabs">
-                <ul>
-                    @foreach (var binding in queryInherited)
-                    {
-                        <li><a href="#@(binding.WorkSpaceTypeName)_inherited">@binding.WorkSpaceTypeName</a></li>
-                    }
-                </ul>
-                @foreach (var binding in queryInherited)
-                {
-                    <div id="@(binding.WorkSpaceTypeName)_inherited">
-                        <div class="actions">
-                            @foreach (var service in binding.WorkSpaceType.Services)
-                            {
-                                @Ajax.ActionLink(service.Name, "Index", "Service/" + service.Name, new { containerId = Model.Id, structureId = Model.Prototype.StructureId, workspaceTypeName = binding.WorkSpaceTypeName }, new AjaxOptions { UpdateTargetId = binding.WorkSpaceTypeName + "_inherited_service" }, new { @class = "button" })
-                            }
-                        </div>
-                        <div id="@(binding.WorkSpaceTypeName)_inherited_service">
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    }
+    </div>
 </div>
 <script type="text/javascript">
     $(".tabs").tabs();
-    $(".accordion").accordion();
+    $(".accordion").accordion({ collapsible: true });
 </script>

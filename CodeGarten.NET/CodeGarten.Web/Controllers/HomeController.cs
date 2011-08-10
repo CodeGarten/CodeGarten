@@ -2,6 +2,7 @@
 
 namespace CodeGarten.Web.Controllers
 {
+    [Authorize]
     public sealed class HomeController : Controller
     {
         public ActionResult Index()

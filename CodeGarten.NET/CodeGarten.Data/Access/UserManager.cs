@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Apache;
 using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data.Access
@@ -84,6 +85,8 @@ namespace CodeGarten.Data.Access
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
+            InvokeOnCreateUser(user);
+
             return user;
         }
 
@@ -101,9 +104,13 @@ namespace CodeGarten.Data.Access
             _dbContext.SaveChanges();
         }
 
-        public void Delete(string user)
+        public void Delete(string userName)
         {
-            _dbContext.Users.Remove(Get(user));
+            var user = Get(userName);
+            _dbContext.Users.Remove(user);
+            _dbContext.SaveChanges();
+
+            InvokeOnRemoveUser(user);
         }
 
         private bool PermissionToEnroll(Container container, RoleType roleType, RoleBarrier roleBarrier)
@@ -332,13 +339,21 @@ namespace CodeGarten.Data.Access
         private void InvokeOnCreateUser(User user)
         {
             var e = new UserEventArgs(user);
+            //TODO try/catch
             if (_onCreateUser != null) _onCreateUser(this, e);
+
+            //TODO Better
+            PasswordManager.CreateUser(user.Name, user.Password, PasswordManager.EncodeType.PlainText);
         }
 
         private void InvokeOnRemoveUser(User user)
         {
             var e = new UserEventArgs(user);
+            //TODO try/catch
             if (_onRemoveUser != null) _onRemoveUser(this, e);
+
+            //TODO Better
+            PasswordManager.DeleteUser(user.Name);
         }
 
         private void InvokeOnEnrollUser(Enroll enroll)

@@ -4,6 +4,9 @@
     width: 920px;
 }
 
+a { text-decoration: none; }
+a:hover { text-decoration: underline;}
+
 body{ font: 62.5% "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;}
 		
 h1 { padding: .2em; margin: 0;}
@@ -173,20 +176,48 @@ h1 { padding: .2em; margin: 0;}
 
 /* container
 -----------------------------------------------------------*/
-#container .top { border-bottom: 1px solid #CCCCCC;padding-bottom: 5px; }
-#structure_path { padding-top: 10px;}
-#child_tabs { margin-top: 5px;}
+#container .left_panel {float: left;width: 600px;}
+#container .left_panel > .info{ font-size: small;line-height: 240%;text-align: center;}
+#container .left_panel > .info label{ font-weight: bold;}
+#container .left_panel > .info .counter { font-size: large;}
 
 /* child_tabs
 -----------------------------------------------------------*/
-#child_tabs .create_button { margin-top: 5px;}
+#child_widget { margin-top: 10px;}
+#child_widget  > .ui-widget-content { padding: 10px;}
+#child_tabs .create_button { margin-top: 5px;display: block;}
+.child .child_item {
+     margin: 10px; 
+     display: inline-block; 
+     width: 125px;
+     height: 75px;
+     text-align: center;
+     border: 1px solid #CCCCCC;
+     vertical-align: top;
+     text-overflow: ellipsis;
+     overflow: hidden;
+    font-size: medium;
+}
 
-	#child_tabs .child { list-style-type: none; margin: 0; padding: 0; }
-	#child_tabs .child .item { margin: 3px; padding: 1px;display: inline-block; width: 100px; text-align: center; }
+#child_tabs .child .child_item:hover { background-color:#e8e8e8;}
+#child_tabs .type { border-bottom: 1px solid #CCCCCC;padding-bottom: 10px; }
+
+#workspaces_widget { margin-top: 10px;}
+#workspaces_widget  > .ui-widget-content { padding: 10px;}
+#workspaces_widget .ui-accordion-content { padding-bottom: 35px;} 
 
 /* structure_tabs
 -----------------------------------------------------------*/
 #structure_tabs .create_button { margin-top: 5px;}
+
+#users_widget { margin-top: 5px;}
+#users_widget  > .ui-widget-content { padding: 10px;}
+
+/* actions_widget
+-----------------------------------------------------------*/
+#container .right_panel { width: 300px;float: right;}
+#actions_widget > .ui-widget-content { padding: 10px;text-align: right;}
+#actions_widget > .ui-widget-content a { margin-bottom: 5px;width: 100%;text-align: right; }
 
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}

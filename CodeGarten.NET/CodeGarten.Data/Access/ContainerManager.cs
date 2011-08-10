@@ -111,9 +111,19 @@ namespace CodeGarten.Data.Access
 
         public void Delete(long containerId)
         {
-            _dbContext.Containers.Remove(_dbContext.Containers.Find(containerId));
+            var container = _dbContext.Containers.Find(containerId);
+            _dbContext.Containers.Remove(container);
 
             _dbContext.SaveChanges();
+
+            try
+            {
+                InvokeOnDeleteContainer(container);
+            }
+            catch
+            {
+                //TODO DataLogger
+            }
         }
 
         public void AddPassword(long structure, long container, string roletype, string password)
@@ -161,7 +171,7 @@ namespace CodeGarten.Data.Access
         {
             var eventArgs = new ContainerEventArgs(container);
 
-            var handler = _onCreateContainer;
+            var handler = _onDeleteContainer;
             if (handler != null) handler(this, eventArgs);
         }
 

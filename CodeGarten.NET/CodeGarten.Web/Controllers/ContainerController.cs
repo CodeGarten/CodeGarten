@@ -7,15 +7,17 @@ using CodeGarten.Web.Model;
 
 namespace CodeGarten.Web.Controllers
 {
+    [Authorize]
     public sealed class ContainerController : Controller
     {
-        public ActionResult Index(long id)
+        public ActionResult Index(long id, bool? partial)
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             var container = dataBaseManager.Container.Get(id);
 
-            if (Request.IsAjaxRequest())
+            if(partial != null && partial.Value)
+            //if (Request.IsAjaxRequest())
                 return PartialView("_Container", container);
 
             return View(container);
@@ -88,7 +90,7 @@ namespace CodeGarten.Web.Controllers
             }
         }
 
-        public ActionResult Leave(long structureId, long containerId, string roleTypeName)
+        public ActionResult Disenroll(long structureId, long containerId, string roleTypeName)
         {
             try
             {

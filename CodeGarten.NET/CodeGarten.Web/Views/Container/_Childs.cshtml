@@ -3,57 +3,75 @@
 @{
     var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 }
-
-<div id="child_tabs" class="tabs">
-        <ul>
-            @if (Model.Prototype.Childs.Count > 1)
-            {
-                <li><a href="#all">All</a></li>
-            }
-            @foreach (var cp in Model.Prototype.Childs)
-            {
-                <li><a href="#@cp.Name">@cp.Name</a></li>
-            }
-        </ul>
-        @foreach (var cp in Model.Prototype.Childs)
-        {
-            <div id="@cp.Name" class="child">
-                @{ var cp1 = cp; }
-                @foreach (var container in Model.Childs.Where(c => c.Prototype.Name == cp1.Name))
-                {
-                    @Html.Partial("_ContainerItem", container)
-                }
-                @if (owner)
-                {
-                @Html.ActionLink("Create new", "Create", new { structureId = Model.Prototype.StructureId, prototypeName = cp1.Name, parent = Model.Id }, new { @class = "create_button" })
-                }
-                @*<div class="prototype">
-                    <p>
-                        About
-                        <button>@cp.Name</button></p>
-                    <div class="info">
-                        Prototype info
-                    </div>
-                </div>*@
-            </div>
-        }
-        @if (Model.Prototype.Childs.Count > 1)
-        {
-            <div id="all">
-                @foreach (var container in Model.Childs)
-                {
-                    @Html.Partial("_ContainerItem", container)
-                }
-            </div>
-        }
+<div id="child_widget" class="ui-widget">
+    <div class="ui-widget-header">
+        <h3>
+            Childs</h3>
     </div>
-
+    <div class="ui-widget-content">
+        <div id="child_tabs">
+            <div class="type">
+                @if (Model.Prototype.Childs.Count != 1)
+                {
+                    @Html.RadioButton("type", "all", new { id = "all", onclick = "javascript:SwitchWS('.all','.results');" })
+                    @Html.Label("all", "All")
+                }
+                @foreach (var cp in Model.Prototype.Childs)
+                {
+                    @Html.RadioButton("type", cp.Name, new { id = cp.Name, onclick = "javascript:SwitchWS('." + cp.Name + "','.results');" })
+                    @Html.Label(cp.Name, cp.Name)
+                }
+            </div>
+            <div class="results">
+                @foreach (var cp in Model.Prototype.Childs)
+                {
+                    <div class="child @cp.Name">
+                        @{ var cp1 = cp; }
+                        @foreach (var container in Model.Childs.Where(c => c.Prototype.Name == cp1.Name))
+                        {
+                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item fader_right ui-corner-all ui-widget-header ui-state-default" })
+                        }
+                        @if (owner)
+                        {
+                            @Html.ActionLink("Create new", "Create", new { structureId = Model.Prototype.StructureId, prototypeName = cp1.Name, parent = Model.Id }, new { @class = "create_button" })
+                        }
+                    </div>
+                }
+                @if (Model.Prototype.Childs.Count != 1)
+                {
+                    <div class="child all">
+                        @foreach (var container in Model.Childs)
+                        {
+                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item fader_right" })
+                        }
+                        @if (Model.Childs.Count == 0)
+                        {
+                                <h3>There are no childs.</h3>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+    $("#child_tabs .results .child").hide();
+    $(".type").children().first().attr('checked', true);
+    $(".type").buttonset();
+    $("#child_tabs .results").children("." + $(".type").children().first().attr("value")).fadeIn('fast');
     $(".tabs").tabs();
     $(".create_button").button({ icons: { primary: "ui-icon-plus"} });
-    
+
     $(".prototype .info").hide();
     $(".prototype button").button().click(function () {
         $(this).parent().next().slideToggle("fast");
     });
+
+    var SwitchWS = function (target, container) {
+        $(container).fadeOut('fast', function () {
+            $(container).children().hide();
+            $(container).children(target).show();
+            $(container).fadeIn('fast');
+        });
+    };
 </script>
