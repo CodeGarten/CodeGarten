@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CodeGarten.Data.Access;
 using CodeGarten.Service.Utils;
+using CodeGarten.Utils;
 
 
 namespace CodeGarten.Service
@@ -23,11 +24,13 @@ namespace CodeGarten.Service
         private bool _isInstaled;
 
         protected String PathService { get; private set; }
+        protected Logger Logger { get; private set; }
 
         protected Service(ServiceModel service)
         {
             Name = service.Name;
             ServiceModel = service;
+            Logger = ServiceFactory.ServiceLogger;
             PathService = Path.Combine(ServiceConfig.ServicesResourceLibLocation, Name);
 
             Directory.CreateDirectory(PathService);

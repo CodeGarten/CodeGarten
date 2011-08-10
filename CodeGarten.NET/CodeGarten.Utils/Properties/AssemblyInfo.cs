@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CodeGarten.Logger")]
+[assembly: AssemblyTitle("CodeGarten.Utils")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CodeGarten.Logger")]
+[assembly: AssemblyProduct("CodeGarten.Utils")]
 [assembly: AssemblyCopyright("Copyright ©  2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d5d90fab-3bbd-4fa3-8ef1-c302812d82d5")]
+[assembly: Guid("05988c7b-7dd0-4230-9281-a7b79a23f04e")]
 
 // Version information for an assembly consists of the following four values:
 //

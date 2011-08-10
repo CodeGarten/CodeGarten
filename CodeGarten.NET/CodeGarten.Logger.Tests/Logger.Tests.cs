@@ -4,18 +4,20 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
+using CodeGarten.Utils;
 
 namespace CodeGarten.Logger.Tests
 {
     [TestFixture]
     public class LoggerTests
     {
+        
         [Test]
         public void BasicTest()
         {
             var path = @"C:\CodeGarten\loggerTest.txt";
             var writer = File.CreateText(path);
-            var logger = new Logger(writer);
+            var logger = new Utils.Logger(writer);
             var list = new LinkedList<Thread>();
             var numbers = new bool[1000];
             logger.Start();

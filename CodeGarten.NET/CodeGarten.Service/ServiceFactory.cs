@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CodeGarten.Utils;
 
 namespace CodeGarten.Service
 {
@@ -20,12 +21,18 @@ namespace CodeGarten.Service
 
         private static readonly Dictionary<string, Service> Services;
 
+        public static  Logger ServiceLogger;
+
         static ServiceFactory()
         {
+            var loggerPath = Path.Combine(ServiceConfig.ServicesResourceLibLocation, "Logger.log");
+            var fileLogger = File.Exists(loggerPath) ? File.AppendText(loggerPath) : File.CreateText(loggerPath);
+            ServiceLogger = new Logger(fileLogger);
             Builder = new ServiceBuilder();
             Services = new Dictionary<string, Service>();
             DirectoryCatalog = new DirectoryCatalog(ServiceConfig.ServicesDllLocation);
             CompositionContainer = new CompositionContainer(DirectoryCatalog);
+            ServiceLogger.Start();
         }
 
         public static void LoadServices()

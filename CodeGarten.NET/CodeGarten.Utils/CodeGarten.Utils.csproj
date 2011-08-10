@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{337CC1F6-D513-4A22-B5C5-65D22F0115F1}</ProjectGuid>
+    <ProjectGuid>{A5BDB75D-3719-4E3B-AF57-74CDB0767171}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGarten.Logger</RootNamespace>
-    <AssemblyName>CodeGarten.Logger</AssemblyName>
+    <RootNamespace>CodeGarten.Utils</RootNamespace>
+    <AssemblyName>CodeGarten.Utils</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

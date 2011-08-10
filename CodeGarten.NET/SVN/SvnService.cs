@@ -79,12 +79,18 @@ namespace SVN
 
                 var repository = SVNRepositoryManager.Create(_repoPath, instanceName);
                 if (repository == null)
-                    continue; //TODO Servicelogger;
+                {
+                    Logger.Log(String.Format("Service {0} -> Create folder \"{1}\" fail", Name, _repoPath));
+                    continue;
+                }
                 if (!repository.Initialize())
-                    continue; //TODO Servicelogger;
+                {
+                    Logger.Log(String.Format("Service {0} -> Initialize instance \"{1}\" fail", Name, _repoPath));
+                    continue;
+                }
 
                 var instance = _svnAuthorization.CreateInstance(instanceName);
-                foreach (var role in e.Container.Prototype.Bindings.SelectMany(binding => binding.Roles))
+                foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                     foreach (var rule in role.Rules)

@@ -41,9 +41,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeGarten.Logger\CodeGarten.Logger.csproj">
-      <Project>{337CC1F6-D513-4A22-B5C5-65D22F0115F1}</Project>
-      <Name>CodeGarten.Logger</Name>
+    <ProjectReference Include="..\CodeGarten.Utils\CodeGarten.Utils.csproj">
+      <Project>{A5BDB75D-3719-4E3B-AF57-74CDB0767171}</Project>
+      <Name>CodeGarten.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

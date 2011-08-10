@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace CodeGarten.Logger
+namespace CodeGarten.Utils
 {
     public class Logger: IDisposable     
     {
@@ -83,6 +83,7 @@ namespace CodeGarten.Logger
         {
             lock (this)
             {
+                //TODO
                 _msgQueue.AddLast(msg);
 
                 Monitor.Pulse(this);

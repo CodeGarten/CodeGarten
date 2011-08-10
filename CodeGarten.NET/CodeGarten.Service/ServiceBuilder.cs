@@ -10,7 +10,10 @@ namespace CodeGarten.Service
     {
         public ServiceBuilder()
         {
+            
         }
+
+
 
         //TODO tratar de possiveis erros nos eventos dos serviços
         public event EventHandler<ContainerEventArgs> OnCreateContainer

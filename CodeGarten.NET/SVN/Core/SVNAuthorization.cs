@@ -20,37 +20,22 @@ namespace SVN
 
         public SvnInstance(string instanceName)
         {
-            _instance = CreateRepository(instanceName);
+            _instance = new StringBuilder(String.Format("[{0}:/]\n", instanceName));
         }
 
         public void AddGroupPermission(string groupName, string privilege)
         {
-            AddGroupToRepo(_instance, groupName, privilege);
+            _instance.AppendFormat("@{0} = {1}\n", groupName, privilege);
         }
 
         public void AddUserPermission(string userName, string privilege)
         {
-            AddUserToRepo(_instance, userName, privilege);
+            _instance.AppendFormat("{0} = {1}\n", userName, privilege);
         }
 
         public override string ToString()
         {
             return _instance.ToString();
-        }
-
-        private static StringBuilder CreateRepository(String repoName)
-        {
-            return new StringBuilder(String.Format("[{0}:/]\n", repoName));
-        }
-
-        private static void AddUserToRepo(StringBuilder repo, String userName, string privilege)
-        {
-            repo.AppendFormat("{0} = {1}\n", userName, privilege);
-        }
-
-        private static void AddGroupToRepo(StringBuilder repo, String groupName, string privilege)
-        {
-            repo.AppendFormat("@{0} = {1}\n", groupName, privilege);
         }
     }
 
@@ -135,14 +120,13 @@ namespace SVN
                     if (!line.StartsWith("["))
                         continue;
 
-                    var instanceName = line.Substring(1, line.IndexOf(':'));
+                    var instanceName = line.Substring(1, line.IndexOf(':')-1);
                     var instance = new SvnInstance(instanceName);
 
                     while ((line = textReader.ReadLine()) != null && line != "")
                     {
-                        var itens = line.Split(new[] { '@', ' ', '=' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        var itens = line.Split(new[] { '@', ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
                         var groupName = itens[0];
-                        itens.RemoveAt(0);
                         instance.AddGroupPermission(groupName, itens[1]);
                     }
 
@@ -161,7 +145,7 @@ namespace SVN
                 var groups = new Dictionary<string, SvnGroup>();
                 while ((line = textReader.ReadLine()) != null)
                 {
-                    if (line == "")
+                    if (line == "" || line.StartsWith("["))
                         continue;
 
                     var itens = line.Split(new[] { '=', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -262,8 +246,9 @@ namespace SVN
             if (_anchorGroups == null) return;
             using (TextWriter textWriter = new StreamWriter(_fileGroup))
             {
+                textWriter.WriteLine("[groups]");
                 foreach (var svnGroup in _anchorGroups)
-                    textWriter.WriteLine(svnGroup.Value.ToString());
+                    textWriter.Write(svnGroup.Value.ToString());
                 _anchorGroups = null;
             }
                 
@@ -275,7 +260,7 @@ namespace SVN
             using (TextWriter textWriter = new StreamWriter(_fileInstance))
             {
                 foreach (var svnInstance in _anchorInstances)
-                    textWriter.WriteLine(svnInstance.Value + "\n");
+                    textWriter.WriteLine(svnInstance.Value.ToString());
                 _anchorInstances = null;
             }
                 

@@ -69,6 +69,10 @@
       <Project>{52AC5E24-7D95-457F-B900-2E5AC5644490}</Project>
       <Name>CodeGarten.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeGarten.Utils\CodeGarten.Utils.csproj">
+      <Project>{A5BDB75D-3719-4E3B-AF57-74CDB0767171}</Project>
+      <Name>CodeGarten.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

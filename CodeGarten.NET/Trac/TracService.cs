@@ -31,9 +31,16 @@ namespace Trac
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
             foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
-                if (!TracEnvironmentManager.Delete(PathService, e.Container.UniqueInstanceName(workSpaceType)))
-                    continue; //TODO service logger
-            
+            {
+                var envName = e.Container.UniqueInstanceName(workSpaceType);
+                if (!TracEnvironmentManager.Delete(PathService, envName))
+                {
+                    Logger.Log(String.Format("Service {0} -> Delete instance \"{1}\" fail", Name, envName));
+                    continue;
+                }
+            }
+
+
         }
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
@@ -69,16 +76,22 @@ namespace Trac
         {
             foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
-                
-                var tracEnvironment = TracEnvironmentManager.Create(_envPath,
-                                                                    e.Container.UniqueInstanceName(workSpaceType));
-                if(tracEnvironment==null)
-                    continue;//TODO service logger
-                if(!tracEnvironment.Initialize())
-                    continue;//TODO service logger
+                var envName = e.Container.UniqueInstanceName(workSpaceType);
+                var tracEnvironment = TracEnvironmentManager.Create(_envPath, envName);
+
+                if (tracEnvironment == null)
+                {
+                    Logger.Log(String.Format("Service {0} -> Create folder \"{1}\" fail", Name, envName));
+                    continue;
+                }
+                if (!tracEnvironment.Initialize())
+                {
+                    Logger.Log(String.Format("Service {0} -> Initialize instance \"{1}\" fail", Name, envName));
+                    continue;
+                }
 
                 var tracPermissions = new TracPermissionManager(tracEnvironment.EnvironmentPath);
-                foreach (var role in e.Container.Prototype.Bindings.SelectMany(binding => binding.Roles))
+                foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                     foreach (var rule in role.Rules)
