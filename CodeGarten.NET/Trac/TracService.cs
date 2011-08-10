@@ -30,7 +30,7 @@ namespace Trac
 
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
                 if (!TracEnvironmentManager.Delete(PathService, e.Container.UniqueInstanceName(workSpaceType)))
                     continue; //TODO service logger
             
@@ -38,7 +38,7 @@ namespace Trac
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Container.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
@@ -53,7 +53,7 @@ namespace Trac
 
         private void OnEnrollUser(object sender, EnrollEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Container.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
@@ -67,7 +67,7 @@ namespace Trac
 
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
                 
                 var tracEnvironment = TracEnvironmentManager.Create(_envPath,

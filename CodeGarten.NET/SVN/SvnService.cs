@@ -48,7 +48,7 @@ namespace SVN
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
             //TODO  remove groups
-            foreach (var workSpaceType in e.Container.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var instanceName = e.Container.UniqueInstanceName(workSpaceType);
                 SVNRepositoryManager.Delete(_repoPath, instanceName);
@@ -73,7 +73,7 @@ namespace SVN
 
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.Prototype.Bindings.Select(b => b.WorkSpaceType))
+            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
                 var instanceName = e.Container.UniqueInstanceName(workSpaceType);
 

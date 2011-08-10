@@ -30,9 +30,9 @@ namespace CodeGarten.Service.Utils
 
     public static class DataAccessExtensions
     {
-        public static IEnumerable<WorkSpaceType> WorkSpaceTypeWithService(this Container container, string serviceName)
+        public static IEnumerable<WorkSpaceType> WorkSpaceTypeWithService(this ContainerPrototype prototype, string serviceName)
         {
-            return container.Prototype.Bindings.Select(b => b.WorkSpaceType).Where(
+            return prototype.Bindings.Select(b => b.WorkSpaceType).Where(
                                                                         workSpaceType =>
                                                                         workSpaceType.Services.Where(
                                                                                                 s =>

@@ -8,12 +8,14 @@ namespace CodeGarten.Data.Access
 
     public class ContainerEventArgs : EventArgs
     {
-        public ContainerEventArgs(Container container)
+        public ContainerEventArgs(Container container, ContainerPrototype containerPrototype)
         {
             Container = container;
+            Prototype = containerPrototype;
         }
 
         public Container Container { get; private set; }
+        public ContainerPrototype Prototype { get; set; }
     }
 
     public sealed class ContainerManager
@@ -114,11 +116,13 @@ namespace CodeGarten.Data.Access
             var container = _dbContext.Containers.Find(containerId);
             _dbContext.Containers.Remove(container);
 
+            var prototype = container.Prototype;
+
             _dbContext.SaveChanges();
 
             try
             {
-                InvokeOnDeleteContainer(container);
+                InvokeOnDeleteContainer(container, prototype);
             }
             catch
             {
@@ -160,16 +164,16 @@ namespace CodeGarten.Data.Access
 
         private void InvokeOnCreateContainer(Container container)
         {
-            var eventArgs = new ContainerEventArgs(container);
+            var eventArgs = new ContainerEventArgs(container, container.Prototype);
 
             var handler = _onCreateContainer;
             if (handler != null) handler(this, eventArgs);
         }
 
         //TODO
-        private void InvokeOnDeleteContainer(Container container)
+        private void InvokeOnDeleteContainer(Container container, ContainerPrototype containerPrototype)
         {
-            var eventArgs = new ContainerEventArgs(container);
+            var eventArgs = new ContainerEventArgs(container, containerPrototype);
 
             var handler = _onDeleteContainer;
             if (handler != null) handler(this, eventArgs);
