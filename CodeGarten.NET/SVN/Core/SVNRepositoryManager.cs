@@ -39,6 +39,8 @@ namespace SVN
             var path = Path.Combine(parentPath, repoName);
             if (!Directory.Exists(path))
                 return false;
+            File.SetAttributes(path + "\\format", FileAttributes.Normal);
+            File.SetAttributes(path + "\\db\\format", FileAttributes.Normal);
             Directory.Delete(path, true);
             return true;
         }

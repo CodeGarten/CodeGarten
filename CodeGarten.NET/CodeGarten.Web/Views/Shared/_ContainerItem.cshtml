@@ -4,14 +4,14 @@
     var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 }
 <div class="item">
-@*    <div class="actions">
-        @Html.ActionLink(String.Format("@{0}", @Model.Prototype.Structure.Name), "Index", "Structure", new { id = Model.Prototype.StructureId }, null)
-        @Html.ActionLink(String.Format("Childs ({0})", Model.Childs.Count), "Index", "Container", null, null, "childs", new { id = Model.Id }, null)
+    <div class="actions">
+        @*@Html.ActionLink(String.Format("@{0}", @Model.Prototype.Structure.Name), "Index", "Structure", new { id = Model.Prototype.StructureId }, null)
+        @Html.ActionLink(String.Format("Childs ({0})", Model.Childs.Count), "Index", "Container", null, null, "childs", new { id = Model.Id }, null)*@
         @if (owner)
         {
             @Html.ActionLink("Delete", "Delete", "Container", new { id = Model.Id, structureId = Model.Prototype.StructureId }, new { @class = "delete_button" })
         }
-    </div>*@
+    </div>
     <h3 class="name">@Html.ActionLink(Model.Name, "Index", "Container", new { id = Model.Id }, new{@class = "fader_right"})</h3>
     <div class="info">
         @{var description = Model.Description ?? "No description";}

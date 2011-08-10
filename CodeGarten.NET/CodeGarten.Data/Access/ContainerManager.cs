@@ -114,9 +114,9 @@ namespace CodeGarten.Data.Access
         public void Delete(long containerId)
         {
             var container = _dbContext.Containers.Find(containerId);
-            _dbContext.Containers.Remove(container);
-
             var prototype = container.Prototype;
+
+            _dbContext.Containers.Remove(container);
 
             _dbContext.SaveChanges();
 
