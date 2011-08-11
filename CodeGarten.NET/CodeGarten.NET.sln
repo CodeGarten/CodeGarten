@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Logger.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Utils", "CodeGarten.Utils\CodeGarten.Utils.csproj", "{A5BDB75D-3719-4E3B-AF57-74CDB0767171}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git", "Git\Git.csproj", "{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{A5BDB75D-3719-4E3B-AF57-74CDB0767171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5BDB75D-3719-4E3B-AF57-74CDB0767171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5BDB75D-3719-4E3B-AF57-74CDB0767171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

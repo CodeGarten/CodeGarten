@@ -1,4 +1,5 @@
-﻿@using CodeGarten.Data.Model;
+﻿@using CodeGarten.Data.Model
+@model IQueryable<IGrouping<Structure,Enroll>>
 @{
     ViewBag.Title = "Enrolls";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -37,7 +38,7 @@
                         {
                             <text>Iherited</text>
                         }else{
-                            <a class='buttonLeave' href='@Url.Action("Leave", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Leave</a>
+                            <a class='buttonLeave' href='@Url.Action("Disenroll", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Leave</a>
                         }
                     </td>
 			    </tr>

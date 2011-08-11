@@ -2,6 +2,8 @@
 @model Structure
 @{
     ViewBag.Title = Model.Name;
+
+    var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 }
 <h1>@Model.Name</h1>
 <h3>@Model.Description</h3>
@@ -16,7 +18,10 @@
             @Html.Partial("_ContainerItem", container)
         }
         <div class="actions">
-            @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, new{@class = "create_button"})
+        @if (owner)
+        {
+            @Html.ActionLink("Create new", "Create", "Container", new {structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string}, new {@class = "create_button"})
+        }
         </div>
     </div>
     <div id="design">

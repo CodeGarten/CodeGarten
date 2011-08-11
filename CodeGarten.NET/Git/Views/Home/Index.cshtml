@@ -1,0 +1,6 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+
+<div id="main">
+    <h1>Git Service</h1>
+    <input type="text" readonly = "readonly" value=@(String.Format("http://codegarten.adeetc.e.ipl.pt:8080/Git/{0}_{1}.git", ViewBag.containerId, ViewBag.workspaceTypeName)) />
+</div>
