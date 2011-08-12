@@ -42,6 +42,8 @@ namespace CodeGarten.Utils
                 _textWriter.WriteLine(String.Format("{0}: {1}", DateTime.Now, msg));
                 _msgQueue.RemoveFirst();
             }
+
+            _textWriter.Flush();
         }
 
         private void Run()
@@ -59,7 +61,6 @@ namespace CodeGarten.Utils
                     }
                     catch (ThreadInterruptedException)
                     {
-                        _owner = null;
                         PrintAll();
                         return;
                     }
@@ -75,6 +76,7 @@ namespace CodeGarten.Utils
                 if (_owner == null)
                     throw new InvalidOperationException("The logger is not started");
                 _owner.Interrupt();
+                _owner = null;
             }
             
         }

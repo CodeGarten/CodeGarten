@@ -96,9 +96,12 @@ namespace SVN
             _fileInstance = Path.Combine(_path, String.Format(TmpFormat, "instances"));
             _fileOverride = Path.Combine(_path, String.Format(TmpFormat, _fileName));
             _file = Path.Combine(_path, fileName);
-            
-            if(!File.Exists(_fileGroup))
-                File.Create(_fileGroup).Close();
+
+            if (!File.Exists(_fileGroup))
+                using (var textWriter = File.CreateText(_fileGroup))
+                    textWriter.WriteLine("[groups]");
+                
+                
 
             if(!File.Exists(_fileInstance))
                 File.Create(_fileInstance).Close();
@@ -185,7 +188,8 @@ namespace SVN
 
         public SvnInstance CreateInstance(string instanceName)
         {
-            AnchorInstances();
+            if(_anchorInstances==null)
+                _anchorInstances = new Dictionary<string, SvnInstance>();
 
             if (!_anchorInstances.ContainsKey(instanceName))
             {
@@ -196,6 +200,23 @@ namespace SVN
             }
 
             return _anchorInstances[instanceName];
+        }
+
+
+        public SvnGroup CreateGroup(string groupName)
+        {
+            if(_anchorGroups==null)
+                _anchorGroups = new Dictionary<string, SvnGroup>();
+
+            if (!_anchorGroups.ContainsKey(groupName))
+            {
+                var returnGroup = new SvnGroup(groupName);
+                _anchorGroups.Add(groupName, returnGroup);
+
+                return returnGroup;
+            }
+
+            return _anchorGroups[groupName];
         }
 
         public bool RemoveInstance(string instanceName)
@@ -210,21 +231,6 @@ namespace SVN
             AnchorGroups();
 
             return _anchorGroups.Remove(groupName);
-        }
-
-        public SvnGroup CreateGroup(string groupName)
-        {
-            AnchorGroups();
-
-            if (!_anchorGroups.ContainsKey(groupName))
-            {
-                var returnGroup = new SvnGroup(groupName);
-                _anchorGroups.Add(groupName, returnGroup);                
-
-                return returnGroup;
-            }
-
-            return _anchorGroups[groupName];
         }
 
         public SvnGroup GetGroup(string groupName)
@@ -244,32 +250,42 @@ namespace SVN
         private void SaveGroups()
         {
             if (_anchorGroups == null) return;
-            using (TextWriter textWriter = new StreamWriter(_fileGroup))
+
+            TextWriter textWriter;
+            if(_wkGroups.IsAlive)
             {
+                textWriter = new StreamWriter(_fileGroup);
                 textWriter.WriteLine("[groups]");
-                foreach (var svnGroup in _anchorGroups)
-                    textWriter.Write(svnGroup.Value.ToString());
-                _anchorGroups = null;
             }
-                
+            else
+                textWriter = File.AppendText(_fileGroup);
+                                
+            foreach (var svnGroup in _anchorGroups)
+                textWriter.Write(svnGroup.Value.ToString());
+            
+            textWriter.Dispose();    
         }
 
         private void SaveInstances()
         {
             if (_anchorInstances == null) return;
-            using (TextWriter textWriter = new StreamWriter(_fileInstance))
-            {
-                foreach (var svnInstance in _anchorInstances)
-                    textWriter.WriteLine(svnInstance.Value.ToString());
-                _anchorInstances = null;
-            }
-                
+
+            TextWriter textWriter = 
+                _wkInstances.IsAlive ? new StreamWriter(_fileInstance) : File.AppendText(_fileInstance);
+
+            foreach (var svnInstance in _anchorInstances)
+                textWriter.WriteLine(svnInstance.Value.ToString());
+            
+            textWriter.Dispose();
         }
 
         public void Save()
         {
-            
-            if(_anchorGroups!=null)
+
+            SaveGroups();
+            SaveInstances();
+
+            if (_anchorGroups != null && _wkGroups.IsAlive)
                 using (TextWriter textWriter = File.CreateText(_fileOverride))
                 {
                     textWriter.WriteLine("[groups]");
@@ -278,18 +294,18 @@ namespace SVN
                 }
             else
                 File.Copy(_fileGroup, _fileOverride);
-                
-            if(_anchorInstances!=null)
+
+            if (_anchorInstances != null && _wkInstances.IsAlive)
                 using (TextWriter textWriter = File.AppendText(_fileOverride))
                     foreach (var svnInstance in _anchorInstances)
                         textWriter.WriteLine(svnInstance.Value.ToString());
             else
                 File.AppendAllText(_fileOverride, File.ReadAllText(_fileInstance));
 
-            OverrideFile(_fileOverride, _file);
+            _anchorInstances = null;
+            _anchorGroups = null;
 
-            SaveGroups();
-            SaveInstances();
+            OverrideFile(_fileOverride, _file);
         }
 
         public void Dispose()
