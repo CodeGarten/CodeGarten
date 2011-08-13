@@ -23,7 +23,7 @@ namespace CodeGarten.Service
         private readonly CompositionContainer _compositionContainer;
         private bool _isInstaled;
 
-        protected String PathService { get; private set; }
+        public String PathService { get; private set; }
         protected Logger Logger { get; private set; }
 
         protected Service(ServiceModel service)
@@ -67,14 +67,18 @@ namespace CodeGarten.Service
 
         #region ControllerFactoryMembers
 
-        public IController CreateController(RequestContext requestContext, string controllerName)
+        public ServiceController CreateController(RequestContext requestContext, string controllerName)
         {
-            var lazyController = _compositionContainer.GetExports<IController, IControllerMetadata>().
+            var lazyController = _compositionContainer.GetExports<ServiceController, IControllerMetadata>().
                 Where(
                     e =>
                     e.Metadata != null &&
                     ControllerMatch(e.Metadata.ControllerName, controllerName)
                 ).FirstOrDefault();
+
+            if (lazyController != null)
+                lazyController.Value.Service =
+                    ServiceFactory.Services[(string) requestContext.RouteData.Values["service"]];
 
             return lazyController == null ? null : lazyController.Value;
         }

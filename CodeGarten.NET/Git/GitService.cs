@@ -9,21 +9,21 @@ using Git.Core;
 
 namespace Git
 {
-    [Export(typeof (Service))]
+    [Export(typeof(Service))]
     public sealed class Git : Service
     {
-        private readonly Authorization _authorization;
-        private readonly FileSystem _fileSystem;
+        public readonly Authorization Authorization;
+        public readonly FileSystem FileSystem;
 
         public Git()
             : base(
                 new ServiceModel("Git", "Distributed Version Control System", EnumExtensions.ToEnumerable<Privileges>())
                 )
         {
-            _fileSystem = new FileSystem(Path.Combine(PathService, "repositories"));
+            FileSystem = new FileSystem(Path.Combine(PathService, "repositories"));
 
             Directory.CreateDirectory(Path.Combine(PathService, "etc"));
-            _authorization = new Authorization(Path.Combine(PathService, "etc", "autho_file.xml"));
+            Authorization = new Authorization(Path.Combine(PathService, "etc", "autho_file.xml"));
         }
 
         public override void OnServiceCreating(ServiceBuilder serviceBuilder)
@@ -36,12 +36,14 @@ namespace Git
 
         private void DisenrollUser(object sender, EnrollEventArgs e)
         {
-            _authorization.RemoveUserFromGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName), e.Enroll.UserName);
+            if (e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                Authorization.RemoveUserFromGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName), e.Enroll.UserName);
         }
 
         private void EnrollUser(object sender, EnrollEventArgs e)
         {
-            _authorization.AddUserToGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName), e.Enroll.UserName);
+            if (e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                Authorization.AddUserToGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName), e.Enroll.UserName);
         }
 
         private void Deletecontainer(object sender, ContainerEventArgs e)
@@ -51,10 +53,10 @@ namespace Git
                     e.Prototype.WorkSpaceTypeWithService(Name).Select(
                         workSpaceType => e.Container.UniqueInstanceName(workSpaceType)))
             {
-                _fileSystem.DeleteRepository(repositoryName);
+                FileSystem.DeleteRepository(repositoryName);
 
-                _authorization.DeleteRepositoryReferencedGroups(repositoryName);
-                _authorization.DeleteRepository(repositoryName);
+                Authorization.DeleteRepositoryReferencedGroups(repositoryName);
+                Authorization.DeleteRepository(repositoryName);
             }
         }
 
@@ -67,20 +69,20 @@ namespace Git
                         e.Prototype.WorkSpaceTypeWithService(Name).Select(
                             workspaceType => e.Container.UniqueInstanceName(workspaceType)))
                 {
-                    _fileSystem.CreateRepository(repositoryName);
-                    _authorization.CreateRepository(repositoryName);
+                    FileSystem.CreateRepository(repositoryName);
+                    Authorization.CreateRepository(repositoryName);
 
                     foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
                     {
                         var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
-                        _authorization.CreateGroup(groupName);
+                        Authorization.CreateGroup(groupName);
 
                         foreach (
                             var permission in
                                 role.Rules.SelectMany(
                                     rule => rule.Permissions.Where(p => p.ServiceName == Name).Select(p => p.Name)))
                         {
-                            _authorization.AddGroupToRepository(repositoryName, groupName, permission);
+                            Authorization.AddGroupToRepository(repositoryName, groupName, permission);
                         }
                     }
                 }

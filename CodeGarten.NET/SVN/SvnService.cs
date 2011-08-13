@@ -62,6 +62,9 @@ namespace SVN
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
+            //If the event is not suppose to come to this service, continuing would be bad
+            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.RemoveUser(e.Enroll.UserName);
             _svnAuthorization.Save();
@@ -69,6 +72,9 @@ namespace SVN
 
         private void OnUserEnroll(object sender, EnrollEventArgs e)
         {
+            //If the event is not suppose to come to this service, continuing would be bad
+            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.AddUser(e.Enroll.UserName);
             _svnAuthorization.Save();

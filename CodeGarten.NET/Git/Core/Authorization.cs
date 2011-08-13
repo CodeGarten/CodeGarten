@@ -11,7 +11,7 @@ namespace Git.Core
         rw
     }
 
-    internal sealed class Authorization
+    public sealed class Authorization
     {
         private readonly string _filePath;
 
@@ -127,6 +127,9 @@ namespace Git.Core
             var group = GetGroup(groupName);
 
             if (group == null)
+                return false;
+
+            if (group.Elements("user").SingleOrDefault(u => u.Value == userName) != null)
                 return false;
 
             group.Add(CreateUserElement(userName));

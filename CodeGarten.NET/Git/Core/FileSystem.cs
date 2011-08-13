@@ -5,9 +5,14 @@ using GitSharp.Core;
 
 namespace Git.Core
 {
-    internal sealed class FileSystem
+    public sealed class FileSystem
     {
         private readonly DirectoryInfo _base;
+
+        public Repository this[string instance]
+        {
+            get { return Repository.Open(String.Format(@"{0}\{1}.git", _base, instance)); }
+        }
 
         public FileSystem(string base_path)
         {
