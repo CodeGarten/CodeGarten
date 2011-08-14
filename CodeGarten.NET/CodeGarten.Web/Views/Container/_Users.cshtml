@@ -20,7 +20,8 @@
 </div>
 <script type="text/javascript">
     var Users = function () {
-        $("#users_widget").slideToggle();
+        if ($("#users_widget .child_item").length != 0)
+            $("#users_widget").slideToggle();
     };
 
     $("#users_widget").hide();

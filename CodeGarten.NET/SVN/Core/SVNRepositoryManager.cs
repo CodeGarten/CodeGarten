@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-
-namespace SVN
+namespace SVN.Core
 {
     public sealed class SVNRepositoryManager
     {

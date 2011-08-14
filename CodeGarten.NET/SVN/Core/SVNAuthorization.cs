@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
-using CodeGarten.Data.Interfaces;
 
-namespace SVN
+namespace SVN.Core
 {
     public enum SVNPrivileges
     {

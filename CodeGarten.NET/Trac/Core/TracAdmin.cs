@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using CodeGarten.Service;
 
-namespace Trac
+namespace Trac.Core
 {
     public static class TracAdmin
     {

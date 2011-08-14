@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CodeGarten.Service.Utils;
 using NUnit.Framework;
+using Trac.Core;
 
 namespace Trac.Tests
 {

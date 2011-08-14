@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeGarten.Service
+namespace CodeGarten.Service.Interfaces
 {
     public interface IControllerMetadata
     {
