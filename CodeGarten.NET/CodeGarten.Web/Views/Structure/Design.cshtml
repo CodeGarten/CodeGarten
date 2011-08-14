@@ -3,18 +3,21 @@
 @{
     ViewBag.Title = "Design";
 }
-<script src="@Url.Content("~/Content/Scripts/ErrorPlaceholder.js")" type="text/javascript" ></script>
-<script src="@Url.Content("~/Content/Scripts/FormDialog.js")" type="text/javascript" ></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+{
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/json2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/scripts/DialogConfirmView.js")" type="text/javascript"></script>
+}
+<script src="@Url.Content("~/Content/Scripts/ErrorPlaceholder.js")" type="text/javascript" > </script>
+<script src="@Url.Content("~/Content/Scripts/FormDialog.js")" type="text/javascript" > </script>
+<script src="@Url.Content("~/Content/scripts/Eventcontroller.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/ComponentsView.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Workspace.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/RoleType.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Rule.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/scripts/Tree.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/scripts/Eventcontroller.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/json2.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/scripts/DialogConfirmView.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/Scripts/StructureController.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/CodeGartenModel.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/StructureView.js")" type="text/javascript" ></script>
@@ -22,19 +25,26 @@
     $("#main").mask("Loading...", 500);
     StructureModel.init(@Model.Id);
 </script>
-<div id="title">
-    <h1>@Model.Name Design</h1>
-</div>
+@if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+{
+    <div id="title">
+        <h1>@Model.Name Design</h1>
+    </div>
+}
 <div>
     <div>
         <h2>
             Basic structure</h2>
         <div id="container_structure">
         </div>
-        <div id="error_container_structure">
-        </div>
+        @if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+        {
+            <div id="error_container_structure">
+            </div>
+        }
     </div>
-            <div class="clear"></div>
+    <div class="clear">
+    </div>
     <div id="tree_design">
         <h2>
             Container prototype details</h2>
@@ -42,40 +52,56 @@
         </div>
         <div id="components">
         </div>
-        <div id="error">
-        </div>
+        @if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+        {
+            <div id="error">
+            </div>
+        }
     </div>
     <div class="clear">
     </div>
-    <div id="actions">
-        <button>
-            Back to My Structures</button>
-        <button>
-            Save</button>
-        <button>
-            Publish</button>
+    @if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+    {
+        <div id="actions">
+            <button>
+                Back to My Structures</button>
+            <button>
+                Save</button>
+            <button>
+                Publish</button>
+        </div>
+    }
+</div>
+@if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+{
+    <div id="workspaceCreate">
+        @Html.Partial("_WorkspaceCreateForm", new WorkSpaceTypeView())
     </div>
-</div>
-<div id="workspaceCreate">
-    @Html.Partial("_WorkspaceCreateForm", new WorkSpaceTypeView())
-</div>
-<div id="roleTypeCreate">
-    @Html.Partial("_RoleTypeCreateForm", new RoleTypeView())
-</div>
-<div id="ruleCreate">
-    @Html.Partial("_RuleCreateForm", new RuleView())
-</div>
-<div id="form_containerPrototype">
-    @Html.Partial("_ContainerPrototypeCreateForm", new ContainerPrototypeView())
-</div>
-<div id="dialog_confirm">
-</div>
+    <div id="roleTypeCreate">
+        @Html.Partial("_RoleTypeCreateForm", new RoleTypeView())
+    </div>
+    <div id="ruleCreate">
+        @Html.Partial("_RuleCreateForm", new RuleView())
+    </div>
+    <div id="form_containerPrototype">
+        @Html.Partial("_ContainerPrototypeCreateForm", new ContainerPrototypeView())
+    </div>
+    <div id="dialog_confirm">
+    </div>
+}
 <script type="text/javascript">
     TreeController.Init("#containerPrototypeDesign");
-    WorkspaceController.Init("#workspaceCreate", @Model.Id);
-    RoleTypeView.Init("#roleTypeCreate", @Model.Id);
-    RuleView.Init("#ruleCreate", @Model.Id);
-    ComponentsView.Init("#components", "Components", ["Workspace", "RoleType", "Rule"]);
+    WorkspaceController.Init("#workspaceCreate", @Model.Id, @(ViewBag.PreventEdit == null || !ViewBag.PreventEdit ? "false" : "true"));
+    RoleTypeController.Init("#roleTypeCreate", @Model.Id, @(ViewBag.PreventEdit == null || !ViewBag.PreventEdit ? "false" : "true"));
+    RuleController.Init("#ruleCreate", @Model.Id, @(ViewBag.PreventEdit == null || !ViewBag.PreventEdit ? "false" : "true"));
+    ComponentsView.Init("#components", "Components", ["Workspace", "RoleType", "Rule"], @(ViewBag.PreventEdit == null || !ViewBag.PreventEdit ? "false" : "true"));
+    
+    StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
+    StructureController.init();
+
+    @if (ViewBag.PreventEdit == null || !ViewBag.PreventEdit)
+    {
+        <text>
 
     EventController.Init("#error");
 
@@ -148,10 +174,14 @@
     });
 
     DialogConfirmView.init("#dialog_confirm");
-    
-    
-    StructureView.init("#container_structure", "#form_containerPrototype", "#error_container_structure");
-    StructureController.init();
-    
+    </text>
+    }
+    else
+    {
+        <text>
+            $("#container_structure .ui-icon").remove();
+//            $("#containerPrototypeDesign").css('width','880px');
+        </text>
+    }
     $("#main").unmask();
 </script>

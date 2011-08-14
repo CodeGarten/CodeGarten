@@ -105,6 +105,8 @@ namespace CodeGarten.Web.Controllers
             ViewBag.Instances = dataBaseManager.Container.GetInstances(id.Value).Where(c => c.Parent == null);
             ViewBag.TopInstanceName = dataBaseManager.ContainerPrototype.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
 
+            ViewBag.PreventEdit = true;
+
             return View(structure);
         }
 
