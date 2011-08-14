@@ -9,6 +9,7 @@ using CodeGarten.Data.Access;
 using CodeGarten.Data.Interfaces;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
+using SVN.Core;
 
 
 namespace SVN
@@ -21,7 +22,7 @@ namespace SVN
         //TODO Implemente dispose
 
         public SvnService()
-            : base(new ServiceModel("Svn", "System Version Control", EnumExtensions.ToEnumerable<SVNPrivileges>()))
+            : base(new ServiceModel("SVN", "System Version Control", EnumExtensions.ToEnumerable<SVNPrivileges>()))
         {
             _filesPath = Path.Combine(PathService, "etc");
             Directory.CreateDirectory(_filesPath);

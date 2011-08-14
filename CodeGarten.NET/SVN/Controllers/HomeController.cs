@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel.Composition;
 using System.Web.Mvc;
+using CodeGarten.Service;
 using CodeGarten.Service.Interfaces;
 
 namespace SVN.Controllers
 {
     [Authorize]
-    [Export(typeof (IController)), ExportMetadata("ControllerName", "Home"),
+    [Export(typeof (ServiceController)), ExportMetadata("ControllerName", "Home"),
      PartCreationPolicy(CreationPolicy.NonShared)]
-    public class HomeController : Controller, IServiceEntryPoint
+    public sealed class HomeController : ServiceController, IServiceEntryPoint
     {
         //
         // GET: /Home/structureId/containerId/workspaceTypeName
@@ -22,7 +19,7 @@ namespace SVN.Controllers
             ViewBag.structureId = structureId;
             ViewBag.workspaceTypeName = workspaceTypeName;
 
-            return PartialView("~/Services/SVN.dll/SVN/Views/Home/Index.cshtml");
+            return PartialView();
         }
     }
 }
