@@ -47,7 +47,7 @@ namespace SVN
         public SvnGroup(string groupName)
         {
             _users = new LinkedList<string>();
-            _group = String.Format("{0} =", groupName);
+            _group = String.Format("{0} = ", groupName);
         }
 
         public void AddUser(IEnumerable<string> users)

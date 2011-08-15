@@ -1,0 +1,54 @@
+﻿@using CodeGarten.Data.Model
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "WorkSpace";
+    string Src = Url.Action("Index", "Home", new { workspaceTypeName = ViewBag.WorkSpaceType.Name, structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, service = ViewBag.ServiceName });
+}
+
+<div id="main">
+    <h1>
+        @Html.ActionLink((string)ViewBag.Container.Name, "Index", "Container", new { id = ViewBag.Container.Id}, null)
+        <text> /</text>
+        @ViewBag.WorkSpaceType.Name        
+    </h1>
+    
+    <div class="services">
+        @foreach (Service service in ViewBag.WorkSpaceType.Services)
+        { 
+            bool isChecked = service.Name == ViewBag.ServiceName;
+            @Html.RadioButton("service", service.Name, isChecked, new { id = service.Name, onclick = "javascript:ReloadIframe('"+service.Name+"', '" + Url.Action("Index", "Home", new { workspaceTypeName = ViewBag.WorkSpaceType.Name, structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, service = service.Name }) + "', '" + Url.Action("Index", "WorkSpace", new { structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, workSpaceTypeName = ViewBag.WorkSpaceType.Name, serviceName = service.Name }) + "')" })
+            
+            @Html.Label(service.Name, service.Name)
+        }
+    </div>
+</div>
+
+<iframe src="@Src">
+</iframe>
+
+<script type="text/javascript">
+
+    $(".services").buttonset();
+
+    onpopstate = function (event) {
+        if (event.state != null) {
+            Refreash(event.state.service, event.state.url);
+            $(".services").buttonset();
+        }
+    }
+
+    function Refreash(service, url) {
+        $("iframe").remove();
+        $("#main_service").append("<iframe src=\"" + url + "\"></iframe>");
+        $("input[name=\"service\"]").removeAttr("checked");
+        $("#" + service).attr({ checked: true });
+    }
+
+    function ReloadIframe(service, url, push) {
+        history.pushState({ url: url, service: service}, '', push);
+        Refreash(service, url);
+    }
+
+    history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);
+
+</script>

@@ -20,7 +20,7 @@
                 <div>
                     @foreach (var service in binding.WorkSpaceType.Services)
                     {
-                        @Ajax.ActionLink(service.Name, "Index", "Service/" + service.Name, new { containerId = Model.Id, structureId = Model.Prototype.StructureId, workspaceTypeName = binding.WorkSpaceTypeName }, new AjaxOptions { UpdateTargetId = binding.WorkSpaceTypeName + "_service" }, new { @class = "button" })
+                        @Html.ActionLink(service.Name, "Index", "WorkSpace", new { structureId = Model.Prototype.StructureId, containerId = Model.Id, workSpaceTypeName = binding.WorkSpaceTypeName, serviceName = service.Name }, new { @class = "button" });
                     }
                 </div>   
             }

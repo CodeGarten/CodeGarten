@@ -1,0 +1,20 @@
+﻿<div>
+    <a class= "logo" href="@Url.Action("Index", "Home")">
+        <img src="@Url.Content("~/Content/themes/smoothness/images/CodeGarten.png")" alt="CodeGarten" />
+    </a>
+    @{
+        <div id="user_actions" class="ui-widget-header ui-state-default ui-corner-bottom">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                
+                @Html.ActionLink("Login", "Index", "Login")
+                @Html.ActionLink("Signup", "Index", "Signup")
+            }
+            else
+            {
+                @Html.ActionLink(User.Identity.Name, "Index", "User")
+                @Html.ActionLink("Logout", "Logout", "Login")
+            }
+        </div>
+    }
+</div>

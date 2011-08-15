@@ -78,6 +78,7 @@
     <Compile Include="Controllers\RoleTypeController.cs" />
     <Compile Include="Controllers\RuleController.cs" />
     <Compile Include="Controllers\StructureController.cs" />
+    <Compile Include="Controllers\WorkSpaceController.cs" />
     <Compile Include="Controllers\WorkSpaceTypeController.cs" />
     <Compile Include="Core\ControllerFactory.cs" />
     <Compile Include="Core\Utils.cs" />
@@ -289,6 +290,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Container\_Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkSpace\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_TopLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_FootLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkSpace\_Layout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
