@@ -111,10 +111,12 @@ namespace CodeGarten.Data.Access
             return container;
         }
 
-        public void Delete(long containerId)
+        public Container Delete(long containerId)
         {
-            var container = _dbContext.Containers.Find(containerId);
+            var container = Get(_dbContext, containerId);
             var prototype = container.Prototype;
+
+            var parent = container.Parent;
 
             _dbContext.Containers.Remove(container);
 
@@ -128,6 +130,7 @@ namespace CodeGarten.Data.Access
             {
                 //TODO DataLogger
             }
+            return parent;
         }
 
         public void AddPassword(long structure, long container, string roletype, string password)

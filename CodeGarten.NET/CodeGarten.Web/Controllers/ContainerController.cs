@@ -69,6 +69,8 @@ namespace CodeGarten.Web.Controllers
 
             var container = dataBaseManager.Container.Get(id);
 
+            ViewBag.EnrolledUsers = dataBaseManager.User.GetAll().Where(u => u.Enrolls.Any(e => e.ContainerId == id));
+
             return View(container);
         }
 
@@ -80,9 +82,11 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                dataBaseManager.Container.Delete(id);
+                var parent = dataBaseManager.Container.Delete(id);
 
-                return RedirectToAction("Index", "Structure", new {id = structureId});
+                return parent != null
+                           ? RedirectToAction("Index", new {id = parent.Id})
+                           : RedirectToAction("Index", "Structure", new {id = structureId});
             }
             catch (Exception)
             {

@@ -45,4 +45,13 @@
 <script type="text/javascript">
     $(".button").button();
     $(".delete_button").button({ icons: { primary: 'ui-icon-trash'} });
+
+    $(".slide").click(function () {
+        $.cookie("currentUrl", location.href, { path: '/' });
+        SwitchContainer(this.href, function (location) {
+            history.pushState({ path: this.path }, '', location);
+            $.cookie("currentUrl", location.href, { path: '/Container' });
+        });
+        return false;
+    });
 </script>

@@ -17,7 +17,7 @@
                 @Html.LabelFor(model => model.Name)
             </div>
             <div class="editor-field">
-                @Html.TextBoxFor(model => model.Name)
+                @Html.TextBoxFor(model => model.Name, new{autofocus = "autofocus"})
                 <div>
                     @Html.ValidationMessageFor(model => model.Name)
                 </div>

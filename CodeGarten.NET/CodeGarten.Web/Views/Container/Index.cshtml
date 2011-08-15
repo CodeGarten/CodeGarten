@@ -3,42 +3,29 @@
 @{
     ViewBag.Title = string.Format("{0} @ {1}", Model.Name, Model.Prototype.Structure.Name);
 }
+<script src="../../Scripts/jquery.cookie.js" type="text/javascript"></script>
 @Html.Partial("_Container", Model)
 <script type="text/javascript">
 
-    window.onpopstate = function () {
-        if (!ignore) {
-            SwitchContainer(location.href, "left");
-        }
-        else {
-            ignore = false;
-        }
-    };
-
     var ignore = true;
 
-    var SwitchContainer = function (location, direction) {
-        $.get(location + "?partial=true", function (response) {
-            $("#container").fadeOut('fast', function () {
-                $("#container").html(response).show("slide", { direction: direction }, 'fast');
-                Reload();
-            });
-        });
+    window.onpopstate = function () {
+        if (!ignore) {
+            SwitchContainer(location.href);
+        }
+        else
+            ignore = false;
     };
 
-    var Reload = function () {
-        $(".fader_left").click(function () {
-            var url = this.href;
-            history.pushState({ path: this.path }, '', this.href);
-            SwitchContainer(url, "left");
-            return false;
-        });
+    var SwitchContainer = function (_location, callback) {
+        var currentContainer = Number($.cookie("currentUrl").substr($.cookie("currentUrl").lastIndexOf("/") + 1));
+        var nextContainer = Number(_location.substr(_location.lastIndexOf("/") + 1));
 
-        $(".fader_right").click(function () {
-            var url = this.href;
-            history.pushState({ path: this.path }, '', this.href);
-            SwitchContainer(url, "right");
-            return false;
+        var direction = nextContainer > currentContainer ? "right" : "left";
+        $.get(_location + "?partial=true", function (response) {
+            $("#container").fadeOut('fast', function () {
+                $("#container").html(response).show("slide", { direction: direction }, 'fast', function () { if (callback) callback(_location) });
+            });
         });
     };
 
@@ -48,6 +35,4 @@
     $("#container").ajaxComplete(function () {
         $("#container").unmask();
     });
-
-    Reload();
 </script>
