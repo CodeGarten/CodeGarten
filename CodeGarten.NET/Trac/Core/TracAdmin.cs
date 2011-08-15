@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using CodeGarten.Service;
 
-namespace Trac
+namespace Trac.Core
 {
     public static class TracAdmin
     {
@@ -18,14 +18,7 @@ namespace Trac
             public String StandardError;
         }
 
-        private static readonly String TracAdminPath;
-
-        static TracAdmin ()
-        {
-            var assemblyConfig = 
-                ConfigurationManager.OpenExeConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "Trac.dll"));
-            TracAdminPath = assemblyConfig.AppSettings.Settings["TracAdminLocation"].Value;
-        }
+        private static readonly String TracAdminPath = TracConfiguration.Settings.TracAdmin;
 
         public static bool Add(String userName, String envPath, String permissionOrGroup)
         {

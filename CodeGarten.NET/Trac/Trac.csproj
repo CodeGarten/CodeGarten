@@ -34,7 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Core\TracAdmin.cs" />
+    <Compile Include="Core\TracConfig.cs" />
     <Compile Include="Core\TracEnvironmentManager.cs" />
     <Compile Include="Core\TracPermissionManager.cs" />
     <Compile Include="Core\TracPrivileges.cs" />

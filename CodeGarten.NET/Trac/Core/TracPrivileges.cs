@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Trac
+namespace Trac.Core
 {
     public enum TracPrivileges
     {

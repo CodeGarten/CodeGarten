@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CodeGarten.Service.Utils;
 using NUnit.Framework;
+using Trac.Core;
 
 namespace Trac.Tests
 {
@@ -163,6 +164,17 @@ namespace Trac.Tests
             foreach (var tracPrivilege in list)
             {
                 Console.WriteLine(tracPrivilege);
+            }
+        }
+
+        [Test]
+        public void ShouldTestConfigurationFile()
+        {
+            var setting = TracConfiguration.Settings;
+
+            foreach (PluginConfig plugin in setting.Plugins)
+            {
+                Console.WriteLine("service = {0}, cfgFile= {1}", plugin.Service, plugin.ConfigFile);
             }
         }
     }
