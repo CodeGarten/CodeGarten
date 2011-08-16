@@ -1,0 +1,115 @@
+﻿@model CodeGarten.Data.Model.Structure
+@using CodeGarten.Data.Access
+@using CodeGarten.Data.Model
+@{
+    var dataBaseManager = Context.Items["DataBaseManager"] as DataBaseManager;
+    var prototypes = dataBaseManager.ContainerPrototype.GetAll(Model.Id);
+    var fatherPrototype = prototypes.Where(cp => cp.Parent == null).FirstOrDefault();
+    var roles = dataBaseManager.Role.GetAll(Model.Id);
+    var rules = dataBaseManager.Rule.GetAll(Model.Id);
+}
+
+<h2>Structure Design</h2>
+<div id="container_structure">
+    @Html.Partial("_Prototype", fatherPrototype)
+</div>
+
+<div id="container_structure_design">
+    <h2>Prototype Design</h2>
+    @foreach (ContainerPrototype prototype in prototypes)
+    {
+        <div id='@prototype.Name' class='ui-widget'>
+            <div class='ui-widget-header'>
+                <h1>@prototype.Name</h1>
+            </div>
+            <div class='ui-widget-content'>
+            <div class="workspaces" >
+            @foreach (WorkSpaceType workspace in prototype.Bindings.Select(b => b.WorkSpaceType).Distinct())
+            {
+                @Html.RadioButton("workspace", workspace.Name, new { id = workspace.Name, onclick = "javascript:PrototypeInfo('" + prototype.Name + "-" + workspace.Name + "')" })
+                @Html.Label(workspace.Name, workspace.Name)   
+            }
+            </div>
+            <h3>Roles</h3>
+            @foreach (var group in roles.Where(r => r.ContainerPrototypeName == prototype.Name).GroupBy(r => r.Binding.WorkSpaceType))
+            {
+                <div id='@prototype.Name-@group.Key.Name' class="info">
+                    <table class="ui-widget ui-widget-content">
+		                <thead>
+			                <tr class="ui-widget-header ">
+				                <th>RoleType</th>
+				                <th>Barrier</th>
+                                <th>Rules</th>
+			                </tr>
+		                </thead>
+		                <tbody>
+                        @foreach (var role in group)
+                        { 
+                            <tr>
+				                <td>@role.RoleTypeName
+                                </td>
+				                <td>@role.Barrier.ToString()
+                                </td>
+                                <td>
+                                @foreach (var rule in role.Rules)
+                                { 
+                                    <a onclick="javascript:$('#rule-@rule.Name').dialog('open')">@rule.Name</a>
+                                }
+                                </td>
+			                </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            </div>
+        </div>
+    }
+</div>
+
+@foreach (var rule in rules)
+{
+    <div id="rule-@rule.Name" class="rule" title="Rule @rule.Name">
+        <div class="tabs">
+            <ul>
+                @foreach (var service in rule.Permissions.Select(p => p.Service).Distinct())
+                { 
+                    <li><a href="#@rule.Name-@service.Name">@service.Name</a></li>
+                }
+            </ul>
+
+            @foreach (var serviceGroup in rule.Permissions.GroupBy(p => p.Service))
+            {
+                <div id="@rule.Name-@serviceGroup.Key.Name">
+                    <h3>Permissions</h3>
+                    <ul>
+                        @foreach (var permission in serviceGroup)
+                        {
+                            <li>
+                                @permission.Name
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#container_structure_design table a").button();
+    $("#container_structure_design > div").hide();
+    $(".workspaces").buttonset();
+    $(".info").hide();
+    function PrototypeDesign(prototypeName) {
+        $("#" + prototypeName).show();
+    }
+
+    function PrototypeInfo(info) {
+        $(".info").hide();
+        $("#"+info).show();
+    }
+
+    $(".rule").dialog({ autoOpen: false, resizable: false, buttons: { Close: function () { $(this).dialog("close")} } });
+
+</script>

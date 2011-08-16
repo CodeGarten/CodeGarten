@@ -1,0 +1,13 @@
+﻿@model CodeGarten.Data.Model.ContainerPrototype
+
+<div class='container' >
+	<div class='container_header ui-widget-header ui-state-default ui-corner-all'>
+        <h2 onclick='PrototypeDesign("@Model.Name")'> @Model.Name </h2>
+	</div>
+	<div class='container_childs'>
+        @foreach (var childPrototype in Model.Childs)
+        { 
+            @Html.Partial("_Prototype", childPrototype)
+        }
+	</div>
+</div>

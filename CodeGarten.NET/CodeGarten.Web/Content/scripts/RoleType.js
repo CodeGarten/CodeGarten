@@ -1,6 +1,6 @@
 var RoleTypeController = new (function () {
-    this.Init = function (createFormId, structureId, preventEdit) {
-        RoleTypeView.Init(createFormId, structureId, preventEdit);
+    this.Init = function (createFormId, structureId) {
+        RoleTypeView.Init(createFormId, structureId);
     };
 
     this.Create = function (callback) {
@@ -26,12 +26,10 @@ var RoleTypeController = new (function () {
 var RoleTypeView = new (function () {
     this.create = new FormDialog();
     var structure;
-    var preventEdit;
 
-    this.Init = function (createFormId, structureId, _preventEdit) {
+    this.Init = function (createFormId, structureId) {
         this.create.init(createFormId);
         structure = structureId;
-        preventEdit = _preventEdit;
     };
 
     this.Create = function (callback) {
@@ -85,12 +83,10 @@ var RoleTypeView = new (function () {
 
         $(header).text(roleType.Name);
 
-        if (!preventEdit) {
-            $(header).append(stopTop);
-            $(header).append(stopBottom);
+        $(header).append(stopTop);
+        $(header).append(stopBottom);
 
-            $(header).append(deleteButton);
-        }
+        $(header).append(deleteButton);
 
         $(widget).append(header);
         $(widget).append(placeholder);

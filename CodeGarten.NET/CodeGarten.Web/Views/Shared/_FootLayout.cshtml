@@ -1,5 +1,12 @@
-﻿<p>
-    CodeGarten 2011
-    <br />
+﻿CodeGarten 2011
+<div class="actions">
     <a href="mailto:codegarten.1011@gmail.com">Contact Us</a>
-</p>
+    <a href="#">About Us</a>
+    @Html.ActionLink("Help", "Index", "Help", null, new{target = "_blank"})
+</div>
+
+<script type="text/javascript">
+    $("input[type=submit], input[type=button]").button();
+    $("#user_actions").buttonset();
+    $("#foot .actions").buttonset();
+</script>

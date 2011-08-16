@@ -1,6 +1,6 @@
 var RuleController = new (function () {
-    this.Init = function (createFormId, structureId, preventEdit) {
-        RuleView.Init(createFormId, structureId, preventEdit);
+    this.Init = function (createFormId, structureId) {
+        RuleView.Init(createFormId, structureId);
     };
 
     this.Create = function (callback) {
@@ -27,13 +27,11 @@ var RuleView = new (function () {
     this.create = new FormDialog();
     this.edit = new FormDialog();
     var structure;
-    var preventEdit;
 
-    this.Init = function (createFormId, structureId, _preventEdit) {
+    this.Init = function (createFormId, structureId) {
         $(createFormId).find("#service_permissions").tabs();
         this.create.init(createFormId);
         structure = structureId;
-        preventEdit = _preventEdit;
     };
 
     this.Create = function (callback) {
@@ -57,20 +55,9 @@ var RuleView = new (function () {
         $.get("/Rule/Edit?structureId=" + structure + "&name=" + name, function (result) {
             var element = $("<div/>").append(result);
             $(element).find("#service_permissions").tabs();
-
-            if (preventEdit) {
-                $(element).find("input[type=checkbox]").attr("disabled", "disabled");
-                $(element).find("input[type=submit]").remove();
-                $(element).children("h2").remove();
-            }
-
             RuleView.edit.init(element);
             $("#main").unmask();
-
-            if (preventEdit)
-                RuleView.edit.Open(name + " information", { Name: null });
-            else
-                RuleView.edit.Open("Edit a rule", { Name: null });
+            RuleView.edit.Open("Edit a rule", { Name: null });
         });
     };
 
@@ -79,8 +66,7 @@ var RuleView = new (function () {
 
         var buttonDelete = $("<button title='Delete' onclick='javascript:TreeController.RemoveRule(\"" + rule.Parent.Parent.Name + "\",\"" + rule.Parent.Name + "\",\"" + rule.Name + "\")'/>").button({ icons: { primary: "ui-icon-trash" }, text: false });
 
-        if (!preventEdit)
-            $(widget).children(".item_options").append(buttonDelete);
+        $(widget).children(".item_options").append(buttonDelete);
 
         return widget;
     };
