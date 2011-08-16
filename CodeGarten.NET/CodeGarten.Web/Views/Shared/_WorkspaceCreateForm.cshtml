@@ -20,10 +20,17 @@
     <div>
         <h3>
             Services</h3>
-        @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+        @if (ViewBag.Services != null)
         {
+            foreach (var service in ViewBag.Services as IEnumerable<Service>)
+            {
             <label for="@service.Name">@service.Name</label>
             <input id="@service.Name" name="services" type="checkbox" value="@service.Name" />
+            }
+        }
+        else
+        {
+            <div>There are no available services</div>
         }
     </div>
     <p>

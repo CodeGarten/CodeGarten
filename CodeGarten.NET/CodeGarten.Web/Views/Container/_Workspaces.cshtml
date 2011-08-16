@@ -1,11 +1,6 @@
-﻿@using CodeGarten.Data.Access
-@using CodeGarten.Data.Model
+﻿@using CodeGarten.Data.Model
 @model Container
-@{
-    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
-    var userEnroll = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
-    var inheritedEnrolls = dbMan.User.Get(User.Identity.Name).Enrolls.Where(e => e.ContainerId == Model.Id && e.Inherited);
-}
+
 <div class="ui-widget" id="workspaces_widget">
     <div class="ui-widget-header">
         <h3>

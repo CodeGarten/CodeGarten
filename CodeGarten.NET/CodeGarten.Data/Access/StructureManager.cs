@@ -31,7 +31,7 @@ namespace CodeGarten.Data.Access
             return structure;
         }
 
-        public IQueryable<Structure> GetAll(string username)
+        public IQueryable<Structure> GetAll(string username = null)
         {
             return username == null
                        ? _dbContext.Structures
@@ -87,6 +87,28 @@ namespace CodeGarten.Data.Access
         public IQueryable<Structure> Search(string query)
         {
             return _dbContext.Structures.Where(s => s.Name.StartsWith(query.Trim()));
+        }
+
+        public bool AddAdministrator(long id, string userName)
+        {
+            var structure = Get(id);
+            if (structure.Administrators.Select(a => a.Name).Contains(userName))
+                return false;
+
+            structure.Administrators.Add(UserManager.Get(_dbContext, userName));
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool RemoveAdministrator(long id, string userName)
+        {
+            var structure = Get(id);
+            if (!structure.Administrators.Select(a => a.Name).Contains(userName))
+                return false;
+
+            structure.Administrators.Remove(UserManager.Get(_dbContext, userName));
+            _dbContext.SaveChanges();
+            return true;
         }
     }
 }

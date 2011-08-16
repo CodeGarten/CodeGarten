@@ -1,6 +1,6 @@
 var WorkspaceController = new (function () {
-    this.Init = function (createFormId, structureId) {
-        WorkspaceView.Init(createFormId, structureId);
+    this.Init = function (createFormId, structureId, preventEdit) {
+        WorkspaceView.Init(createFormId, structureId, preventEdit);
     };
 
     this.Create = function (callback) {
@@ -28,10 +28,12 @@ var WorkspaceView = new (function () {
     this.edit = new FormDialog();
 
     var structure;
+    var preventEdit;
 
-    this.Init = function (createFormId, structureId) {
+    this.Init = function (createFormId, structureId, _preventEdit) {
         this.create.init(createFormId);
         structure = structureId;
+        preventEdit = _preventEdit;
     };
 
     this.Create = function (callback) {
@@ -53,9 +55,20 @@ var WorkspaceView = new (function () {
     this.Edit = function (name) {
         $("#main").mask("Loading...", 500);
         $.get("/WorkSpaceType/Edit?structureId=" + structure + "&name=" + name, function (result) {
-            WorkspaceView.edit.init($("<div/>").append(result));
+            var view = $("<div/>").append(result);
+
+            if (preventEdit) {
+                $(view).find("input[type=checkbox]").attr("disabled", "disabled");
+                $(view).find("input[type=submit]").remove();
+                $(view).children("h2").remove();
+            }
+
+            WorkspaceView.edit.init(view);
             $("#main").unmask();
-            WorkspaceView.edit.Open("Edit a workspace", { Name: null });
+            if (preventEdit)
+                WorkspaceView.edit.Open(name + " information", { Name: null });
+            else
+                WorkspaceView.edit.Open("Edit a workspace", { Name: null });
         });
     };
 
@@ -67,7 +80,9 @@ var WorkspaceView = new (function () {
         var placeholder = $(EventController.Placeholder("Drag role types from the components into this workspace. Or add a <a href='javascript:TreeController.CreateAddRoleType(\"" + workspace.Name + "\");'>new one.</a>", "h3"));
 
         $(header).text(workspace.Name);
-        $(header).append(deleteButton);
+
+        if (!preventEdit)
+            $(header).append(deleteButton);
 
         $(widget).append(header);
         $(widget).append(placeholder);

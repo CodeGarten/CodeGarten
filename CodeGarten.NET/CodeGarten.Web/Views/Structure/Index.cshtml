@@ -4,13 +4,24 @@
     ViewBag.Title = Model.Name;
 
     var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+
+    var description = Model.Description ?? "No Description";
 }
+<script src="../../Scripts/MicrosoftAjax.js" type="text/javascript"></script>
+<script src="../../Scripts/MicrosoftMvcAjax.js" type="text/javascript"></script>
+<script src="../../Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
 <h1>@Model.Name</h1>
-<h3>@Model.Description</h3>
+<h3>@description</h3>
+<h4>
+    Create on: @Model.CreatedOn</h4>
 <div id="structure_tabs" class="tabs">
     <ul>
         <li><a href="#all">Instances</a></li>
         <li><a href="#design">Design</a></li>
+        @if (owner)
+        {
+            <li><a href="#management">Management</a></li>
+        }
     </ul>
     <div id="all">
         @foreach (var container in ViewBag.Instances as IEnumerable<Container>)
@@ -18,19 +29,68 @@
             @Html.Partial("_ContainerItem", container)
         }
         <div class="actions">
-        @if (owner)
-        {
-            @Html.ActionLink("Create new", "Create", "Container", new {structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string}, new {@class = "create_button"})
-        }
+            @if (owner)
+            {
+                @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, new { @class = "create_button" })
+            }
         </div>
     </div>
     <div id="design">
-        <p>
-            Not yet implemented.</p>
+        @Html.Partial("Design", Model)
     </div>
+    @if (owner)
+    {
+        <div id="management">
+            <h3>
+                Administrators @Html.TextBox("userName", null, new { placeholder = "Add administrator..." })
+                <a class="create_button" href="javascript:AddAdmin()">Add</a></h3>
+            <div class="administrators child">
+                @foreach (var administrator in Model.Administrators)
+                {
+                    @Html.ActionLink(administrator.Name, "Index", "User", new { name = administrator.Name }, new { @class = "child_item ui-corner-all ui-widget-header ui-state-default" })
+                }
+            </div>
+            <div class="actions">
+                @Html.ActionLink("Delete " + Model.Name, "Delete", new { id = Model.Id }, null)
+                @Html.ActionLink("Leave the administration", "LeaveAdministration", new { id = Model.Id, userName = User.Identity.Name }, new{id = "leave_admin"})
+            </div>
+        </div>
+    }
 </div>
 <script type="text/javascript">
     $(".tabs").tabs();
-    $(".actions").children().button();
-    $(".actions .create_button").button({ icons: { primary: "ui-icon-plus"} });
+    $(".actions").buttonset();
+    $(".create_button").button({ icons: { primary: "ui-icon-plus"} });
+
+    $("#userName").autocomplete({ source: '@Url.Action("Find", "User")' });
+
+    var AddAdmin = function() {
+        $("#management .administrators").mask("Working...", 100);
+        $.ajax(
+                    {
+                        url: '/Structure/AddAdministrator?id=' + @Model.Id + "&userName=" + $("#userName").val() ,
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        async: false,
+                        success: function(response) {
+                            $("#management .administrators").unmask(); 
+                            if (response.Success) {
+                                var element = $("<a href='/User/Index?name=" + response.Name + "' class='child_item ui-corner-all ui-widget-header ui-state-default'>" + response.Name + "</a>").hide();
+                                $("#management .administrators").append(element);
+                                $(element).fadeIn();
+                                $("#leave_admin").button( "option", "disabled", false );
+                            }
+                        }
+                    }
+                );  
+        return false;
+    };
+    
+    @if (Model.Administrators.Count == 1)
+    {
+        <text>
+            $("#leave_admin").button( "option", "disabled", true );
+        </text>
+    }
 </script>

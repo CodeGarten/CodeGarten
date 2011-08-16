@@ -1,6 +1,173 @@
-﻿@inherits System.Web.Mvc.WebViewPage
-
+﻿@using CodeGarten.Data.Model
+@inherits System.Web.Mvc.WebViewPage<bool>
+@{
+    var user = (User)ViewBag.User;
+    var enroll = (Enroll)ViewBag.Enroll;
+    var permissions = (IEnumerable<ServicePermission>)ViewBag.Permissions;
+}
+<link href="@Url.Content("~/Content/themes/smoothness/jquery-ui-1.8.14.custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/styling.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-1.6.2.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.14.min.js")" type="text/javascript"></script>
+<style>
+    body
+    {
+        font: 62.5% "Trebuchet MS" , sans-serif;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+    .code
+    {
+        font-family: "Consolas";
+        font-size: larger;
+    }
+    .ui-widget-content
+    {
+        text-align: center;
+    }
+    .link
+    {
+        font-size: larger;
+    }
+    .link_area
+    {
+        padding: 20px;
+    }
+    .center
+    {
+        text-align: center;
+    }
+    .ui-state-highlight
+    {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .ui-icon
+    {
+        display: inline-block;
+    }
+    .permissions
+    {
+        padding: 20px;
+    }
+    .denied
+    {
+        font-size: large;
+    }
+</style>
 <div id="main">
-    <h1>Git Service</h1>
-    <input type="text" readonly = "readonly" value=@(String.Format("http://codegarten.adeetc.e.ipl.pt:8080/Git/{0}_{1}.git", ViewBag.containerId, ViewBag.workspaceTypeName)) />
+    <div id="info">
+        <h1>@ViewBag.ServiceName</h1>
+        <h2>@ViewBag.ServiceDescription</h2>
+    </div>
+    <div id="serviceLocation" class="ui-widget">
+        <div class="ui-widget-header">
+            <h3 class="center">
+                Location</h3>
+        </div>
+        <div class="ui-widget-content">
+            <div class="link_area">
+                You can interact with this repository at:<br />
+                <a href="@(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))" class="link" target="_blank">@(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))</a>
+                <div class="permissions">
+                    @if (enroll == null)
+                    {
+                        <div class="denied">
+                            But you don't have any permissions over it</div>
+                    }
+                    else
+                    {
+                        <div class="accepted">
+                            With the following permissions:<br />
+                            @foreach (var permission in permissions)
+                            {
+                                <span>@permission.Name </span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (enroll != null)
+    {
+        if (Model)
+        {
+        <div id="active" class="ui-state-highlight ui-corner-bottom">
+            <h2 class="center">
+                Status: This repository is working correctly</h2>
+        </div>
+        }
+        else
+        {
+        <div id="inactive" class="ui-state-highlight ui-corner-bottom">
+            <h3 class="center">
+                <span class="ui-icon ui-icon-alert"></span>Warning: This repository is not yet configured</h3>
+            @if (permissions.Select(p => p.Name).Contains("rw"))
+            {
+                <div class="center">
+                    <p>
+                        If you already have a git client configured (as showed in <a href="#get_client">Setting
+                            up a client</a>) it's time to get this repository ready.</p>
+                    To accomplish that follow this set of instructions (to be executed under the bash
+                    command line):
+                </div>
+                <ul>
+                    <li>If not done yet, set up your username and email for git:
+                        <ul>
+                            <li class="code">git config --global user.name @User.Identity.Name</li>
+                            <li class="code">git config --global user.email @user.Email</li>
+                        </ul>
+                    </li>
+                    <li>Navigate to the folder where you want your local copy to be. Then:
+                        <ul>
+                            <li class="code">mkdir @ViewBag.InstanceName</li>
+                            <li class="code">cd @ViewBag.InstanceName</li>
+                            <li class="code">git init</li>
+                            <li class="code">touch README</li>
+                            <li class="code">git add README</li>
+                            <li class="code">git commit -m 'first commit'</li>
+                            <li class="code">git remote add origin @(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))</li>
+                            <li class="code">git push -u origin master</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="center">
+                    <a href="@Request.Url.AbsoluteUri" class="button">Continue</a>
+                </div>
+            }
+            else
+            {
+                <div class="center denied">
+                    But has a reader you cannot do it
+                </div>
+            }
+        </div>
+        }
+    }
+    <div id="get_client" class="ui-widget">
+        <div class="ui-widget-header">
+            <h3 class="center">
+                Setting up a client</h3>
+        </div>
+        <div class="ui-widget-content">
+            <div class="link_area">
+                <strong>Linux users:</strong> No need to as linux bundles with git installed already<br />
+                <strong>Windows users:</strong> Follow this github <a href="http://help.github.com/win-set-up-git/"
+                    target="_blank">guide</a>.
+            </div>
+            <div class="link_area">
+                <strong>NOTE:</strong> No need to configure SSH keys as this repository is accessed
+                using the http protocol.
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <a href="http://git-scm.com" target="_blank" class="button">git official website</a>
+        <a href="http://progit.org/book/ch1-3.html" target="_blank" class="button">A crash course
+            on git</a>
+    </div>
 </div>
+<script type="text/javascript">
+    $(".button").button();
+</script>

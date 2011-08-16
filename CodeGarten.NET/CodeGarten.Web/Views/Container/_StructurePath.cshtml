@@ -14,7 +14,7 @@
     /
     @foreach (var container in fullPath)
     {
-        @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "fader_left" })<text> /</text>
+        @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "slide" })<text> /</text>
     }
     @Model.Name
 </div>

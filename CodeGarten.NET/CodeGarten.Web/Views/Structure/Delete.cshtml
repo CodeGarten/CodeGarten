@@ -2,8 +2,9 @@
 @model Structure
 @{
     ViewBag.Title = "Delete " + Model.Name;
+    var safe = true;
 }
-<div class="ui-widget">
+<div id="delete_container_form" class="ui-widget">
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary(true)
@@ -12,10 +13,42 @@
                 Delete @Model.Name</h2>
         </div>
         <div class="ui-widget-content ui-state-highlight">
-            <p>Under construction...</p>
-            <p>
-                <input type="submit" value="Delete" />
-            </p>
+            <h3>@Model.Description</h3>
+            @if ((ViewBag.Instances as IQueryable<Container>).Any())
+            {
+                <div>
+                    Has <strong>@((ViewBag.Instances as IQueryable<Container>).Count())</strong> instance(s)
+                    <span class="ui-icon ui-icon-alert" title="Unsafe to delete"></span>
+                </div>
+                safe = false;
+            }
+            else
+            {
+                <div>
+                    Has no instances <span class="ui-icon ui-icon-check" title="Safe to delete">
+                    </span>
+                </div>
+            }
+            @if (!safe)
+            {
+                <div class="diagnose">
+                    Diagnose: <strong>Not safe to delete</strong> <span class="ui-icon ui-icon-alert"
+                        title="Unsafe to delete"></span>
+                </div>
+                <p>
+                    <input type="submit" value="Delete anyway" />
+                </p>
+            }
+            else
+            {
+                <div class="diagnose">
+                    Diagnose: <strong>Safe to delete</strong> <span class="ui-icon ui-icon-check" title="Safe to delete">
+                    </span>
+                </div>
+                <p>
+                    <input type="submit" value="Delete" />
+                </p>   
+            }
         </div>
     }
 </div>

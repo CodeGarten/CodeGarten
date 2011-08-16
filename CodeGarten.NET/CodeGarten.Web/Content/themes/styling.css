@@ -71,7 +71,7 @@ h1 { padding: .2em; margin: 0;}
     margin-top: -8px;
     margin-left: -10px;
     margin-right: -10px;
-    background-image: url(http://jqueryui.com/themeroller/images/?new=e6e6e6&w=1&h=100&f=png&q=100&fltr[]=over|textures/03_highlight_soft.png|0|0|75);
+    background-image: url('smoothness/images/TopImage.png');
     background-repeat: repeat-x;
 }
 
@@ -130,6 +130,7 @@ h1 { padding: .2em; margin: 0;}
 /* container create form
 -----------------------------------------------------------*/
 #container_create_form { text-align: center;}
+#container_create_form input[type=text] { text-align: center;font-size: 150%;width: 400px;}
 
 /* Login form
 -----------------------------------------------------------*/
@@ -138,16 +139,22 @@ h1 { padding: .2em; margin: 0;}
 
 /* Signup form
 -----------------------------------------------------------*/
-#signup_form input[type=text], #signup_form input[type=password] { text-align: center;}
+#signup_form input { text-align: center;font-size: 125%;}
 #signup_form { text-align: center;}
+
+/* Delete container form
+-----------------------------------------------------------*/
+#delete_container_form { text-align: center;}
+#delete_container_form .diagnose{ font-size: 150%;padding-top: 10px;}
+#delete_container_form .ui-icon { margin-bottom: 2px;}
 
 /* Search form
 -----------------------------------------------------------*/
 .search_title .name { display: inline-block;vertical-align: top;}
 #search_form { display: inline-block;padding-left: 5px; }
-#search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 685px;top: -54px;}
-#search_form .query input[type=Submit] { left: -8px;height: 30px;top: -4px;}
-#search_form .query input[type=text] { font-size:large;width: 710px;}
+#search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 665px;top: -54px;}
+#search_form .query input[type=Submit] { left: -6px;height: 30px;top: -4px;}
+#search_form .query input[type=search] { font-size:large;width: 710px;}
 
 /* top user actions
 -----------------------------------------------------------*/
@@ -218,6 +225,27 @@ h1 { padding: .2em; margin: 0;}
 #container .right_panel { width: 300px;float: right;}
 #actions_widget > .ui-widget-content { padding: 10px;text-align: right;}
 #actions_widget > .ui-widget-content a { margin-bottom: 5px;width: 100%;text-align: right; }
+
+/* anonymous home
+-----------------------------------------------------------*/
+#anonymous_home .top { padding-bottom: 10px;}
+#anonymous_home .top h1 { font-size: 6em;text-align: center;font-weight: bold;}
+#anonymous_home .top .caracteristics div { font-size: 3em;text-align: center;font-weight: bold;}
+#anonymous_home .top .count { font-size: larger;}
+
+/* experimental
+-----------------------------------------------------------*/
+::-webkit-input-placeholder {
+    font-style: italic;
+}
+
+:-moz-placeholder {
+    font-style: italic;
+}
+
+#management .administrators {border-bottom: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC;margin-top: -10px;}
+#management .actions{ padding-top: 5px;}
+#management .create_button { margin-bottom: 10px;}
 
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}

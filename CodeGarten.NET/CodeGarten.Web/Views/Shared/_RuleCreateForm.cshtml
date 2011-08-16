@@ -19,6 +19,8 @@
     
     <h3>
         Service permissions</h3>
+    if (ViewBag.Services != null)
+    {
     <div id='service_permissions'>
         <ul>
             @foreach (var service in ViewBag.Services as IEnumerable<Service>)
@@ -34,8 +36,8 @@
                     {
                         <li>
                             @{
-                                var permissionId = service.Name + "_" + permission.Name;
-                                var permissionValue = service.Name + " " + permission.Name;
+                        var permissionId = service.Name + "_" + permission.Name;
+                        var permissionValue = service.Name + " " + permission.Name;
                             }
                             <label for="@permissionId">@permission.Name</label>
                             <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
@@ -45,6 +47,12 @@
             </div>
         }
     </div>
+    }
+    else
+    {
+    <div>
+        There are no available services</div>
+    }
     <p>
         <input type="submit" value="Create" />
     </p>

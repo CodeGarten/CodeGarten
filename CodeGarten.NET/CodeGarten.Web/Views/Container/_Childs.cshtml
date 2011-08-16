@@ -29,7 +29,7 @@
                         @{ var cp1 = cp; }
                         @foreach (var container in Model.Childs.Where(c => c.Prototype.Name == cp1.Name))
                         {
-                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item fader_right ui-corner-all ui-widget-header ui-state-default" })
+                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item slide ui-corner-all ui-widget-header ui-state-default" })
                         }
                         @if (owner)
                         {
@@ -42,7 +42,7 @@
                     <div class="child all">
                         @foreach (var container in Model.Childs)
                         {
-                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item fader_right" })
+                            @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item slide" })
                         }
                         @if (Model.Childs.Count == 0)
                         {

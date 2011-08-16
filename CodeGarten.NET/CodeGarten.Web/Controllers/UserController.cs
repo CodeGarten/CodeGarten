@@ -66,5 +66,12 @@ namespace CodeGarten.Web.Controllers
 
             return View(databaseManager.User.GetEnrolls(User.Identity.Name));
         }
+
+        public JsonResult Find(string term)
+        {
+            var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            return Json(databaseManager.User.GetAll().Select(u => u.Name).Where(u => u.StartsWith(term)), JsonRequestBehavior.AllowGet);
+        }
     }
 }

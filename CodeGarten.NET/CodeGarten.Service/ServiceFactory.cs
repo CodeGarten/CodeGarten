@@ -19,7 +19,7 @@ namespace CodeGarten.Service
 
         private static readonly ServiceBuilder Builder;
 
-        private static readonly Dictionary<string, Service> Services;
+        internal static readonly Dictionary<string, Service> Services;
 
         public static  Logger ServiceLogger;
 

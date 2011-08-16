@@ -7,6 +7,7 @@ using System.Text;
 using CodeGarten.Data.Access;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
+using Trac.Core;
 
 namespace Trac
 {

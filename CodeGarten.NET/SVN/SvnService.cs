@@ -9,6 +9,7 @@ using CodeGarten.Data.Access;
 using CodeGarten.Data.Interfaces;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
+using SVN.Core;
 
 
 namespace SVN
@@ -21,7 +22,7 @@ namespace SVN
         //TODO Implemente dispose
 
         public SvnService()
-            : base(new ServiceModel("Svn", "System Version Control", EnumExtensions.ToEnumerable<SVNPrivileges>()))
+            : base(new ServiceModel("SVN", "System Version Control", EnumExtensions.ToEnumerable<SVNPrivileges>()))
         {
             _filesPath = Path.Combine(PathService, "etc");
             Directory.CreateDirectory(_filesPath);
@@ -62,6 +63,9 @@ namespace SVN
 
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
+            //If the event is not suppose to come to this service, continuing would be bad
+            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.RemoveUser(e.Enroll.UserName);
             _svnAuthorization.Save();
@@ -69,6 +73,9 @@ namespace SVN
 
         private void OnUserEnroll(object sender, EnrollEventArgs e)
         {
+            //If the event is not suppose to come to this service, continuing would be bad
+            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+                return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.AddUser(e.Enroll.UserName);
             _svnAuthorization.Save();

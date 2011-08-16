@@ -11,7 +11,7 @@
         @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "results" }))
         {
             <div class="query">
-                @Html.TextBox("query")
+                @Html.TextBox("query", null, new { autofocus = "autofocus", type = "search", placeholder = "Search for users, projects or structures..." })
                 <input type="submit" value="Search" />
             </div>
         
@@ -38,9 +38,7 @@
 
         $("form").ajaxStart(function () {
             $("#results").hide();
-            //            $("#results").fadeOut('fast', function () {
             $("#search_form img[alt=Loading]").fadeIn('fast');
-            //            });
         });
         $("form").ajaxStop(function () {
             $("#search_form img[alt=Loading]").fadeOut('fast', function () {
@@ -49,14 +47,5 @@
         });
 
         $("#search_form img[alt=Loading]").hide();
-
-        $("#search_form .query input[type=text]").focus();
     });
-
-    //    Update = function (response) {
-    //        $("#results").fadeOut('fast', function () {
-    //            $("#results").html(response);
-    //            $("#results").fadeIn();
-    //        });
-    //    };
 </script>

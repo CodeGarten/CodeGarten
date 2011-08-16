@@ -19,11 +19,11 @@ namespace CodeGarten.Web.Controllers
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name) , rl.RoleBarrier });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name), rl.RoleBarrier });
 
             var Bindings =
                 dataBaseManager.ContainerPrototype.GetAll(id).SelectMany(cp => cp.Bindings).Select(
-                    b => new {b.ContainerPrototypeName, b.WorkSpaceTypeName});
+                    b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName });
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });
@@ -75,7 +75,7 @@ namespace CodeGarten.Web.Controllers
                             dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
                                                         role.RoleTypeName,
                                                         role.Rules == null ? null : role.Rules.Select(rule => rule.Name),
-                                                        (RoleBarrier) role.RoleBarrier);
+                                                        (RoleBarrier)role.RoleBarrier);
                     }
 
                 return FormValidationResponse.Ok();
@@ -91,7 +91,7 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-            if(id == null)
+            if (id == null)
             {
                 var structures = dataBaseManager.Structure.GetAll(User.Identity.Name);
                 return View("Structures", structures);
@@ -104,6 +104,8 @@ namespace CodeGarten.Web.Controllers
 
             ViewBag.Instances = dataBaseManager.Container.GetInstances(id.Value).Where(c => c.Parent == null);
             ViewBag.TopInstanceName = dataBaseManager.ContainerPrototype.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
+
+            ViewBag.PreventEdit = true;
 
             return View(structure);
         }
@@ -144,6 +146,8 @@ namespace CodeGarten.Web.Controllers
 
             var structure = dataBaseManager.Structure.Get(id);
 
+            ViewBag.Instances = dataBaseManager.Container.GetInstances(id);
+
             return View(structure);
         }
 
@@ -174,23 +178,46 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
 
-                if(!dataBaseManager.Structure.Get(id).Developing)
+                if (!dataBaseManager.Structure.Get(id).Developing)
                     return FormValidationResponse.Ok();
 
                 dataBaseManager.Structure.Publish(id);
 
                 return FormValidationResponse.Ok();
 
-            }catch(InvalidOperationException e)
+            }
+            catch (InvalidOperationException e)
             {
                 ModelState.AddGlobalError(e.Message);
                 return FormValidationResponse.Error(ModelState);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ModelState.AddGlobalError("An error has occured, please try again.");
                 return FormValidationResponse.Error(ModelState);
             }
+        }
+
+        [HttpPost]
+        [StructureOwner("id")]
+        public JsonResult AddAdministrator(long id, string userName)
+        {
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            var success = dataBaseManager.Structure.AddAdministrator(id, userName);
+
+            return Json(new { Success = success, Name = userName }, JsonRequestBehavior.AllowGet);
+        }
+
+        [StructureOwner("id")]
+        public ActionResult LeaveAdministration(long id, string userName)
+        {
+            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+
+            if(userName == User.Identity.Name)
+                dataBaseManager.Structure.RemoveAdministrator(id, userName);
+
+            return RedirectToAction("Index", "Structure");
         }
     }
 }

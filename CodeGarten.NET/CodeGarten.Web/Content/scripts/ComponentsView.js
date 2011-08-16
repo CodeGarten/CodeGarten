@@ -2,9 +2,12 @@ var ComponentsView = new (function () {
     var divId;
 
     var content;
+    var preventEdit;
 
-    this.Init = function (id, title, pages) {
+    this.Init = function (id, title, pages, _preventEdit) {
         divId = id;
+
+        preventEdit = _preventEdit;
 
         $(divId).empty();
         $(divId).append("<h1 class='ui-widget-header'/>");
@@ -18,7 +21,10 @@ var ComponentsView = new (function () {
         for (var v in pages) {
             var pageTag = $("<h3 class='" + pages[v] + "_link'><a class='page_link href='#'>" + pages[v] + "s</a></h3> <div> " + EventController.Placeholder("Empty. Click the add button to create.", "h5") + "<div class='page_content'/> <div class='page_options'/> </div>");
             var addButton = $("<button class='page_add' onclick='javascript:" + pages[v] + "Controller.Create();'>Add " + pages[v] + "</button>").button({ icons: { primary: "ui-icon-plus"} });
-            $(pageTag).find(".page_options").append(addButton);
+
+            if (!preventEdit)
+                $(pageTag).find(".page_options").append(addButton);
+
             $(content).append(pageTag);
         }
         $(content).accordion({ 'clearStyle': true, autoHeight: false });
@@ -37,7 +43,12 @@ var ComponentsView = new (function () {
 
         if (page !== "RoleType")
             $(itemTag).children(".item_options").append(buttonEdit);
-        $(itemTag).children(".item_options").append(buttonDelete);
+        if (!preventEdit)
+            $(itemTag).children(".item_options").append(buttonDelete);
+        else {
+            $(buttonEdit).attr("title", "Info");
+            $(buttonEdit).button("option", "icons", { primary: 'ui-icon-info' });
+        }
         $(pageTag).parent().next().children(".ui-state-highlight").hide();
         $(pageTag).parent().next().children(".page_content").append(itemTag);
         $(itemTag).draggable({
