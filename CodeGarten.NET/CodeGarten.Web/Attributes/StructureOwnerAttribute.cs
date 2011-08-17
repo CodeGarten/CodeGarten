@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using CodeGarten.Data.Access;
 
 namespace CodeGarten.Web.Attributes
@@ -15,7 +16,7 @@ namespace CodeGarten.Web.Attributes
             StructureIdField = structureIdField;
         }
 
-        protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             var dataBaseManager = httpContext.Items["DataBaseManager"] as DataBaseManager;
 
@@ -24,12 +25,15 @@ namespace CodeGarten.Web.Attributes
                 Int32.Parse((httpContext.Request.RequestContext.RouteData.Values[StructureIdField] ??
                              httpContext.Request[StructureIdField]) as string);
 
+            if(dataBaseManager.Structure.Get(structureId) == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
+
             return user.Structures.Select(s => s.Id).Contains(structureId);
         }
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectResult(FormsAuthentication.DefaultUrl);
+            throw new HttpException((int)HttpStatusCode.Forbidden, HttpStatusCode.Forbidden.ToString());
         }
     }
 }

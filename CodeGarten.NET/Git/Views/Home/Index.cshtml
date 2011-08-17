@@ -54,6 +54,10 @@
     {
         font-size: large;
     }
+    #get_client
+    {
+        padding-top: 10px;
+    }
 </style>
 <div id="main">
     <div id="info">
@@ -68,7 +72,7 @@
         <div class="ui-widget-content">
             <div class="link_area">
                 You can interact with this repository at:<br />
-                <a href="@(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))" class="link" target="_blank">@(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))</a>
+                <a href="@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))" class="link" target="_blank">@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))</a>
                 <div class="permissions">
                     @if (enroll == null)
                     {
@@ -91,14 +95,7 @@
     </div>
     @if (enroll != null)
     {
-        if (Model)
-        {
-        <div id="active" class="ui-state-highlight ui-corner-bottom">
-            <h2 class="center">
-                Status: This repository is working correctly</h2>
-        </div>
-        }
-        else
+        if (!Model)
         {
         <div id="inactive" class="ui-state-highlight ui-corner-bottom">
             <h3 class="center">
@@ -127,7 +124,7 @@
                             <li class="code">touch README</li>
                             <li class="code">git add README</li>
                             <li class="code">git commit -m 'first commit'</li>
-                            <li class="code">git remote add origin @(String.Format("http://{0}@codegarten.adeetc.e.ipl.pt:8080/Git/{1}.git", User.Identity.Name, ViewBag.InstanceName))</li>
+                            <li class="code">git remote add origin @(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))</li>
                             <li class="code">git push -u origin master</li>
                         </ul>
                     </li>

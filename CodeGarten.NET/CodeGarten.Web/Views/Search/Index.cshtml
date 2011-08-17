@@ -1,17 +1,23 @@
-﻿@{
+﻿@model IEnumerable<object>
+@{
     ViewBag.Title = "Search";
 }
 <div class="search_title title">
+    @if (TempData["Message404_Head"] != null)
+    {
+        <h1>@TempData["Message404_Head"]</h1>
+        <h3>@TempData["Message404_Body"]</h3>
+    }
     <div class="name">
         <img src="@Url.Content("~/Content/themes/smoothness/images/Search.png")" alt="Structures" />
         <h2>
             Search</h2>
     </div>
     <div id="search_form">
-        @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "results" }))
+        @using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "Update", HttpMethod = "GET" }))
         {
             <div class="query">
-                @Html.TextBox("query", null, new { autofocus = "autofocus", type = "search", placeholder = "Search for users, projects or structures..." })
+                @Html.TextBox("search", null, new { autofocus = "autofocus", type = "search", placeholder = "Search for users, projects or structures..." })
                 <input type="submit" value="Search" />
             </div>
         
@@ -30,22 +36,35 @@
     </div>
 </div>
 <div id="results">
+    @if (Model != null)
+    {
+        @Html.Partial("_SearchResults", Model)
+    }
+    else
+    {
+        if (ViewBag.MixedSearch != null && ViewBag.MixedSearch)
+        {
+        @Html.Partial("_SearchAllResults")
+        }
+    }
 </div>
 <script type="text/javascript">
-    var type;
-    $(document).ready(function () {
-        $(".type").buttonset();
+    $(".type").buttonset();
 
-        $("form").ajaxStart(function () {
-            $("#results").hide();
-            $("#search_form img[alt=Loading]").fadeIn('fast');
-        });
-        $("form").ajaxStop(function () {
-            $("#search_form img[alt=Loading]").fadeOut('fast', function () {
-                $("#results").fadeIn('fast');
-            });
-        });
-
-        $("#search_form img[alt=Loading]").hide();
+    $("form").ajaxStart(function () {
+        $("#results").hide();
+        $("#search_form img[alt=Loading]").fadeIn('fast');
     });
+    $("form").ajaxStop(function () {
+        $("#search_form img[alt=Loading]").fadeOut('fast', function () {
+            $("#results").fadeIn('normal');
+        });
+    });
+
+    $("#search_form img[alt=Loading]").hide();
+
+    var Update = function (results) {
+        $("#results").html(results);
+        history.pushState(null, $("#search").val(), "?search=" + $("#search").val() + "&type=" + $("#search_form .type label[aria-pressed=true]").attr("for"));
+    };
 </script>

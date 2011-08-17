@@ -1,10 +1,15 @@
-﻿using System.Security.Principal;
+﻿using System.Configuration;
+using System.IO;
+using System.Security.Principal;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Service;
+using CodeGarten.Utils;
+using CodeGarten.Web.Controllers;
 using CodeGarten.Web.Core;
 
 namespace CodeGarten.Web
@@ -14,10 +19,15 @@ namespace CodeGarten.Web
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
-            filters.Add(new HandleErrorAttribute());
-        }
+        private static readonly Logger Logger =
+            new Logger(File.Exists(ConfigurationManager.AppSettings["Log"])
+                           ? File.AppendText(ConfigurationManager.AppSettings["Log"])
+                           : File.CreateText(ConfigurationManager.AppSettings["Log"]));
+
+        //public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        //{
+        //    filters.Add(new HandleErrorAttribute());
+        //}
 
         public static void RegisterRoutes(RouteCollection routes)
         {
@@ -49,7 +59,7 @@ namespace CodeGarten.Web
         {
             AreaRegistration.RegisterAllAreas();
 
-            RegisterGlobalFilters(GlobalFilters.Filters);
+            //RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
             ControllerBuilder.Current.SetControllerFactory(new ControllerFactory());
@@ -57,6 +67,14 @@ namespace CodeGarten.Web
             HostingEnvironment.RegisterVirtualPathProvider(new ServiceVirtualPath());
 
             ServiceFactory.LoadServices();
+
+            Logger.Start();
+        }
+
+        protected void Application_End()
+        {
+            Logger.Log("Web application stopped.");
+            Logger.Stop();
         }
 
         public void Application_AuthenticateRequest()
@@ -82,6 +100,12 @@ namespace CodeGarten.Web
 
             if (dataBaseManager != null)
                 dataBaseManager.Dispose();
+        }
+
+        protected void Application_Error()
+        {
+            var exception = Server.GetLastError();
+            Logger.Log(exception.Message);
         }
     }
 }

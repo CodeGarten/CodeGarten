@@ -22,8 +22,8 @@ h1 { padding: .2em; margin: 0;}
 #error { width: 74%;float: left; }
 
 #containerPrototypeDesign { width: 74%;float: left;}
-#containerPrototypeDesign .Workspace {margin: 2em; display:inline-block;}
-#containerPrototypeDesign .RoleType {margin: 2em; display:inline-block;}
+#containerPrototypeDesign .Workspace {margin: 2em;display:inline-block;}
+#containerPrototypeDesign .RoleType {margin: 2em;display:inline-block;}
 #containerPrototypeDesign .Rule {margin: 1em; font-size:medium;}
 #containerPrototypeDesign .Rule > .item_options {margin-left:1em;}
 #containerPrototypeDesign .RoleType .ui-icon-arrowthickstop-1-s { float: left;}
@@ -126,6 +126,7 @@ h1 { padding: .2em; margin: 0;}
 /* structure create form
 -----------------------------------------------------------*/
 #structure_create_form { text-align: center;}
+#structure_create_form input[type=text] { text-align: center;font-size: 150%;width: 400px;}
 
 /* container create form
 -----------------------------------------------------------*/
@@ -151,6 +152,7 @@ h1 { padding: .2em; margin: 0;}
 /* Search form
 -----------------------------------------------------------*/
 .search_title .name { display: inline-block;vertical-align: top;}
+.search_title h3 { margin-top: -5px;}
 #search_form { display: inline-block;padding-left: 5px; }
 #search_form img[alt=Loading] { width: 20px;height: 20px;position:relative;z-index: 1;left: 665px;top: -54px;}
 #search_form .query input[type=Submit] { left: -6px;height: 30px;top: -4px;}
@@ -246,6 +248,8 @@ h1 { padding: .2em; margin: 0;}
 #management .administrators {border-bottom: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC;margin-top: -10px;}
 #management .actions{ padding-top: 5px;}
 #management .create_button { margin-bottom: 10px;}
+
+#container_div { min-height: 400px;}
 
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}

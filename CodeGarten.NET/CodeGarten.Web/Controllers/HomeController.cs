@@ -6,6 +6,7 @@ namespace CodeGarten.Web.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Title = "Structured collaborative development";
             return User.Identity.IsAuthenticated ? View("AuthenticatedHome") : View();
         }
     }

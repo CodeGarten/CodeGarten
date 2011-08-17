@@ -10,7 +10,7 @@
 
     var description = Model.Description ?? "No description";
 }
-<div>
+<div id="container_div">
     <div id="container">
         <h1>@Html.Partial("_StructurePath", Model)</h1>
         <div class="left_panel">
@@ -47,10 +47,11 @@
     $(".delete_button").button({ icons: { primary: 'ui-icon-trash'} });
 
     $(".slide").click(function () {
-        $.cookie("currentUrl", location.href, { path: '/' });
-        SwitchContainer(this.href, function (location) {
-            history.pushState({ path: this.path }, '', location);
-            $.cookie("currentUrl", location.href, { path: '/Container' });
+        currentUrl = location.href;
+        var nextUrl = this.href;
+        SwitchContainer(nextUrl, function () {
+            history.pushState(null, $("#container #structure_path .name").first().text(), nextUrl);
+            $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Prototype.Structure.Name");
         });
         return false;
     });

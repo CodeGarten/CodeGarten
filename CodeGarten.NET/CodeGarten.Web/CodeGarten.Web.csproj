@@ -70,6 +70,7 @@
     <Compile Include="Attributes\StructureOwnerAttribute.cs" />
     <Compile Include="Controllers\ContainerController.cs" />
     <Compile Include="Controllers\ContainerPrototypeController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SignupController.cs" />
@@ -138,7 +139,6 @@
     <Content Include="Content\scripts\ComponentsView.js" />
     <Content Include="Scripts\jquery-ui-1.8.14.js" />
     <Content Include="Scripts\jquery-ui-1.8.14.min.js" />
-    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.loadmask.js" />
     <Content Include="Scripts\jquery.loadmask.min.js" />
     <Content Include="Scripts\jquery.loadmask.ui.js" />
@@ -214,6 +214,10 @@
     <ProjectReference Include="..\CodeGarten.Service\CodeGarten.Service.csproj">
       <Project>{52AC5E24-7D95-457F-B900-2E5AC5644490}</Project>
       <Name>CodeGarten.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeGarten.Utils\CodeGarten.Utils.csproj">
+      <Project>{A5BDB75D-3719-4E3B-AF57-74CDB0767171}</Project>
+      <Name>CodeGarten.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +310,11 @@
     <Content Include="Views\WorkSpace\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Error\Error403.cshtml" />
+    <Content Include="Views\Error\Error404.cshtml" />
+    <Content Include="Views\Error\Server.cshtml" />
+  </ItemGroup>
+    <ItemGroup>
     <Content Include="Views\Structure\_ViewDesign.cshtml" />
   </ItemGroup>
   <ItemGroup>
