@@ -405,9 +405,19 @@ table td, table th
     min-width: 300px;
 }
 
+#container_structure_design table td
+{
+    text-align: center;    
+}
+
 #container_structure_design h3
 {
     margin-left: 20px;
     padding-bottom: 0;
     margin-bottom: 0;
+}
+
+#container_structure_design>.ui-state-highlight>p
+{
+    margin-left: 20px;
 }

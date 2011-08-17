@@ -13,27 +13,35 @@
 <div id="container_structure">
     @Html.Partial("_Prototype", fatherPrototype)
 </div>
-
+<div class="clear"></div>
 <div id="container_structure_design">
     <h2>Prototype Design</h2>
+    <div class="ui-state-highlight ui-corner-all">
+        <p>
+            <span class="ui-icon ui-icon-info"></span>
+            <strong>Select a Prototype</strong>
+        </p>
+    </div>
+
     @foreach (ContainerPrototype prototype in prototypes)
     {
         <div id='@prototype.Name' class='ui-widget'>
             <div class='ui-widget-header'>
-                <h1>@prototype.Name</h1>
+                <h2>@prototype.Name</h2>
             </div>
             <div class='ui-widget-content'>
             <div class="workspaces" >
             @foreach (WorkSpaceType workspace in prototype.Bindings.Select(b => b.WorkSpaceType).Distinct())
             {
-                @Html.RadioButton("workspace", workspace.Name, new { id = workspace.Name, onclick = "javascript:PrototypeInfo('" + prototype.Name + "-" + workspace.Name + "')" })
-                @Html.Label(workspace.Name, workspace.Name)   
+                var id = prototype.Name+"-"+workspace.Name;
+                @Html.RadioButton(prototype.Name+"workspace", id, new { id = id, onclick = "javascript:PrototypeInfo('" +prototype.Name+ "','"+workspace.Name+"')" })
+                @Html.Label(id, workspace.Name)   
             }
             </div>
             <h3>Roles</h3>
             @foreach (var group in roles.Where(r => r.ContainerPrototypeName == prototype.Name).GroupBy(r => r.Binding.WorkSpaceType))
             {
-                <div id='@prototype.Name-@group.Key.Name' class="info">
+                <div id='info-@prototype.Name-@group.Key.Name' class="ProtoInfo-@prototype.Name">
                     <table class="ui-widget ui-widget-content">
 		                <thead>
 			                <tr class="ui-widget-header ">
@@ -48,7 +56,29 @@
                             <tr>
 				                <td>@role.RoleTypeName
                                 </td>
-				                <td>@role.Barrier.ToString()
+				                <td>
+                                    @switch(role.Barrier)
+                                    {
+                                        case 1:
+                                            <text>Top ( </text>
+                                                <span class="ui-icon ui-icon-arrowstop-1-s"></span>
+                                            <text> )</text>
+                                            break;
+                                        case 2:
+                                            <text>Bottom ( </text>
+                                                <span class="ui-icon ui-icon-arrowstop-1-n"></span>
+                                            <text> )</text>
+                                            break;
+                                        case 3:
+                                            <text>All ( </text>
+                                                <span class="ui-icon ui-icon-arrowstop-1-s"></span>
+                                                <span class="ui-icon ui-icon-arrowstop-1-n"></span> 
+                                            <text> )</text>
+                                            break;
+                                        default:
+                                            <text>No Barriers</text>
+                                            break;
+                                    }
                                 </td>
                                 <td>
                                 @foreach (var rule in role.Rules)
@@ -97,19 +127,27 @@
 }
 
 <script type="text/javascript">
+
     $("#container_structure_design table a").button();
-    $("#container_structure_design > div").hide();
+    $("#container_structure_design > .ui-widget").hide();
     $(".workspaces").buttonset();
     $(".info").hide();
     function PrototypeDesign(prototypeName) {
+        $("#container_structure_design > .ui-state-highlight").remove();
+        $("#container_structure_design > .ui-widget").hide();
         $("#" + prototypeName).show();
     }
 
-    function PrototypeInfo(info) {
-        $(".info").hide();
-        $("#"+info).show();
+    function PrototypeInfo(proto, work) {
+        $(".ProtoInfo-"+proto).hide();
+        $("#info-" + proto + "-" + work).show();
     }
 
-    $(".rule").dialog({ autoOpen: false, resizable: false, buttons: { Close: function () { $(this).dialog("close")} } });
+    $(".rule").dialog({ autoOpen: false, resizable: false });
+
+    var array = $("#container_structure_design > .ui-widget").toArray();
+    for (var i in array)
+        $(array[i]).find(".ui-widget-content>.workspaces>input[type=\"radio\"]").first().click();
+    
 
 </script>
