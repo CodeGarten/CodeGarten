@@ -11,7 +11,9 @@
         <text> /</text>
         @ViewBag.WorkSpaceType.Name        
     </h1>
-    
+    <span class="loading">
+        <img src="@Url.Content("~/Content/themes/smoothness/images/loading.gif")" alt="Loading"/>
+    </span>
     <div class="services">
         @foreach (Service service in ViewBag.WorkSpaceType.Services)
         { 
@@ -22,12 +24,11 @@
         }
     </div>
 </div>
-
-<iframe src="@Src">
-</iframe>
-
+<div class="iframe">
+    <iframe src="@Src" onload="javascript:OnLoadIframe()">
+    </iframe>
+</div>
 <script type="text/javascript">
-
     $(".services").buttonset();
 
     onpopstate = function (event) {
@@ -38,8 +39,9 @@
     }
 
     function Refreash(service, url) {
-        $("iframe").remove();
-        $("#main_service").append("<iframe src=\"" + url + "\"></iframe>");
+        $("#main_service>.iframe>iframe").remove();
+        $("#main_service>#main>.loading").append("<img src='@Url.Content("~/Content/themes/smoothness/images/loading.gif")' alt='Loading'/>");
+        $("#main_service>.iframe").append("<iframe src=\"" + url + "\" onload=\"javascript:OnLoadIframe()\"></iframe>");
         $("input[name=\"service\"]").removeAttr("checked");
         $("#" + service).attr({ checked: true });
     }
@@ -49,6 +51,11 @@
         Refreash(service, url);
     }
 
-    history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);
+    function OnLoadIframe() {
+        var iframe = $("#main_service>.iframe>iframe");
+        iframe.height($(iframe[0].contentWindow.document).height());
+        $("#main_service>#main>.loading").remove();
+    }
 
+    history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);
 </script>

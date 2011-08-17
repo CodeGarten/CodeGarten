@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 
 namespace CodeGarten.Web.Controllers
 {
@@ -16,7 +17,7 @@ namespace CodeGarten.Web.Controllers
         {
 
             var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
-
+            
             ViewBag.Container = dataBaseManager.Container.Get(containerId);
             ViewBag.WorkSpaceType = dataBaseManager.WorkSpaceType.Get(structureId, workSpaceTypeName);
             ViewBag.StructureId = structureId;

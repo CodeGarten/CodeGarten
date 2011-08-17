@@ -373,10 +373,9 @@ table td, table th
 /* Styles for WorkSpace Services
 ----------------------------------------------------------*/
 
-#main_service > iframe
+#main_service > .iframe > iframe
 {
       min-width: 100%;
-      min-height: 
       border-style: none;
 }
 
