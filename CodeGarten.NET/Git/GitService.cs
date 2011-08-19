@@ -3,9 +3,11 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
 using Git.Core;
+using Service = CodeGarten.Service.Service;
 
 namespace Git
 {
@@ -24,6 +26,11 @@ namespace Git
 
             Directory.CreateDirectory(Path.Combine(PathService, "etc"));
             Authorization = new Authorization(Path.Combine(PathService, "etc", "autho_file.xml"));
+        }
+
+        public override string GetInstancePath(Container container, WorkSpaceType workSpaceType)
+        {
+            return Path.Combine(Path.Combine(PathService, "repositories"), container.UniqueInstanceName(workSpaceType));
         }
 
         public override void OnServiceCreating(ServiceBuilder serviceBuilder)

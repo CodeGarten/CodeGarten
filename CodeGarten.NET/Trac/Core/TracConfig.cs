@@ -4,66 +4,73 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 using CodeGarten.Service;
 
 namespace Trac.Core
 {
-    public class TracConfiguration : ConfigurationSection
+    public static class TracConfig
     {
-
         public static TracConfiguration Settings { get; private set; }
 
-        static TracConfiguration()
+        static TracConfig()
         {
-            var assemblyConfig =
-                ConfigurationManager.OpenExeConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "Trac.dll"));
-            Settings = (TracConfiguration) assemblyConfig.GetSection("tracConfig");
-        }
-
-        [ConfigurationProperty("tracAdmin", IsRequired = true)]
-        public string TracAdmin
-        {
-            get { return (string) this["tracAdmin"]; }
-            set { this["tracAdmin"] = value; }
-        }
-
-        //[ConfigurationProperty("plugins", IsRequired = false, IsDefaultCollection = false)]
-        [ConfigurationProperty("plugins", IsRequired = false)]
-        [ConfigurationCollection(typeof(PluginsConfigCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
-        public PluginsConfigCollection Plugins
-        {
-            get { return (PluginsConfigCollection)this["plugins"]; }
+            Settings = new TracConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "Trac.dll.config"));
+            Settings.Load();
         }
     }
 
-    public class PluginsConfigCollection : ConfigurationElementCollection
+    public class TracConfiguration
     {
-        protected override ConfigurationElement CreateNewElement()
+        private readonly string _xmlPath;
+
+        public TracConfiguration(string xmlPath)
         {
-            return new PluginConfig();
+            _xmlPath = xmlPath;
         }
 
-        protected override object GetElementKey(ConfigurationElement element)
+        public void Load()
         {
-            return ((PluginConfig) element).Service;
+            var file = new FileStream(_xmlPath, FileMode.Open);
+            var xmlDocument = new XmlDocument();
+            xmlDocument.XmlResolver = null;
+            xmlDocument.Load(file);
+
+            var tracAdminNode = xmlDocument.SelectSingleNode("/configuration/tracConfig");
+            TracAdmin = tracAdminNode.Attributes["tracAdmin"].Value;
+            var node = tracAdminNode.Attributes["inherit"];
+            InheritInit = node == null ? null : node.Value;
+
+            var pluginNodes = xmlDocument.SelectNodes("/configuration/tracConfig/plugins/add[@service]");
+            Plugins = new Dictionary<string, PluginConfig>();
+            foreach (XmlNode pluginNode in pluginNodes)
+            {
+                var service = pluginNode.Attributes["service"].Value;
+                Plugins.Add(service, new PluginConfig(service,
+                                             pluginNode.Attributes["cfgFile"].Value));
+            }
+
+            file.Close();
         }
+
+        public string TracAdmin { get;private set;}
+        public string InheritInit { get; private set; }
+
+        public Dictionary<string, PluginConfig> Plugins { get; private set; }
+
     }
 
-    public class PluginConfig : ConfigurationElement
+    public class PluginConfig
     {
-        [ConfigurationProperty("service", IsRequired = true, IsKey = true)]
-
-        public string Service
+        public PluginConfig(string service, string configFile)
         {
-            get { return (string) this["service"]; }
-            set { this["service"] = value; }
+            Service = service;
+            ConfigFile = configFile;
         }
 
-        [ConfigurationProperty("cfgFile", IsRequired = true)]
-        public string ConfigFile
-        {
-            get { return (string)this["cfgFile"]; }
-            set { this["cfgFile"] = value; }
-        }
+        public string Service { get; private set; }
+
+        public string ConfigFile { get; private set; }
     }
 }

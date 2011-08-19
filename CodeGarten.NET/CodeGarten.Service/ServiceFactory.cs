@@ -4,9 +4,12 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CodeGarten.Data.Model;
 using CodeGarten.Utils;
 
 namespace CodeGarten.Service
@@ -49,6 +52,19 @@ namespace CodeGarten.Service
                 service.OnServiceCreating(Builder);
                 Services.Add(service.Name, service);
             }
+        }
+
+        public static string InstancePath(string service, Container container, WorkSpaceType workSpaceType)
+        {
+            try
+            {
+                return Services.ContainsKey(service) ? Services[service].GetInstancePath(container, workSpaceType) : null;   
+ 
+            }catch(NotImplementedException)
+            {
+                return null;
+            }
+
         }
 
         public static bool Install(string name)
@@ -98,8 +114,8 @@ namespace CodeGarten.Service
         {
             if (Services.ContainsKey(serviceName))
                 return Services[serviceName].CreateController(requestContext, controllerName);
-            //return Services[serviceName].CreateController(controllerName);
-            return null;
+
+            throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
         }
 
         #region Class ServiceEngine

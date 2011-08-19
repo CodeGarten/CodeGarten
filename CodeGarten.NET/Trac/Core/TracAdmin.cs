@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using CodeGarten.Service;
 
 namespace Trac.Core
@@ -15,7 +16,12 @@ namespace Trac.Core
             public String StandardError;
         }
 
-        private static readonly String TracAdminPath = TracConfiguration.Settings.TracAdmin;
+        private static readonly String TracAdminPath;
+
+        static TracAdmin()
+        {
+            TracAdminPath = TracConfig.Settings.TracAdmin;
+        }
 
         public static bool Add(String userName, String envPath, String permissionOrGroup)
         {
@@ -123,8 +129,38 @@ namespace Trac.Core
 
         public static bool InitEnv(String envName, String envPath)
         {
-            var responce = Execute(String.Format(@"{0} initenv", envPath), String.Format("{0}\n\n",envName));
-            return responce.StandardError.Length == 0;
+            string inherit = "";
+            if (!String.IsNullOrEmpty(TracConfig.Settings.InheritInit))
+                inherit = String.Format(" --inherit={0}", TracConfig.Settings.InheritInit);
+
+            var response = Execute(String.Format(@"{0} initenv{1}", envPath, inherit), String.Format("{0}\n\n",envName));
+            return response.StandardError.Length == 0;
+        }
+
+        public static bool ConfigPlugins(string envPath, string plugin, string instancePath)
+        {
+            var plugins = TracConfig.Settings.Plugins;
+            if (!plugins.ContainsKey(plugin))
+                return false;
+
+            using(TextReader reader = File.OpenText(plugins[plugin].ConfigFile))
+            {
+                string command;
+                StringBuilder builder;
+                while((command = reader.ReadLine())!=null)
+                {
+                    builder= new StringBuilder(command);
+                    builder = builder.Replace("{env}", envPath);
+
+                    if (instancePath != null)
+                        builder.Replace("{service}", instancePath);
+
+                    var response = Execute(builder.ToString(), null);
+                    if(response.StandardError.Length != 0)
+                        ServiceFactory.ServiceLogger.Log(response.StandardError);
+                }
+                return true;
+            }
         }
 
         private static Response Execute(String args, String input)

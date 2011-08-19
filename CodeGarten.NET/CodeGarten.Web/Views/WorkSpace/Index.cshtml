@@ -25,7 +25,7 @@
     </div>
 </div>
 <div class="iframe">
-    <iframe src="@Src" onload="javascript:OnLoadIframe()">
+    <iframe src="@Src" onload="javascript:OnLoadIframe()" >
     </iframe>
 </div>
 <script type="text/javascript">
@@ -39,8 +39,8 @@
     }
 
     function Refreash(service, url) {
-        $("#main_service>.iframe>iframe").remove();
         $("#main_service>#main>.loading").append("<img src='@Url.Content("~/Content/themes/smoothness/images/loading.gif")' alt='Loading'/>");
+        $("#main_service>.iframe>iframe").remove();
         $("#main_service>.iframe").append("<iframe src=\"" + url + "\" onload=\"javascript:OnLoadIframe()\"></iframe>");
         $("input[name=\"service\"]").removeAttr("checked");
         $("#" + service).attr({ checked: true });
@@ -54,7 +54,7 @@
     function OnLoadIframe() {
         var iframe = $("#main_service>.iframe>iframe");
         iframe.height($(iframe[0].contentWindow.document).height());
-        $("#main_service>#main>.loading").remove();
+        $("#main_service>#main>.loading>img").remove();
     }
 
     history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);

@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
 using Trac.Core;
+using Service = CodeGarten.Service.Service;
 
 namespace Trac
 {
@@ -16,9 +18,14 @@ namespace Trac
     {
         private readonly string _envPath;
 
-        public Trac() : base(new ServiceModel("Trac", "", EnumExtensions.ToEnumerable<TracPrivileges>()))
+        public Trac() : base(new ServiceModel("Trac", "Integrated SCM & Project Management", EnumExtensions.ToEnumerable<TracPrivileges>()))
         {
             _envPath = Path.Combine(PathService, "envs");
+        }
+
+        public override string GetInstancePath(Container container, WorkSpaceType workSpaceType)
+        {
+            return Path.Combine(_envPath, container.UniqueInstanceName(workSpaceType));
         }
 
         public override void OnServiceCreating(ServiceBuilder serviceBuilder)
@@ -78,6 +85,7 @@ namespace Trac
         {
             foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
             {
+                var contextType = workSpaceType;
                 var envName = e.Container.UniqueInstanceName(workSpaceType);
                 var tracEnvironment = TracEnvironmentManager.Create(_envPath, envName);
 
@@ -86,7 +94,11 @@ namespace Trac
                     Logger.Log(String.Format("Service {0} -> Create folder \"{1}\" fail", Name, envName));
                     continue;
                 }
-                if (!tracEnvironment.Initialize())
+                
+                if (!tracEnvironment.Initialize(workSpaceType.Services.Where(s => s.Name != Name).Select(
+                    s => new KeyValuePair<string, string>(s.Name, 
+                        ServiceFactory.InstancePath(s.Name, e.Container, contextType))
+                        )))
                 {
                     Logger.Log(String.Format("Service {0} -> Initialize instance \"{1}\" fail", Name, envName));
                     continue;

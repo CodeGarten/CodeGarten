@@ -170,11 +170,13 @@ namespace Trac.Tests
         [Test]
         public void ShouldTestConfigurationFile()
         {
-            var setting = TracConfiguration.Settings;
+            var setting =
+                new TracConfiguration(
+                    @"C:\Users\Faustino\Documents\Isel\6º Semestre\PS\CodeGarten.Github\CodeGarten\CodeGarten.NET\CodeGarten.Web\Services\Trac.dll.config");
 
-            foreach (PluginConfig plugin in setting.Plugins)
+            foreach (var plugin in setting.Plugins.ToList())
             {
-                Console.WriteLine("service = {0}, cfgFile= {1}", plugin.Service, plugin.ConfigFile);
+                Console.WriteLine("service = {0}, cfgFile= {1}", plugin.Value.Service, plugin.Value.ConfigFile);
             }
         }
     }

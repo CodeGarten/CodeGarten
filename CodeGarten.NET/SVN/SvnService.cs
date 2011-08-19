@@ -7,9 +7,11 @@ using System.Text;
 using System.Threading;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.Interfaces;
+using CodeGarten.Data.Model;
 using CodeGarten.Service;
 using CodeGarten.Service.Utils;
 using SVN.Core;
+using Service = CodeGarten.Service.Service;
 
 
 namespace SVN
@@ -30,6 +32,11 @@ namespace SVN
             _repoPath = Path.Combine(PathService, "repositories");
             
             _svnAuthorization = new SVNAuthorization(_filesPath, _authFileName);
+        }
+
+        public override string GetInstancePath(Container container, WorkSpaceType workSpaceType)
+        {
+            return Path.Combine(_repoPath, container.UniqueInstanceName(workSpaceType));
         }
 
         #region Service On Creating

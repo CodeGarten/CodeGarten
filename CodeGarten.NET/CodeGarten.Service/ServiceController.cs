@@ -5,7 +5,8 @@ namespace CodeGarten.Service
 {
     public class ServiceController : Controller
     {
-        protected internal Service Service { get; set; }
+        internal Service _service;
+        protected Service Service { get { return _service; } }
 
         protected override PartialViewResult PartialView(string viewName, object model)
         {

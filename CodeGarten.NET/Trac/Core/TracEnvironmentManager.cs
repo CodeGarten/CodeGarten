@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Trac.Core
@@ -19,6 +20,16 @@ namespace Trac.Core
         public bool Initialize()
         {
             return TracAdmin.InitEnv(_envName, EnvironmentPath);
+        }
+
+        public bool Initialize(IEnumerable<KeyValuePair<string, string>> services)
+        {
+            var initFlag = TracAdmin.InitEnv(_envName, EnvironmentPath);
+            
+            foreach (var service in services)
+                TracAdmin.ConfigPlugins(EnvironmentPath, service.Key, service.Value);
+
+            return initFlag;
         }
 
         public static bool Delete(String parentPath, String envName)

@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CodeGarten.Data.Access;
+using CodeGarten.Data.Model;
 using CodeGarten.Service.Interfaces;
 using CodeGarten.Service.Utils;
 using CodeGarten.Utils;
@@ -21,7 +22,7 @@ namespace CodeGarten.Service
     {
         public string Name { get; private set; }
         public ServiceModel ServiceModel { get; private set; }
-
+        
         private readonly AssemblyCatalog _assemblyCatalog;
         private readonly CompositionContainer _compositionContainer;
         private bool _isInstaled;
@@ -68,6 +69,8 @@ namespace CodeGarten.Service
         {
         }
 
+        public abstract string GetInstancePath(Container container, WorkSpaceType workSpaceType);
+
         #region ControllerFactoryMembers
 
         public ServiceController CreateController(RequestContext requestContext, string controllerName)
@@ -81,7 +84,7 @@ namespace CodeGarten.Service
 
             if (lazyController != null)
             {
-                lazyController.Value.Service =
+                lazyController.Value._service =
                     ServiceFactory.Services[(string) requestContext.RouteData.Values["service"]];
                 return lazyController.Value;
             }

@@ -1,5 +1,96 @@
-﻿@inherits System.Web.Mvc.WebViewPage
-
+﻿@using CodeGarten.Data.Model
+@using CodeGarten.Service.Utils
+@inherits System.Web.Mvc.WebViewPage<ServiceModel>
+@{
+    var user = (User)ViewBag.User;
+    var enroll = (Enroll)ViewBag.Enroll;
+    var permissions = (IEnumerable<ServicePermission>)ViewBag.Permissions;
+    string url = String.Format("http://{0}/trac/{1}", Request.Url.Host, ViewBag.InstanceName);
+}
+<link href="@Url.Content("~/Content/themes/smoothness/jquery-ui-1.8.14.custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/styling.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-1.6.2.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.14.min.js")" type="text/javascript"></script>
+<style>
+    body
+    {
+        font: 62.5% "Trebuchet MS" , sans-serif;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+    .ui-widget-content
+    {
+        text-align: center;
+    }
+    .link
+    {
+        font-size: larger;
+    }
+    .link_area
+    {
+        padding: 20px;
+    }
+    .center
+    {
+        text-align: center;
+    }
+    .ui-state-highlight
+    {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .ui-icon
+    {
+        display: inline-block;
+    }
+    .permissions
+    {
+        padding: 20px;
+    }
+    .denied
+    {
+        font-size: large;
+    }
+</style>
 <div id="main">
-    <h1>Trac Service</h1>
+    <div id="info">
+        <h1>@Model.Name</h1>
+        <h2>@Model.Description</h2>
+    </div>
+    <div id="serviceLocation" class="ui-widget">
+        <div class="ui-widget-header">
+            <h3 class="center">
+                Location</h3>
+        </div>
+        <div class="ui-widget-content">
+            <div class="link_area">
+                You can interact with this instance trac at:<br />
+                <a href="@url" class="link" >@url</a>
+                <div class="permissions">
+                    @if (enroll == null)
+                    {
+                        <div class="denied">
+                            But you don't have any permissions over it</div>
+                    }
+                    else
+                    {
+                        <div class="accepted">
+                            With the following permissions:<br />
+                            @foreach (var permission in permissions)
+                            {
+                                <span>@permission.Name </span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <a href="http://trac.edgewall.org/" target="_blank" class="button">Trac official website</a>
+        <a href="http://trac.edgewall.org/wiki/TracGuide" target="_blank" class="button">User guide</a>
+    </div>
 </div>
+<script type="text/javascript">
+    $(".button").button();
+</script>
