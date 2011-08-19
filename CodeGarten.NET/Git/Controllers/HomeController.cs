@@ -38,7 +38,9 @@ namespace Git.Controllers
                             ru => ru.Permissions).Where(p => p.ServiceName == Service.ServiceModel.Name);
             }
 
-            return PartialView(repository.Head.ObjectId != null);
+            var repo = repository.Head == null ? (bool?) null : repository.Head.ObjectId != null;
+
+            return PartialView(repo);
         }
     }
 }

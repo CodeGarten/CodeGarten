@@ -17,7 +17,7 @@ namespace CodeGarten.Web.Controllers
                 return FormValidationResponse.Error(ModelState);
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.ContainerPrototype.Create(structureId, containerPrototype.Name, parent);
 
@@ -36,7 +36,7 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.ContainerPrototype.Delete(structureId, name);
 

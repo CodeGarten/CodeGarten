@@ -7,7 +7,7 @@
 a { text-decoration: none; }
 a:hover { text-decoration: underline;}
 
-body{ font: 62.5% "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;}
+body{ font: 0.6em "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;margin: 0px;}
 		
 h1 { padding: .2em; margin: 0;}
 
@@ -45,13 +45,11 @@ h1 { padding: .2em; margin: 0;}
 {
     border-top: 1px solid #CCCCCC;
     padding-bottom: 10px;
-    margin-left: -10px;
-    margin-right: -10px;
     padding-top: 20px;
     text-align: center;
     line-height:normal;
     background-color: #F1F1F1;
-    width: inherit;
+    width: 100%;
     margin-top: 20px;
 }
 
@@ -67,10 +65,7 @@ h1 { padding: .2em; margin: 0;}
     height: 70px;
     background-color: #F1F1F1;
     margin-bottom: 20px;
-    width: inherit;
-    margin-top: -8px;
-    margin-left: -10px;
-    margin-right: -10px;
+    width: 100%;
     background-image: url('smoothness/images/TopImage.png');
     background-repeat: repeat-x;
 }
@@ -160,7 +155,7 @@ h1 { padding: .2em; margin: 0;}
 
 /* top user actions
 -----------------------------------------------------------*/
-#user_actions { float: right;padding: 10px;}
+#user_actions { float: right;padding: 10px;margin-right: 0px;}
 
 /* auth user actions
 -----------------------------------------------------------*/
@@ -250,6 +245,8 @@ h1 { padding: .2em; margin: 0;}
 #management .create_button { margin-bottom: 10px;}
 
 #container_div { min-height: 400px;}
+
+.customerror { padding: 10px;margin-bottom: 10px;width: 920px;margin-left: auto; margin-right: auto;}
 
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}

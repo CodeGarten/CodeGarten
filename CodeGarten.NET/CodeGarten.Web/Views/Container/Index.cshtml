@@ -9,7 +9,7 @@
     var ignore = true;
     var currentUrl;
 
-    window.onpopstate = function (event) {
+    window.onpopstate = function () {
         if (!ignore) {
             SwitchContainer(location.href, function () {
                 currentUrl = location.href;
@@ -29,18 +29,10 @@
             $("#container_div").mask("Loading...", 300);
             $.get(_location + "?partial=true", function (response) {
                 $("#container_div").unmask();
-                //            $("#container").fadeOut('fast', function () {
                 $("#container").html(response).show("slide", { direction: direction }, 'normal', function () {
                     if (callback) callback();
                 });
             });
         });
     };
-
-    //    $("#container").ajaxSend(function () {
-    //        $("#container_div").mask("Loading...", 200);
-    //    });
-    //    $("#container").ajaxComplete(function () {
-    //        $("#container_div").unmask();
-    //    });
 </script>

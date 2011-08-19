@@ -2,7 +2,7 @@
 @using CodeGarten.Data.Model
 @model Container
 @{
-    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
+    var dbMan = (DataBaseManager)Context.Items["DataBaseManager"];
 
     var users = dbMan.User.GetAll().Where(u => u.Enrolls.Any(e => e.ContainerId == Model.Id));
 }

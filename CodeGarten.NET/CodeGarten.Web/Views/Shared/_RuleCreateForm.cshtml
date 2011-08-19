@@ -23,22 +23,22 @@
     {
     <div id='service_permissions'>
         <ul>
-            @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+            @foreach (var service in (IEnumerable<Service>) ViewBag.Services)
             {
                 <li><a href="#@service.Name">@service.Name</a></li>
             }
         </ul>
-        @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+        @foreach (var service in (IEnumerable<Service>) ViewBag.Services)
         {
             <div id="@service.Name">
                 <ul>
                     @foreach (var permission in service.Permissions)
                     {
                         <li>
-                            @{
-                        var permissionId = service.Name + "_" + permission.Name;
-                        var permissionValue = service.Name + " " + permission.Name;
-                            }
+                            
+                            @{var permissionId = service.Name + "_" + permission.Name;
+                                var permissionValue = service.Name + " " + permission.Name;}
+                            
                             <label for="@permissionId">@permission.Name</label>
                             <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
                         </li>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
 using CodeGarten.Data.Model;
@@ -16,7 +18,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("id")]
         public JsonResult Synchronization(long id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
             var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name), rl.RoleBarrier });
@@ -44,7 +46,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("id")]
         public ActionResult Design(long id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var structure = dataBaseManager.Structure.Get(id);
 
@@ -62,7 +64,7 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.ContainerPrototype.ClearAllBindings(id);
 
@@ -89,7 +91,7 @@ namespace CodeGarten.Web.Controllers
 
         public ActionResult Index(long? id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             if (id == null)
             {
@@ -99,13 +101,14 @@ namespace CodeGarten.Web.Controllers
 
             var structure = dataBaseManager.Structure.Get(id.Value);
 
+            if(structure == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
+
             if (structure.Developing)
                 return RedirectToAction("Design", new { id });
 
             ViewBag.Instances = dataBaseManager.Container.GetInstances(id.Value).Where(c => c.Parent == null);
             ViewBag.TopInstanceName = dataBaseManager.ContainerPrototype.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
-
-            ViewBag.PreventEdit = true;
 
             return View(structure);
         }
@@ -125,7 +128,7 @@ namespace CodeGarten.Web.Controllers
 
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 var dbStructure = dataBaseManager.Structure.Create(structure.Name, structure.Description,
                                                                    structure.Public, User.Identity.Name);
@@ -142,7 +145,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("id")]
         public ActionResult Delete(long id)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var structure = dataBaseManager.Structure.Get(id);
 
@@ -157,11 +160,11 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.Structure.Delete(id);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -176,7 +179,7 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 if (!dataBaseManager.Structure.Get(id).Developing)
                     return FormValidationResponse.Ok();
@@ -202,7 +205,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("id")]
         public JsonResult AddAdministrator(long id, string userName)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var success = dataBaseManager.Structure.AddAdministrator(id, userName);
 
@@ -212,7 +215,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("id")]
         public ActionResult LeaveAdministration(long id, string userName)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             if(userName == User.Identity.Name)
                 dataBaseManager.Structure.RemoveAdministrator(id, userName);

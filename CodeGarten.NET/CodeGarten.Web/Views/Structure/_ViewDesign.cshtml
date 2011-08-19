@@ -1,8 +1,8 @@
-﻿@model CodeGarten.Data.Model.Structure
+﻿@model Structure
 @using CodeGarten.Data.Access
 @using CodeGarten.Data.Model
 @{
-    var dataBaseManager = Context.Items["DataBaseManager"] as DataBaseManager;
+    var dataBaseManager = (DataBaseManager)Context.Items["DataBaseManager"];
     var prototypes = dataBaseManager.ContainerPrototype.GetAll(Model.Id);
     var fatherPrototype = prototypes.Where(cp => cp.Parent == null).FirstOrDefault();
     var roles = dataBaseManager.Role.GetAll(Model.Id);

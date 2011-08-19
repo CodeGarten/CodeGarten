@@ -424,7 +424,7 @@ var TreeView = new (function () {
 
             for (var v in containerPrototype.Childs)
                 TreeView.AddWorkspace(WorkspaceView.GetWidget(containerPrototype.Childs[v]));
-
+            
             $(view).fadeIn();
         });
     };

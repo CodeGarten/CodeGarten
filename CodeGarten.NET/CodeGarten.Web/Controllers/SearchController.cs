@@ -18,18 +18,15 @@ namespace CodeGarten.Web.Controllers
             {
                 case "user":
                     {
-                        var results = dataBaseManager.User.Search(search);
-                        return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View(results);
+                        return User(search);
                     }
                 case "structure":
                     {
-                        var results = dataBaseManager.Structure.Search(search).Where(s => s.Public && !s.Developing);
-                        return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View(results);
+                        return Structure(search);
                     }
                 case "project":
                     {
-                        var results = dataBaseManager.Container.Search(search).Where(c => c.Prototype.Structure.Public);
-                        return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View(results);
+                        return Project(search);
                     }
                 default:
                     {
@@ -37,9 +34,37 @@ namespace CodeGarten.Web.Controllers
                         ViewBag.Structures = dataBaseManager.Structure.Search(search).Where(s => s.Public && !s.Developing);
                         ViewBag.Projects = dataBaseManager.Container.Search(search).Where(c => c.Prototype.Structure.Public);
                         ViewBag.MixedSearch = true;
+                        var ajax = Request.IsAjaxRequest();
                         return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchAllResults") : View();
                     }
             }
+        }
+
+        [NonAction]
+        public new ActionResult User(string search)
+        {
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            var results = dataBaseManager.User.Search(search);
+            return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View("Index", results);
+        }
+
+        [NonAction]
+        public ActionResult Structure(string search)
+        {
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            var results = dataBaseManager.Structure.Search(search).Where(s => s.Public && !s.Developing);
+            return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View("Index", results);
+        }
+
+        [NonAction]
+        public ActionResult Project(string search)
+        {
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            var results = dataBaseManager.Container.Search(search).Where(c => c.Prototype.Structure.Public);
+            return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View("Index", results);
         }
     }
 }

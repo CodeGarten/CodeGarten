@@ -5,8 +5,10 @@
 <div class="search_title title">
     @if (TempData["Message404_Head"] != null)
     {
-        <h1>@TempData["Message404_Head"]</h1>
-        <h3>@TempData["Message404_Body"]</h3>
+        <div class="customerror ui-widget-content ui-corner-all ui-state-highlight">
+            <h1>@TempData["Message404_Head"]</h1>
+            <h3>@TempData["Message404_Body"]</h3>
+        </div>
     }
     <div class="name">
         <img src="@Url.Content("~/Content/themes/smoothness/images/Search.png")" alt="Structures" />

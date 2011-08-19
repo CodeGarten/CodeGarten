@@ -8,35 +8,35 @@
         Service permissions</h3>
     <div id='service_permissions'>
         <ul>
-            @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+            @foreach (var service in (IEnumerable<Service>)ViewBag.Services)
             {
                 <li><a href="#@service.Name">@service.Name</a></li>
             }
         </ul>
-        @foreach (var service in ViewBag.Services as IEnumerable<Service>)
+        @foreach (var service in (IEnumerable<Service>) ViewBag.Services)
         {
             <div id="@service.Name">
                 <ul>
                     @foreach (var permission in Model.Permissions.Where(p => p.ServiceName == service.Name))
                     {
                         <li>
-                        @{
-                            var permissionId = service.Name + "_" + permission.Name;
-                            var permissionValue = service.Name + " " + permission.Name;
-                        }
-                        <label for="@permissionId">@permission.Name</label>
-                        <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" checked="checked"/>
+                        
+                            @{var permissionId = service.Name + "_" + permission.Name;
+                                var permissionValue = service.Name + " " + permission.Name;}
+                        
+                            <label for="@permissionId">@permission.Name</label>
+                            <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" checked="checked"/>
                         </li>
                     }
                     @foreach (var permission in service.Permissions.Except(Model.Permissions))
                     {
                         <li>
-                        @{
-                            var permissionId = service.Name + "_" + permission.Name;
-                            var permissionValue = service.Name + " " + permission.Name;
-                        }
-                        <label for="@permissionId">@permission.Name</label>
-                        <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
+                        
+                            @{var permissionId = service.Name + "_" + permission.Name;
+                                var permissionValue = service.Name + " " + permission.Name;}
+                        
+                            <label for="@permissionId">@permission.Name</label>
+                            <input id="@permissionId" name="permissions" type="checkbox" value="@permissionValue" />
                         </li>
                     }
                 </ul>

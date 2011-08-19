@@ -1,5 +1,5 @@
 ﻿@using CodeGarten.Data.Model
-@inherits System.Web.Mvc.WebViewPage<bool>
+@inherits System.Web.Mvc.WebViewPage<bool?>
 @{
     var user = (User)ViewBag.User;
     var enroll = (Enroll)ViewBag.Enroll;
@@ -58,46 +58,36 @@
     {
         padding-top: 10px;
     }
+    #repo_error
+    {
+        padding: 10px;
+        text-align: center;
+        margin-bottom:10px;
+    }
+    #inactive 
+    {
+        margin-bottom: 10px;
+    }
 </style>
 <div id="main">
     <div id="info">
         <h1>@ViewBag.ServiceName</h1>
         <h2>@ViewBag.ServiceDescription</h2>
     </div>
-    <div id="serviceLocation" class="ui-widget">
-        <div class="ui-widget-header">
-            <h3 class="center">
-                Location</h3>
-        </div>
-        <div class="ui-widget-content">
-            <div class="link_area">
-                You can interact with this repository at:<br />
-                <a href="@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))" class="link" target="_blank">@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))</a>
-                <div class="permissions">
-                    @if (enroll == null)
-                    {
-                        <div class="denied">
-                            But you don't have any permissions over it</div>
-                    }
-                    else
-                    {
-                        <div class="accepted">
-                            With the following permissions:<br />
-                            @foreach (var permission in permissions)
-                            {
-                                <span>@permission.Name </span>
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
     @if (enroll != null)
     {
-        if (!Model)
+        if (Model == null)
         {
-        <div id="inactive" class="ui-state-highlight ui-corner-bottom">
+        <div id="repo_error" class="ui-state-error ui-corner-all">
+            <span class="ui-icon ui-icon-alert"></span>
+            <h2>
+                This repository is not working correctly.<br />
+                Please contact the system administrator.</h2>
+        </div>
+        }
+        else if (!Model.Value)
+        {
+        <div id="inactive" class="ui-state-highlight ui-corner-all">
             <h3 class="center">
                 <span class="ui-icon ui-icon-alert"></span>Warning: This repository is not yet configured</h3>
             @if (permissions.Select(p => p.Name).Contains("rw"))
@@ -136,12 +126,41 @@
             else
             {
                 <div class="center denied">
-                    But has a reader you cannot do it
+                    But as a reader you cannot do it
                 </div>
             }
         </div>
         }
     }
+    <div id="serviceLocation" class="ui-widget">
+        <div class="ui-widget-header">
+            <h3 class="center">
+                Location</h3>
+        </div>
+        <div class="ui-widget-content">
+            <div class="link_area">
+                You can interact with this repository at:<br />
+                <a href="@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))" class="link" target="_blank">@(String.Format("http://{0}@{1}:8080/Git/{2}.git", User.Identity.Name, Request.Url.Host, ViewBag.InstanceName))</a>
+                <div class="permissions">
+                    @if (enroll == null)
+                    {
+                        <div class="denied">
+                            But you don't have any permissions over it</div>
+                    }
+                    else
+                    {
+                        <div class="accepted">
+                            With the following permissions:<br />
+                            @foreach (var permission in permissions)
+                            {
+                                <span>@permission.Name </span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="get_client" class="ui-widget">
         <div class="ui-widget-header">
             <h3 class="center">

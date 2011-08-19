@@ -4,7 +4,9 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CodeGarten.Data.Access;
@@ -78,10 +80,13 @@ namespace CodeGarten.Service
                 ).FirstOrDefault();
 
             if (lazyController != null)
+            {
                 lazyController.Value.Service =
                     ServiceFactory.Services[(string) requestContext.RouteData.Values["service"]];
+                return lazyController.Value;
+            }
 
-            return lazyController == null ? null : lazyController.Value;
+            throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
         }
 
         protected static bool ControllerMatch(String arg0, String arg1)

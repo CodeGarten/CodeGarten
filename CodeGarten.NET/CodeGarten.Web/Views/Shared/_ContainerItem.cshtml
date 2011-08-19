@@ -5,8 +5,6 @@
 }
 <div class="item">
     <div class="actions">
-        @*@Html.ActionLink(String.Format("@{0}", @Model.Prototype.Structure.Name), "Index", "Structure", new { id = Model.Prototype.StructureId }, null)
-        @Html.ActionLink(String.Format("Childs ({0})", Model.Childs.Count), "Index", "Container", null, null, "childs", new { id = Model.Id }, null)*@
         @if (owner)
         {
             @Html.ActionLink("Delete", "Delete", "Container", new { id = Model.Id, structureId = Model.Prototype.StructureId }, new { @class = "delete_button" })

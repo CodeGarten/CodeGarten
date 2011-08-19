@@ -2,7 +2,7 @@
 @using CodeGarten.Data.Model
 @model Container
 @{
-    var dbMan = Context.Items["DataBaseManager"] as DataBaseManager;
+    var dbMan = (DataBaseManager)Context.Items["DataBaseManager"];
 
     var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 

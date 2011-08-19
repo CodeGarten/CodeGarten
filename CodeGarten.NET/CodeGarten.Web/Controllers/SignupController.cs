@@ -21,7 +21,7 @@ namespace CodeGarten.Web.Controllers
 
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.User.Create(user.Name, user.Password, user.Email);
 

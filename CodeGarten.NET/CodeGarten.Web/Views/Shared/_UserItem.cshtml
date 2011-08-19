@@ -3,8 +3,6 @@
 <div class="item">
     <div class="actions">
         @Html.ActionLink("Profile", "Index", "User", new { name = Model.Name }, null)
-        @*@Html.ActionLink(String.Format("Structures ({0})",Model.Structures.Count(s => !s.Developing && s.Public)), "Index", "User", null, null, "structures", new { name = Model.Name }, null)*@
-        @*@Html.ActionLink(String.Format("Enrolls ({0})", Model.Enrolls.Count), "Index", "Profile", null, null, "enrolls", new { name = Model.Name }, null)*@
     </div>
     <h3 class="name">@Model.Name</h3>
     <div class="info">

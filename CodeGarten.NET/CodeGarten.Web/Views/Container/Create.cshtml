@@ -36,7 +36,7 @@
                 <h3>
                     Passwords (Optional)</h3>
                 @{var i = 0;}
-                @foreach (var roleTypeName in (ViewBag.Prototype as ContainerPrototype).Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
+                @foreach (var roleTypeName in ((ContainerPrototype)ViewBag.Prototype).Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct())
                 {
                     <div>
                         <input name="Passwords[@i].RoleType" value="@roleTypeName" type="hidden"/>

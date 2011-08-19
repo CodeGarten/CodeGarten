@@ -18,7 +18,7 @@ namespace CodeGarten.Web.Controllers
 
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.RoleType.Create(structureId, roleType.Name);
 
@@ -35,7 +35,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("structureId")]
         public JsonResult Delete(long structureId, string name)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             dataBaseManager.RoleType.Delete(structureId, name);
 

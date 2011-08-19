@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Net;
+using System.Web.Mvc;
 using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Model;
@@ -22,19 +23,21 @@ namespace CodeGarten.Web.Controllers
         {
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 var dbUser = dataBaseManager.User.Get(user.Name);
 
                 if (dbUser == null)
                 {
                     ModelState.AddModelError("Name", "This user does not exist.");
+                    Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return View(user);
                 }
 
                 if (!dataBaseManager.Authentication.Authenticate(user.Name, user.Password))
                 {
                     ModelState.AddModelError("Password", "Incorrect password.");
+                    Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return View(user);
                 }
 
@@ -48,6 +51,7 @@ namespace CodeGarten.Web.Controllers
             catch
             {
                 ModelState.AddModelError("", "An error occured, please try again.");
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return View();
             }
         }

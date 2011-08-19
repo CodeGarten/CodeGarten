@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.Model;
 
 namespace CodeGarten.Web.Controllers
 {
-    public class WorkSpaceController : Controller
+    [Authorize]
+    public sealed class WorkSpaceController : Controller
     {
-        //
-        // GET: /WorkSpace/structureId/containerId/wkName/workspaceTypeName
-
         public ActionResult Index(long structureId, long containerId, string workSpaceTypeName, string serviceName)
         {
 
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
             
             ViewBag.Container = dataBaseManager.Container.Get(containerId);
             ViewBag.WorkSpaceType = dataBaseManager.WorkSpaceType.Get(structureId, workSpaceTypeName);

@@ -26,7 +26,7 @@ namespace CodeGarten.Web.Controllers
 
             try
             {
-                var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+                var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
                 dataBaseManager.Rule.Create(structureId, rule.Name, permissions);
 
@@ -42,7 +42,7 @@ namespace CodeGarten.Web.Controllers
         [StructureOwner("structureId")]
         public PartialViewResult Edit(long structureId, string name)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             ViewBag.Services = dataBaseManager.Service.GetAll();
             return PartialView(dataBaseManager.Rule.Get(structureId, name));
@@ -58,18 +58,26 @@ namespace CodeGarten.Web.Controllers
                 return FormValidationResponse.Error(ModelState);
             }
 
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            try
+            {
+                var dataBaseManager = (DataBaseManager) HttpContext.Items["DataBaseManager"];
 
-            dataBaseManager.Rule.Edit(structureId, name, permissions);
+                dataBaseManager.Rule.Edit(structureId, name, permissions);
 
-            return FormValidationResponse.Ok();
+                return FormValidationResponse.Ok();
+
+            }catch
+            {
+                ModelState.AddGlobalError("An error has occured, please try again.");
+                return FormValidationResponse.Error(ModelState);
+            }
         }
 
         [HttpPost]
         [StructureOwner("structureId")]
         public JsonResult Delete(long structureId, string name)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             dataBaseManager.Rule.Delete(structureId, name);
             

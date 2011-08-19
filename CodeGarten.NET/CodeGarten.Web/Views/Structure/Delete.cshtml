@@ -14,10 +14,10 @@
         </div>
         <div class="ui-widget-content ui-state-highlight">
             <h3>@Model.Description</h3>
-            @if ((ViewBag.Instances as IQueryable<Container>).Any())
+            @if (((IQueryable<Container>)ViewBag.Instances).Any())
             {
                 <div>
-                    Has <strong>@((ViewBag.Instances as IQueryable<Container>).Count())</strong> instance(s)
+                    Has <strong>@(((IQueryable<Container>)ViewBag.Instances).Count())</strong> instance(s)
                     <span class="ui-icon ui-icon-alert" title="Unsafe to delete"></span>
                 </div>
                 safe = false;

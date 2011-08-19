@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Core;
@@ -10,10 +9,9 @@ namespace CodeGarten.Web.Controllers
     [Authorize]
     public sealed class UserController : Controller
     {
-
         public ActionResult Index(string name)
         {
-            var dataBaseManager = HttpContext.Items["DataBaseManager"] as DataBaseManager;
+            var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var user = string.IsNullOrEmpty(name)
                            ? dataBaseManager.User.Get(User.Identity.Name)
@@ -44,6 +42,9 @@ namespace CodeGarten.Web.Controllers
         [HttpPost]
         public ActionResult ChangePassword(UserView userView, string currentPassword)
         {
+            if (User.Identity.Name != userView.Name)
+                return RedirectToAction("Index", new { name = userView.Name });
+
             if(!ModelState.IsValidField("Password", userView))
                 return PartialView("_EditPasswordForm", userView);
 
