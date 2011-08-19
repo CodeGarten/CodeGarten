@@ -47,8 +47,14 @@
     }
 
     function ReloadIframe(service, url, push) {
-        history.pushState({ url: url, service: service}, '', push);
-        Refreash(service, url);
+        if(hasHistory)
+        {
+            history.pushState({ url: url, service: service}, '', push);
+            Refreash(service, url);
+        }else
+        {
+            window.location = push;
+        }
     }
 
     function OnLoadIframe() {
@@ -57,5 +63,12 @@
         $("#main_service>#main>.loading>img").remove();
     }
 
-    history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);
+    var hasHistory = true;
+    try
+    {
+        history.replaceState({ url: "@Src", service: "@ViewBag.ServiceName" }, '', location.href);
+    }catch(e)
+    {
+        hasHistory = false;
+    }
 </script>

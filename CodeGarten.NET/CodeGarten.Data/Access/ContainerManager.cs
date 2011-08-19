@@ -73,14 +73,7 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            try
-            {
-                InvokeOnCreateContainer(container);
-            }
-            catch
-            {
-                //TODO DataLogger
-            }
+            InvokeOnCreateContainer(container);
 
             return container;
         }
@@ -99,15 +92,8 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            try
-            {
-                InvokeOnCreateContainer(container);
-            }
-            catch
-            {
-                //TODO DataLogger
-            }
-
+            InvokeOnCreateContainer(container);
+            
             return container;
         }
 
@@ -122,14 +108,8 @@ namespace CodeGarten.Data.Access
 
             _dbContext.SaveChanges();
 
-            try
-            {
-                InvokeOnDeleteContainer(container, prototype);
-            }
-            catch
-            {
-                //TODO DataLogger
-            }
+            InvokeOnDeleteContainer(container, prototype);
+            
             return parent;
         }
 
@@ -169,17 +149,30 @@ namespace CodeGarten.Data.Access
         {
             var eventArgs = new ContainerEventArgs(container, container.Prototype);
 
-            var handler = _onCreateContainer;
-            if (handler != null) handler(this, eventArgs);
+            if (_onCreateContainer != null) 
+                try
+                {
+                    _onCreateContainer(this, eventArgs);    
+                }catch(Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnCreateContainer fail - {0}", e.Message));
+                }
         }
 
-        //TODO
+        
         private void InvokeOnDeleteContainer(Container container, ContainerPrototype containerPrototype)
         {
             var eventArgs = new ContainerEventArgs(container, containerPrototype);
 
-            var handler = _onDeleteContainer;
-            if (handler != null) handler(this, eventArgs);
+            if (_onDeleteContainer != null) 
+                try
+                {
+                    _onDeleteContainer(this, eventArgs);    
+                }catch(Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnDeleteContainer fail - {0}", e.Message));
+                }
+                
         }
 
         #endregion

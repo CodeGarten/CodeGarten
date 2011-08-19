@@ -282,7 +282,7 @@ namespace CodeGarten.Data.Access
             var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
 
             if (!ExisteRole(containerObj, roleTypeObj))
-                return false; // throw exception
+                return false; //TODO throw exception
 
             var pass = _dbContext.EnrollPassWords.Find(container, roleType, structure);
             if (pass != null)
@@ -293,7 +293,7 @@ namespace CodeGarten.Data.Access
             if (enroll != null)
             {
                 if (!enroll.Inherited)
-                    return false; // throw exception 
+                    return false; //TODO throw exception 
 
                 enroll.Inherited = false;
             }else
@@ -338,9 +338,17 @@ namespace CodeGarten.Data.Access
         
         private void InvokeOnCreateUser(User user)
         {
-            var e = new UserEventArgs(user);
-            //TODO try/catch
-            if (_onCreateUser != null) _onCreateUser(this, e);
+            var eventArgs = new UserEventArgs(user);
+            
+            if (_onCreateUser != null) 
+                try
+                {
+                    _onCreateUser(this, eventArgs);
+                }catch(Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnCreateUser fail - {0}", e.Message));
+                }
+                
 
             //TODO Better
             PasswordManager.CreateUser(user.Name, user.Password, PasswordManager.EncodeType.PlainText);
@@ -348,9 +356,16 @@ namespace CodeGarten.Data.Access
 
         private void InvokeOnRemoveUser(User user)
         {
-            var e = new UserEventArgs(user);
-            //TODO try/catch
-            if (_onRemoveUser != null) _onRemoveUser(this, e);
+            var eventArgs = new UserEventArgs(user);
+            
+            if (_onRemoveUser != null) 
+                try
+                {
+                    _onRemoveUser(this, eventArgs);
+                }catch(Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnRemoveUser fail - {0}", e.Message));
+                }
 
             //TODO Better
             PasswordManager.DeleteUser(user.Name);
@@ -358,14 +373,32 @@ namespace CodeGarten.Data.Access
 
         private void InvokeOnEnrollUser(Enroll enroll)
         {
-            var e = new EnrollEventArgs(enroll, enroll.Container);
-            if (_onEnrollUser != null) _onEnrollUser(this, e);
+            var eventArgs = new EnrollEventArgs(enroll, enroll.Container);
+
+            if (_onEnrollUser != null) 
+                try
+                {
+                    _onEnrollUser(this, eventArgs);
+                }catch(Exception e)
+                {
+                   DataBaseManager.Logger.Log(String.Format("InvokeOnEnrollUser fail - {0}", e.Message));
+                }
+                
         }
 
         private void InvokeOnDisenrollUser(Enroll enroll, Container container)
         {
-            var e = new EnrollEventArgs(enroll, container);
-            if (_onDisenrollUser != null) _onDisenrollUser(this, e);
+            var eventArgs = new EnrollEventArgs(enroll, container);
+
+            if (_onDisenrollUser != null) 
+                try
+                {
+                    _onDisenrollUser(this, eventArgs);    
+                }catch(Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnDisenrollUser fail - {0}", e.Message));
+                }
+                
         }
 
         #endregion

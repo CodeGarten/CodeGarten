@@ -28,7 +28,7 @@ namespace CodeGarten.Service
 
         static ServiceFactory()
         {
-            var loggerPath = Path.Combine(ServiceConfig.ServicesResourceLibLocation, "Logger.log");
+            var loggerPath = Path.Combine(ServiceConfig.ServicesResourceLibLocation, "ServiceLogger.log");
             var fileLogger = File.Exists(loggerPath) ? File.AppendText(loggerPath) : File.CreateText(loggerPath);
             ServiceLogger = new Logger(fileLogger);
             Builder = new ServiceBuilder();

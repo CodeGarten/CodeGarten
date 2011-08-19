@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.Entity;
+using System.IO;
+using CodeGarten.Utils;
 
 namespace CodeGarten.Data.Access
 {
     public sealed class DataBaseManager : IDisposable
     {
         internal readonly Context DbContext;
+        internal static Logger Logger;
+
+        static DataBaseManager()
+        {
+            var path = ConfigurationManager.AppSettings["DataLoggerPath"];
+            var loggerPath = path ?? @"C:\DataLogger.log";
+            var fileLogger = File.Exists(loggerPath) ? File.AppendText(loggerPath) : File.CreateText(loggerPath);
+            Logger = new Logger(fileLogger);
+            Logger.Start();
+        }
 
         private UserManager _user;
 

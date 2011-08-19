@@ -288,7 +288,7 @@ namespace SVN.Core
                 {
                     textWriter.WriteLine("[groups]");
                     foreach (var svnGroup in _anchorGroups)
-                        textWriter.WriteLine(svnGroup.Value.ToString());
+                        textWriter.Write(svnGroup.Value.ToString());
                 }
             else
                 File.Copy(_fileGroup, _fileOverride);
