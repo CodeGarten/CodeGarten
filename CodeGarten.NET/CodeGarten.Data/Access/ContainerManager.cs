@@ -118,6 +118,11 @@ namespace CodeGarten.Data.Access
 
             var parent = container.Parent;
 
+            foreach(var child in container.Childs.ToList())
+            {
+                Delete(child.Id);
+            }
+
             _dbContext.Containers.Remove(container);
 
             _dbContext.SaveChanges();
@@ -158,6 +163,11 @@ namespace CodeGarten.Data.Access
             return db.Containers.Find(container);
         }
 
+        internal static IQueryable<Container> GetInstances(Context db, long structureId)
+        {
+            return db.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
+        }
+
         public Container Get(long container)
         {
             return _dbContext.Containers.Find(container);
@@ -191,7 +201,7 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<Container> GetInstances(long structureId)
         {
-            return _dbContext.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
+            return GetInstances(_dbContext, structureId);
         }
     }
 }

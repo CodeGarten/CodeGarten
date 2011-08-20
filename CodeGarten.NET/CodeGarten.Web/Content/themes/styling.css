@@ -246,7 +246,7 @@ h1 { padding: .2em; margin: 0;}
 
 #container_div { min-height: 400px;}
 
-.customerror { padding: 10px;margin-bottom: 10px;width: 920px;margin-left: auto; margin-right: auto;}
+.customerror { padding: 10px;margin-bottom: 10px;width: inherit;margin-left: auto; margin-right: auto;}
 
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}

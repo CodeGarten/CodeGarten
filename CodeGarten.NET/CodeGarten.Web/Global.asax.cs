@@ -32,7 +32,7 @@ namespace CodeGarten.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("{*favicon}", new {favicon = @"(.*/)?favicon.ico(/.*)?"});
+            //routes.IgnoreRoute("{*favicon}", new {favicon = @"(.*/)?favicon.ico(/.*)?"});
 
             routes.MapRoute
                 (
@@ -69,6 +69,7 @@ namespace CodeGarten.Web
             ServiceFactory.LoadServices();
 
             Logger.Start();
+            Logger.Log("Web application started.");
         }
 
         protected void Application_End()

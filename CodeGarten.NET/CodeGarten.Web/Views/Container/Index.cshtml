@@ -20,7 +20,7 @@
             ignore = false;
     };
 
-    var SwitchContainer = function (_location, callback) {
+    var SwitchContainer = function (_location) {
         var currentContainer = Number(currentUrl.substr(currentUrl.lastIndexOf("/") + 1));
         var nextContainer = Number(_location.substr(_location.lastIndexOf("/") + 1));
 
@@ -29,9 +29,7 @@
             $("#container_div").mask("Loading...", 300);
             $.get(_location + "?partial=true", function (response) {
                 $("#container_div").unmask();
-                $("#container").html(response).show("slide", { direction: direction }, 'normal', function () {
-                    if (callback) callback();
-                });
+                $("#container").html(response).show("slide", { direction: direction }, 'normal');
             });
         });
     };

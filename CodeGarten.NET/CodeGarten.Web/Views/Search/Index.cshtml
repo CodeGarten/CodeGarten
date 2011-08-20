@@ -16,7 +16,7 @@
             Search</h2>
     </div>
     <div id="search_form">
-        @using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "Update", HttpMethod = "GET" }))
+        @using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "Update", OnBegin = "CheckHistory", HttpMethod = "GET" }))
         {
             <div class="query">
                 @Html.TextBox("search", null, new { autofocus = "autofocus", type = "search", placeholder = "Search for users, projects or structures..." })
@@ -67,6 +67,13 @@
 
     var Update = function (results) {
         $("#results").html(results);
-        history.pushState(null, $("#search").val(), "?search=" + $("#search").val() + "&type=" + $("#search_form .type label[aria-pressed=true]").attr("for"));
+    };
+
+    var CheckHistory = function () {
+        try {
+            history.pushState(null, $("#search").val(), "?search=" + $("#search").val() + "&type=" + $("#search_form .type label[aria-pressed=true]").attr("for"));
+        } catch (exception) {
+            window.location = "/Search?search=" + $("#search").val() + "&type=" + $("#search_form .type label[aria-pressed=true]").attr("for");
+        }
     };
 </script>

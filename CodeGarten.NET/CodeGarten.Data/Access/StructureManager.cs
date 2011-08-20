@@ -7,10 +7,12 @@ namespace CodeGarten.Data.Access
     public sealed class StructureManager
     {
         private readonly Context _dbContext;
+        private readonly DataBaseManager _dataBaseManager;
 
         public StructureManager(DataBaseManager db)
         {
             _dbContext = db.DbContext;
+            _dataBaseManager = db;
         }
 
         public Structure Create(string name, string description, bool @public, string administrator)
@@ -45,6 +47,9 @@ namespace CodeGarten.Data.Access
 
         public void Delete(long id)
         {
+            foreach (var instance in _dataBaseManager.Container.GetInstances(id).ToList())
+                _dataBaseManager.Container.Delete(instance.Id);
+
             _dbContext.Structures.Remove(Get(id));
             _dbContext.SaveChanges();
         }

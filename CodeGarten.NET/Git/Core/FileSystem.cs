@@ -52,10 +52,5 @@ namespace Git.Core
             repository.Config.save();
             return true;
         }
-
-        public bool HasRepository(string name)
-        {
-            return _base.GetDirectories(string.Format("{0}.git", name), SearchOption.TopDirectoryOnly).Length != 0;
-        }
     }
 }
