@@ -125,12 +125,12 @@ namespace CodeGarten.Web.Controllers
 
             if (dataBaseManager.Container.Get(containerId) == null || dataBaseManager.RoleType.Get(structureId, roleTypeName) == null)
                 throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
-
+            
             try
             {
                 dataBaseManager.User.Disenroll(User.Identity.Name, structureId, containerId, roleTypeName);
 
-                return RedirectToAction("Index", "Container", new { id = containerId });
+                return Redirect(HttpContext.Request.UrlReferrer.AbsoluteUri);
             }
             catch
             {

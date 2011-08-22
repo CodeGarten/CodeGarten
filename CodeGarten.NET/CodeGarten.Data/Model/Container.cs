@@ -37,7 +37,7 @@ namespace CodeGarten.Data.Model
         [Key]
         public long Id { get; internal set; }
 
-        [MinLength(4)]
+        [MinLength(2)]
         [MaxLength(64)]
         public string Name { get; internal set; }
 

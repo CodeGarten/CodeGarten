@@ -21,7 +21,7 @@
         <table class="ui-widget ui-widget-content">
 		    <thead>
 			    <tr class="ui-widget-header ">
-				    <th>Project</th>
+				    <th class="project">Project</th>
 				    <th>Roletype</th>
                     <th></th>
 			    </tr>
@@ -30,7 +30,7 @@
     @foreach (Enroll enroll in structureEnrolls)
     {        
                 <tr>
-				    <td><a href='@Url.Action("Index", "Container", new { id = enroll.ContainerId })' title='@enroll.Container.Description'  >@enroll.Container.Name</a>
+				    <td class="project"><strong><a href='@Url.Action("Index", "Container", new { id = enroll.ContainerId })' title='@enroll.Container.Description'  >@enroll.Container.Name</a></strong>
                     
                     </td>
 				    <td>@enroll.RoleTypeName</td>
@@ -38,7 +38,7 @@
                         {
                             <text>Iherited</text>
                         }else{
-                            <a class='buttonLeave' href='@Url.Action("Disenroll", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Leave</a>
+                            <a class='buttonLeave' href='@Url.Action("Disenroll", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Disenroll</a>
                         }
                     </td>
 			    </tr>

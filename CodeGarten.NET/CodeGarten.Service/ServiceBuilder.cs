@@ -9,12 +9,7 @@ namespace CodeGarten.Service
 {
     public class ServiceBuilder : IDisposable
     {
-        public ServiceBuilder()
-        {
-            //TODO change load services and remove registerevents form here
-            RegisterEvents();
-        }
-
+        
         public void RegisterEvents()
         {
             ContainerManager.OnCreateContainer += CreateServiceInstances;
@@ -31,41 +26,38 @@ namespace CodeGarten.Service
             UserManager.OnDisenrollUser -= DisenrollUser;
         }
 
-        private static void ParallelExecute<T>(object sender, T eventArgs, EventHandler<T> eventHandler) where T : EventArgs
+        private static void InvokeEvent<T>(object sender, T eventArgs, EventHandler<T> eventHandler) where T : EventArgs
         {
-            var tasks =
-                eventHandler.GetInvocationList().Select(
-                    d => Task.Factory.StartNew(() =>((EventHandler<T>) d)(sender, eventArgs))).ToArray();
-
-            try
-            {
-                Task.WaitAll(tasks);
-            }catch(AggregateException e)
-            {
-                ServiceFactory.ServiceLogger.Log(
-                    String.Format("Call service method fail Exception from: {0} message:{1}",
-                                                        e.InnerException.Source, e.InnerException.Message));
-            }
+            foreach (var eventDelegate in eventHandler.GetInvocationList())
+                try
+                {
+                    ((EventHandler<T>) eventDelegate)(sender, eventArgs);
+                }catch(Exception e)
+                {
+                    ServiceFactory.ServiceLogger.Log(
+                        String.Format("Call service method fail Exception from target: {0} message:{1}",
+                                                            eventDelegate.Target, e.Message));
+                }
         }
 
         public void CreateServiceInstances(object sender, ContainerEventArgs eventArgs)
         {
-            ParallelExecute(sender, eventArgs, _onCreateContainer);
+            InvokeEvent(sender, eventArgs, _onCreateContainer);
         }
 
         public void DeleteServiceInstance(object sender, ContainerEventArgs eventArgs)
         {
-            ParallelExecute(sender, eventArgs, _onDeleteContiner);
+            InvokeEvent(sender, eventArgs, _onDeleteContiner);
         }
 
         public void EnrollUser(object sender, EnrollEventArgs eventArgs)
         {
-            ParallelExecute(sender, eventArgs, _onEnrollUser);
+            InvokeEvent(sender, eventArgs, _onEnrollUser);
         }
 
         public void DisenrollUser(object sender, EnrollEventArgs eventArgs)
         {
-            ParallelExecute(sender, eventArgs, _onDisenrollUser);
+            InvokeEvent(sender, eventArgs, _onDisenrollUser);
         }
 
 

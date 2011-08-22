@@ -16,7 +16,6 @@ namespace CodeGarten.Service
 {
     public static class ServiceFactory
     {
-        //TODO develop auto refreash
         private static readonly DirectoryCatalog DirectoryCatalog;
         private static readonly CompositionContainer CompositionContainer;
 
@@ -52,6 +51,8 @@ namespace CodeGarten.Service
                 service.OnServiceCreating(Builder);
                 Services.Add(service.Name, service);
             }
+
+            Builder.RegisterEvents();
         }
 
         public static string InstancePath(string service, Container container, WorkSpaceType workSpaceType)

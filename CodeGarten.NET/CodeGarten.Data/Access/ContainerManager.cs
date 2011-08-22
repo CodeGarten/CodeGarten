@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using CodeGarten.Data.Model;
 
@@ -74,6 +74,10 @@ namespace CodeGarten.Data.Access
 
             InvokeOnCreateContainer(container);
 
+            _dbManager.User.SyncronizeEnrolls(container);
+
+            _dbManager.DbContext.SaveChanges();
+
             return container;
         }
 
@@ -91,7 +95,11 @@ namespace CodeGarten.Data.Access
             _dbManager.DbContext.SaveChanges();
 
             InvokeOnCreateContainer(container);
-            
+
+            _dbManager.User.SyncronizeEnrolls(container);
+
+            _dbManager.DbContext.SaveChanges();
+
             return container;
         }
 

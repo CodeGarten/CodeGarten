@@ -6,7 +6,7 @@ namespace CodeGarten.Web.Model
     public sealed class ContainerView
     {
         [Required(ErrorMessage = "Required")]
-        [MinLength(4, ErrorMessage = "Minimum length: 4")]
+        [MinLength(2, ErrorMessage = "Minimum length: 2")]
         [MaxLength(64, ErrorMessage = "Maximum length: 64")]
         public string Name { get; set; }
 

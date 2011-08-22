@@ -31,11 +31,11 @@ namespace CodeGarten.Data.Access
 
     public sealed class UserManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _db;
 
         public UserManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _db = db;            
         }
 
         #region Events
@@ -82,8 +82,8 @@ namespace CodeGarten.Data.Access
                 Password = AuthenticationManager.EncryptPassword(password),
                 Email = email
             };
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
+            _db.DbContext.Users.Add(user);
+            _db.DbContext.SaveChanges();
 
             InvokeOnCreateUser(user);
 
@@ -92,23 +92,31 @@ namespace CodeGarten.Data.Access
 
         public void ChangeEmail(string name, string newEmail)
         {
-            Get(_dbContext, name).Email = newEmail;
+            Get(name).Email = newEmail;
 
-            _dbContext.SaveChanges();
+            _db.DbContext.SaveChanges();
         }
 
         public void ChangePassword(string name, string newPassword)
         {
-            Get(_dbContext, name).Password = AuthenticationManager.EncryptPassword(newPassword);
+            Get(name).Password = AuthenticationManager.EncryptPassword(newPassword);
 
-            _dbContext.SaveChanges();
+            _db.DbContext.SaveChanges();
         }
 
         public void Delete(string userName)
         {
             var user = Get(userName);
-            _dbContext.Users.Remove(user);
-            _dbContext.SaveChanges();
+
+            _db.DbContext.Enrolls.Where(e => e.UserName == userName).Select(
+                e => Disenroll(userName, e.RoleType.StructureId, e.ContainerId, e.RoleTypeName));
+
+            var structures = _db.DbContext.Structures.Where(s => s.Administrators.Count == 1 && s.Administrators.Contains(user));
+            foreach (var structure in structures)
+                _db.Structure.Delete(structure.Id);
+
+            _db.DbContext.Users.Remove(user);
+            _db.DbContext.SaveChanges();
 
             InvokeOnRemoveUser(user);
         }
@@ -117,7 +125,7 @@ namespace CodeGarten.Data.Access
         {
             var barrier = (int) roleBarrier;
 
-            return _dbContext.Roles.Where(r =>
+            return _db.DbContext.Roles.Where(r =>
                                           r.ContainerPrototypeName == container.Prototype.Name &&
                                           r.RoleTypeName == roleType.Name &&
                                           r.Barrier != barrier
@@ -126,7 +134,7 @@ namespace CodeGarten.Data.Access
 
         private bool ExisteRole(Container container, RoleType roleType)
         {
-            return _dbContext.Roles.Where(r =>
+            return _db.DbContext.Roles.Where(r =>
                                           r.ContainerPrototypeName == container.Prototype.Name &&
                                           r.RoleTypeName == roleType.Name
                 ).Any();
@@ -136,7 +144,7 @@ namespace CodeGarten.Data.Access
 
         private bool EnrollInherited(User user, Container container, RoleType roleType)
         {
-            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
+            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
 
             if (enroll != null)
             {
@@ -154,7 +162,7 @@ namespace CodeGarten.Data.Access
                 InheritedCount = 1
             };
 
-            _dbContext.Enrolls.Add(enroll);
+            _db.DbContext.Enrolls.Add(enroll);
 
             InvokeOnEnrollUser(enroll);
 
@@ -195,7 +203,7 @@ namespace CodeGarten.Data.Access
 
         private bool InheritedDisenroll(User user, Container container, RoleType roleType)
         {
-            var enroll = _dbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
+            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
 
             if (enroll == null)
                 return false;
@@ -205,7 +213,7 @@ namespace CodeGarten.Data.Access
             if (enroll.InheritedCount == 0)
                 if (enroll.Inherited)
                 {
-                    _dbContext.Enrolls.Remove(enroll);
+                    _db.DbContext.Enrolls.Remove(enroll);
 
                     InvokeOnDisenrollUser(enroll, container);
                 }
@@ -244,13 +252,13 @@ namespace CodeGarten.Data.Access
 
         public bool Disenroll(string user, long structure, long container, string roleType)
         {
-            var userObj = Get(_dbContext, user);
+            var userObj = Get(user);
 
-            var containerObj = ContainerManager.Get(_dbContext, container);
+            var containerObj = _db.Container.Get(container);
 
-            var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
+            var roleTypeObj = _db.RoleType.Get( structure, roleType);
 
-            var enroll = _dbContext.Enrolls.Find(user, container, roleType, structure);
+            var enroll = _db.DbContext.Enrolls.Find(user, container, roleType, structure);
 
             if (enroll == null)
                 return false; //TODO throw exception
@@ -260,8 +268,8 @@ namespace CodeGarten.Data.Access
 
             if (enroll.InheritedCount == 0)
             {
-                _dbContext.Enrolls.Remove(enroll);
-                
+                _db.DbContext.Enrolls.Remove(enroll);
+
                 InvokeOnDisenrollUser(enroll, containerObj);
                 
             }else
@@ -270,26 +278,26 @@ namespace CodeGarten.Data.Access
             InheritedDisenrollChilds(userObj, containerObj, roleTypeObj);
             InheritedDisenrollParents(userObj, containerObj.Parent, roleTypeObj);
 
-            return _dbContext.SaveChanges() != 0;
+            return _db.DbContext.SaveChanges() != 0;
         }
 
         public bool Enroll(string user, long structure, long container, string roleType, string password = null)
         {
-            var userObj = Get(_dbContext, user);
+            var userObj = Get(user);
 
-            var containerObj = ContainerManager.Get(_dbContext, container);
+            var containerObj = _db.Container.Get(container);
 
-            var roleTypeObj = RoleTypeManager.Get(_dbContext, structure, roleType);
+            var roleTypeObj = _db.RoleType.Get(structure, roleType);
 
             if (!ExisteRole(containerObj, roleTypeObj))
                 return false; //TODO throw exception
 
-            var pass = _dbContext.EnrollPassWords.Find(container, roleType, structure);
+            var pass = _db.DbContext.EnrollPassWords.Find(container, roleType, structure);
             if (pass != null)
                 if (password == null || pass.Password != AuthenticationManager.EncryptPassword(password))
                     return false;
 
-            var enroll = _dbContext.Enrolls.Find(user, container, roleType, structure);
+            var enroll = _db.DbContext.Enrolls.Find(user, container, roleType, structure);
             if (enroll != null)
             {
                 if (!enroll.Inherited)
@@ -307,7 +315,7 @@ namespace CodeGarten.Data.Access
                                  InheritedCount = 0
                              };
 
-                _dbContext.Enrolls.Add(enroll);
+                _db.DbContext.Enrolls.Add(enroll);
 
                 InvokeOnEnrollUser(enroll);
             }
@@ -316,22 +324,47 @@ namespace CodeGarten.Data.Access
             
             InheritedEnrollParents(userObj, containerObj.Parent, roleTypeObj);
 
-            return _dbContext.SaveChanges() != 0;
+            return _db.DbContext.SaveChanges() != 0;
         }
         
-        internal static User Get(Context db, string user)
+        internal void SyncronizeEnrolls(Container container)
         {
-            return db.Users.Where((u) => u.Name == user).SingleOrDefault();
+
+            var roles = _db.DbContext.Roles.Where(r => r.ContainerPrototypeName == container.Prototype.Name && r.Barrier != (int)RoleBarrier.Top);
+            if (roles.Count() == 0)
+                return;
+
+            var currentContainer = container.Parent;
+            while(currentContainer!=null)
+            {
+                var currentContext = currentContainer;
+                var currentRoles = _db.DbContext.Roles.Where(
+                    r => r.ContainerPrototypeName == currentContext.Name && r.Barrier == (int)RoleBarrier.Top);
+
+                var rolesContext = roles = roles.Where(r => !currentRoles.Where(cr => cr.RoleTypeName == r.RoleTypeName).Any());
+                if (roles.Count() == 0)
+                    return;
+
+                var enrolls = _db.DbContext.Enrolls.Where(
+                                e =>    e.ContainerId == currentContext.Id && 
+                                        e.Inherited == false &&
+                                        rolesContext.Where(r => r.RoleTypeName == e.RoleTypeName).Any()
+                                                        );
+                foreach (var enroll in enrolls)
+                    EnrollInherited(enroll.User, container, enroll.RoleType);
+
+                currentContainer = currentContainer.Parent;
+            }
         }
 
         public User Get(string user)
         {
-            return Get(_dbContext, user);
+            return _db.DbContext.Users.Find(user);
         }
 
         public IEnumerable<IGrouping<Structure, Enroll>> GetEnrolls(string userName)
         {
-            return _dbContext.Enrolls.Where(e => e.UserName == userName).GroupBy(e => e.RoleType.Structure);
+            return _db.DbContext.Enrolls.Where(e => e.UserName == userName).GroupBy(e => e.RoleType.Structure);
         }
 
         #region InvokeEvents
@@ -405,12 +438,12 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<User> GetAll()
         {
-            return _dbContext.Users;
+            return _db.DbContext.Users;
         }
  
         public IQueryable<User> Search(string query)
         {
-            return _dbContext.Users.Where(u => u.Name.StartsWith(query.Trim()));
+            return _db.DbContext.Users.Where(u => u.Name.StartsWith(query.Trim()));
         }
     }
 }
