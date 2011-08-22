@@ -1,4 +1,4 @@
-﻿@using CodeGarten.Data.Access
+@using CodeGarten.Data.Access
 @using CodeGarten.Data.Model
 @model Container
 @{
@@ -21,9 +21,41 @@
             </div>
         }
         <div>
-            @(enrolled == null ?
-                Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" }) :
-                Html.ActionLink("Disenroll", "Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id, roleTypeName = enrolled.RoleTypeName }, new { @class = "button" }))
+            @if(enrolled == null)
+            {
+                @Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" })
+            }else{
+                <a href="javascript:ConfirmDisenroll()" class="button">Disenroll</a>
+            }
         </div>
     </div>
 </div>
+
+@if(enrolled != null)
+{
+<div id="disenrollDialogConfirm" title="Disenroll @@ @Model.Name">
+    Are you sure?
+</div>
+    
+<script type="text/javascript">
+    var url = '@Url.Action("Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id, roleTypeName = enrolled.RoleTypeName })';
+    url = url.replace(/amp;/g, "");
+    $("#disenrollDialogConfirm").dialog({
+        autoOpen: false,
+        resizable: false,
+        buttons: {
+            Yes: function () {
+                window.location = url;
+                $(this).dialog("close");
+            },
+            No: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    function ConfirmDisenroll() {
+        $("#disenrollDialogConfirm").dialog("open");
+    }
+</script>
+}

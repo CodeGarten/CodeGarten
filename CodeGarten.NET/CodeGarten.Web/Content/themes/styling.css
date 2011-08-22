@@ -213,7 +213,8 @@ h1 { padding: .2em; margin: 0;}
 /* structure_tabs
 -----------------------------------------------------------*/
 #structure_tabs .create_button { margin-top: 5px;}
-
+#structure_tabs > #all > .actions a { float: right; }
+#structure_tabs > #all > .actions { height: 35px; }
 #users_widget { margin-top: 5px;}
 #users_widget  > .ui-widget-content { padding: 10px;}
 

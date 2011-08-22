@@ -38,7 +38,7 @@
                         {
                             <text>Iherited</text>
                         }else{
-                            <a class='buttonLeave' href='@Url.Action("Disenroll", "Container", new {structureId = enroll.Container.Prototype.StructureId, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName})'>Disenroll</a>
+                            <a class='buttonLeave' href="javascript:ConfirmDisenroll('@enroll.Container.Name', '@Url.Action("Disenroll", "Container", new { structureId = structureEnrolls.Key.Id, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName })')">Disenroll</a>
                         }
                     </td>
 			    </tr>
@@ -49,6 +49,10 @@
 }
 </div>
 
+<div id="disenrollDialogConfirm" >
+    Are you sure?
+</div>
+
 <script type="text/javascript">
     $("#structureAccordion").accordion({
         autoHeight: false,
@@ -56,4 +60,26 @@
     });
 
     $(".buttonLeave").button();
+
+    $("#disenrollDialogConfirm").dialog({
+        autoOpen: false,
+        resizable: false,
+    });
+
+    function ConfirmDisenroll(container, url) {
+        var dialog = $("#disenrollDialogConfirm");
+        dialog.dialog({
+            title: "Disenroll @@ " + container,
+            buttons: {
+                Yes: function () {
+                    window.location = url.replace(/amp;/g, ""); ;
+                    $(this).dialog("close");
+                },
+                No: function () {
+                        $(this).dialog("close");
+                    }
+            }
+        });
+        dialog.dialog("open");
+    }
 </script>

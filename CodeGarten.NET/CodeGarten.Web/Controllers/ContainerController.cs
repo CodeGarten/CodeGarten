@@ -22,7 +22,6 @@ namespace CodeGarten.Web.Controllers
             if (container == null)
                 throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
 
-            //Request.IsAjaxRequest() did not work very well
             if (partial != null && partial.Value)
                 return PartialView("_Container", container);
 

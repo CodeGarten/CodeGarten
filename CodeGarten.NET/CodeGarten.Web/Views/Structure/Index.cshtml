@@ -23,16 +23,16 @@
         }
     </ul>
     <div id="all">
-        @foreach (var container in (IEnumerable<Container>) ViewBag.Instances)
-        {
-            @Html.Partial("_ContainerItem", container)
-        }
         <div class="actions">
             @if (owner)
             {
                 @Html.ActionLink("Create new", "Create", "Container", new { structureId = Model.Id, prototypeName = ViewBag.TopInstanceName as string }, new { @class = "create_button" })
             }
         </div>
+        @foreach (var container in (IEnumerable<Container>) ViewBag.Instances)
+        {
+            @Html.Partial("_ContainerItem", container)
+        }
     </div>
     <div id="design">
         @Html.Partial("_ViewDesign", Model)
