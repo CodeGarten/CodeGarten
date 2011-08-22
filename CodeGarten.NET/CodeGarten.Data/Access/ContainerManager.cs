@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
 
@@ -20,11 +19,11 @@ namespace CodeGarten.Data.Access
 
     public sealed class ContainerManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public ContainerManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         #region Events
@@ -57,7 +56,7 @@ namespace CodeGarten.Data.Access
 
             if (parent != null)
             {
-                var parentobj = _dbContext.Containers.Find(parent);
+                var parentobj = _dbManager.Container.Get(parent.Value);
 
                 container.Prototype = parentobj.Prototype.Childs.First();
                 container.Parent = parentobj;
@@ -65,13 +64,13 @@ namespace CodeGarten.Data.Access
             else
             {
                 container.Prototype =
-                    _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structure && cp.Parent == null).
-                        SingleOrDefault();
+                    _dbManager.ContainerPrototype.GetAll(structure).Where(
+                        cp => cp.StructureId == structure && cp.Parent == null).SingleOrDefault();
             }
 
-            _dbContext.Containers.Add(container);
+            _dbManager.DbContext.Containers.Add(container);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             try
             {
@@ -89,15 +88,14 @@ namespace CodeGarten.Data.Access
         {
             var container = new Container
                                 {
-                                    Prototype =
-                                        ContainerPrototypeManager.Get(_dbContext, structure, prototypeName),
+                                    Prototype = _dbManager.ContainerPrototype.Get(structure, prototypeName),
                                     Description = description,
                                     Name = containerName,
-                                    Parent = parent == null ? null : Get(_dbContext, parent.Value)
+                                    Parent = parent == null ? null : Get(parent.Value)
                                 };
-            _dbContext.Containers.Add(container);
+            _dbManager.DbContext.Containers.Add(container);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             try
             {
@@ -113,7 +111,7 @@ namespace CodeGarten.Data.Access
 
         public Container Delete(long containerId)
         {
-            var container = Get(_dbContext, containerId);
+            var container = Get(containerId);
             var prototype = container.Prototype;
 
             var parent = container.Parent;
@@ -123,9 +121,9 @@ namespace CodeGarten.Data.Access
                 Delete(child.Id);
             }
 
-            _dbContext.Containers.Remove(container);
+            _dbManager.DbContext.Containers.Remove(container);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             try
             {
@@ -148,29 +146,19 @@ namespace CodeGarten.Data.Access
                                          Password = AuthenticationManager.EncryptPassword(password)
                                      };
 
-            _dbContext.EnrollPassWords.Add(enrollPassword);
+            _dbManager.DbContext.EnrollPassWords.Add(enrollPassword);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
         }
 
         public bool HasPassword(long structure, long container, string roletype)
         {
-            return _dbContext.EnrollPassWords.Find(container, roletype, structure) != null;
-        }
-
-        internal static Container Get(Context db, long container)
-        {
-            return db.Containers.Find(container);
-        }
-
-        internal static IQueryable<Container> GetInstances(Context db, long structureId)
-        {
-            return db.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
+            return _dbManager.DbContext.EnrollPassWords.Find(container, roletype, structure) != null;
         }
 
         public Container Get(long container)
         {
-            return _dbContext.Containers.Find(container);
+            return _dbManager.DbContext.Containers.Find(container);
         }
 
         #region InvokeEvents
@@ -196,12 +184,12 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<Container> Search(string query)
         {
-            return _dbContext.Containers.Where(c => c.Name.StartsWith(query.Trim()));
+            return _dbManager.DbContext.Containers.Where(c => c.Name.StartsWith(query.Trim()));
         }
 
         public IQueryable<Container> GetInstances(long structureId)
         {
-            return GetInstances(_dbContext, structureId);
+            return _dbManager.DbContext.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
         }
     }
 }

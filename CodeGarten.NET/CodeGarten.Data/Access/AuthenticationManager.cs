@@ -7,16 +7,16 @@ namespace CodeGarten.Data.Access
 {
     public sealed class AuthenticationManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public AuthenticationManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public void CreateAuthenticationDataBase(IAuthentication authenticaton)
         {
-            foreach (var user in _dbContext.Users)
+            foreach (var user in _dbManager.User.GetAll())
                 authenticaton.CreateUser(user.Name, user.Password);
         }
 
@@ -29,7 +29,7 @@ namespace CodeGarten.Data.Access
 
         public bool Authenticate(string user, string passwordPlainText)
         {
-            var userObj = _dbContext.Users.Find(user);
+            var userObj = _dbManager.User.Get(user);
             if (user == null) throw new Exception();
 
             return userObj.Password == EncryptPassword(passwordPlainText);

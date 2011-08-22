@@ -6,11 +6,11 @@ namespace CodeGarten.Data.Access
 {
     public sealed class RuleManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public RuleManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public Rule Create(long structureId, string name, IEnumerable<string> permissions)
@@ -21,11 +21,11 @@ namespace CodeGarten.Data.Access
             {
                 var serviceName = permission[0];
                 var permissionName = permission[1];
-                rule.Permissions.Add(_dbContext.ServicePermissions.Find(permissionName, serviceName));
+                rule.Permissions.Add(_dbManager.DbContext.ServicePermissions.Find(permissionName, serviceName));
             }
 
-            _dbContext.Rules.Add(rule);
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.Rules.Add(rule);
+            _dbManager.DbContext.SaveChanges();
 
             return rule;
         }
@@ -35,22 +35,17 @@ namespace CodeGarten.Data.Access
             var rule = new Rule { Name = name, StructureId = structureId };
 
             foreach (var permission in permissions)
-                rule.Permissions.Add(_dbContext.ServicePermissions.Find(permission.Value, permission.Key));
-            
-            _dbContext.Rules.Add(rule);
-            _dbContext.SaveChanges();
+                rule.Permissions.Add(_dbManager.DbContext.ServicePermissions.Find(permission.Value, permission.Key));
+
+            _dbManager.DbContext.Rules.Add(rule);
+            _dbManager.DbContext.SaveChanges();
 
             return rule;
         }
 
-        internal static Rule Get(Context db, long structureId, string name)
-        {
-            return db.Rules.Find(name, structureId);
-        }
-
         public Rule Get(long structureId, string name)
         {
-            return Get(_dbContext, structureId, name);
+            return _dbManager.DbContext.Rules.Find(name, structureId);
         }
 
         public void Edit(long structureId, string name, IEnumerable<string> permissions)
@@ -64,21 +59,21 @@ namespace CodeGarten.Data.Access
                 {
                     var serviceName = permission[0];
                     var permissionName = permission[1];
-                    rule.Permissions.Add(_dbContext.ServicePermissions.Find(permissionName, serviceName));
+                    rule.Permissions.Add(_dbManager.DbContext.ServicePermissions.Find(permissionName, serviceName));
                 }
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
         }
 
         public void Delete(long structureId, string name)
         {
-            _dbContext.Rules.Remove(Get(structureId, name));
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.Rules.Remove(Get(structureId, name));
+            _dbManager.DbContext.SaveChanges();
         }
 
         public IQueryable<Rule> GetAll(long structureId)
         {
-            return _dbContext.Rules.Where(r => r.StructureId == structureId);
+            return _dbManager.DbContext.Rules.Where(r => r.StructureId == structureId);
         }
     }
 }

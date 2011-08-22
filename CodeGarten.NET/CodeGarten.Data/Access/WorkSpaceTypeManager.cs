@@ -6,11 +6,11 @@ namespace CodeGarten.Data.Access
 {
     public sealed class WorkSpaceTypeManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public WorkSpaceTypeManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public WorkSpaceType Create(long structureId, string name, IEnumerable<string> services)
@@ -18,17 +18,17 @@ namespace CodeGarten.Data.Access
             var workspace = new WorkSpaceType { StructureId = structureId, Name = name };
 
             foreach (var service in services)
-                workspace.Services.Add(_dbContext.Services.Find(service));
+                workspace.Services.Add(_dbManager.Service.Get(service));
 
-            _dbContext.WorkSpaceTypes.Add(workspace);
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.WorkSpaceTypes.Add(workspace);
+            _dbManager.DbContext.SaveChanges();
 
             return workspace;
         }
 
         public WorkSpaceType Get(long structureId, string name)
         {
-            return _dbContext.WorkSpaceTypes.Find(name, structureId);
+            return _dbManager.DbContext.WorkSpaceTypes.Find(name, structureId);
         }
 
         public WorkSpaceType Edit(long structureId, string name, IEnumerable<string> services)
@@ -38,22 +38,22 @@ namespace CodeGarten.Data.Access
             workspace.Services.Clear();
 
             foreach (var service in services)
-                workspace.Services.Add(_dbContext.Services.Find(service));
+                workspace.Services.Add(_dbManager.Service.Get(service));
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             return workspace;
         }
 
         public void Delete(long structureId, string name)
         {
-            _dbContext.WorkSpaceTypes.Remove(Get(structureId, name));
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.WorkSpaceTypes.Remove(Get(structureId, name));
+            _dbManager.DbContext.SaveChanges();
         }
 
         public IQueryable<WorkSpaceType> GetAll(long structureId)
         {
-            return _dbContext.WorkSpaceTypes.Where(wst => wst.StructureId == structureId);
+            return _dbManager.DbContext.WorkSpaceTypes.Where(wst => wst.StructureId == structureId);
         }
     }
 }

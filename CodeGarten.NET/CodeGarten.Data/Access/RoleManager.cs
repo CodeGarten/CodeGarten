@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeGarten.Data.Model;
 
@@ -9,11 +7,11 @@ namespace CodeGarten.Data.Access
 
     public sealed class RoleManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public RoleManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public Role Create(long structure, string containerPrototype, string workspaceType, string roleType,
@@ -29,18 +27,18 @@ namespace CodeGarten.Data.Access
                            };
 
             if (rules != null)
-                foreach(var r in rules.Select(e => RuleManager.Get(_dbContext, structure, e)))
+                foreach(var r in rules.Select(e => _dbManager.Rule.Get(structure, e)))
                     role.Rules.Add(r);
 
-            _dbContext.Roles.Add(role);
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.Roles.Add(role);
+            _dbManager.DbContext.SaveChanges();
 
             return role;
         }
 
         public Role Get(long structure, string containerPrototype, string workspaceType, string roleType)
         {
-            return _dbContext.Roles.Find(
+            return _dbManager.DbContext.Roles.Find(
                                             containerPrototype,
                                             structure,
                                             roleType,
@@ -52,21 +50,21 @@ namespace CodeGarten.Data.Access
 
         public void AddRule(long structure, string containerPrototype, string workspaceType, string roleType, string rule)
         {
-            Get(structure, containerPrototype, workspaceType, roleType).Rules.Add(RuleManager.Get(_dbContext, structure, rule));
+            Get(structure, containerPrototype, workspaceType, roleType).Rules.Add(_dbManager.Rule.Get(structure, rule));
         }
 
         public IEnumerable<Role> GetAll(long structureId)
         {
-            return _dbContext.Roles.Where(rl => rl.StructureId == structureId);
+            return _dbManager.DbContext.Roles.Where(rl => rl.StructureId == structureId);
         }
 
         public void Delete(long structureId, string containerPrototype, string workspaceType, string roleType)
         {
             var role = Get(structureId, containerPrototype, workspaceType, roleType);
 
-            _dbContext.Roles.Remove(role);
+            _dbManager.DbContext.Roles.Remove(role);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
         }
     }
 }

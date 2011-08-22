@@ -5,26 +5,21 @@ namespace CodeGarten.Data.Access
 {
     public sealed class ContainerPrototypeManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public ContainerPrototypeManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
-        }
-
-        internal static ContainerPrototype Get(Context db, long structureId, string name)
-        {
-            return db.ContainerPrototypes.Find(name, structureId);
+            _dbManager = db;
         }
 
         public IQueryable<ContainerPrototype> GetAll(long structureId)
         {
-            return _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId);
+            return _dbManager.DbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId);
         }
 
         public ContainerPrototype Get(long structureId, string name)
         {
-            return Get(_dbContext, structureId, name);
+            return _dbManager.DbContext.ContainerPrototypes.Find(name, structureId);
         }
 
         public ContainerPrototype Create(long structureId, string name, string parent)
@@ -38,17 +33,17 @@ namespace CodeGarten.Data.Access
             if (parentCp != null)
                 parentCp.Childs.Add(cp);
             else
-                _dbContext.ContainerPrototypes.Add(cp);
+                _dbManager.DbContext.ContainerPrototypes.Add(cp);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             return cp;
         }
 
         public void Delete(long structureId, string name)
         {
-            _dbContext.ContainerPrototypes.Remove(Get(structureId, name));
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.ContainerPrototypes.Remove(Get(structureId, name));
+            _dbManager.DbContext.SaveChanges();
         }
 
         public ContainerPrototype AddWorkSpaceType(long structureId, string name, string workSpaceName)
@@ -57,28 +52,28 @@ namespace CodeGarten.Data.Access
 
             cp.Bindings.Add(new Binding{WorkSpaceTypeName = workSpaceName});
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             return cp;
         }
 
         public void ClearAllBindings(long structureId)
         {
-            foreach(var cp in _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId))
+            foreach (var cp in _dbManager.DbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId))
                 cp.Bindings.Clear();
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
         }
 
         public ContainerPrototype Bind(long structureId, string containerPrototypeName, string workSpaceTypeName)
         {
             var cp = Get(structureId, containerPrototypeName);
-            var binding = _dbContext.Bindings.Find(structureId, containerPrototypeName, workSpaceTypeName) ??
+            var binding = _dbManager.DbContext.Bindings.Find(structureId, containerPrototypeName, workSpaceTypeName) ??
                 new Binding { WorkSpaceTypeName = workSpaceTypeName };
 
             cp.Bindings.Add(binding);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             return cp;
         }
