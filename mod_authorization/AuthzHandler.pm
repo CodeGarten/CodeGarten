@@ -13,33 +13,38 @@ package CodeGarten::AuthzHandler;
   
   use Switch;
   
-  use Apache2::Const -compile => qw(OK HTTP_UNAUTHORIZED);
+  use Apache2::Const -compile => qw(OK HTTP_FORBIDDEN);
   
   sub handler {
       my $r = shift;
-	  
 	  return user_is_authorized($r->user, $r->unparsed_uri, $r->dir_config('GitPermissions'))?
-	  Apache2::Const::OK : Apache2::Const::HTTP_UNAUTHORIZED;
+	  Apache2::Const::OK : Apache2::Const::HTTP_FORBIDDEN;
   }
   
   sub user_is_authorized
 	{
 		my ($user, $uri, $git_permissions) = @_;
 		
-		my $auth_xmlFile = XML::XPath->new(filename => $git_permissions); 
 		my ($repo, $perm) = repo_perm_type ($uri);
+
+		if(defined $repo){
+		my $auth_xmlFile = XML::XPath->new(filename => $git_permissions . '\\' . $repo . ".xml"); 
+
 		return is_user_autho ($auth_xmlFile, $user, $perm, $repo );
+		} else {
+			return 0;
+		}
 	}
    
 	sub repo_perm_type
 	{
 		my $url = shift;
-		my $regex = '.*/git/(.*).git/info/refs\?service=(.*)';
+		my $regex = '.*/Git/(.*).git/info/refs\?service=(.*)';
 		my ($repo, $action) = $url =~ $regex;
 		
 		switch($action) {
-          case (/git-upload-pack/) {return ($repo,'r');}
-          case (/git-receive-pack/) {return ($repo,'rw');}
+          case 'git-upload-pack' {return ($repo,'r');}
+          case 'git-receive-pack' {return ($repo,'rw');}
 		}
 	}
 	
@@ -49,9 +54,8 @@ package CodeGarten::AuthzHandler;
 		
 		$perm= $perm.'\' or @perm=\'rw' if (length($perm)==1);
 			
-		my $xpath_group = 'autho_file/group[@ID=//repo[@location=\''.$locationRepo.'\']/group[@perm=\''.$perm.'\']/text()]/user[.=\''.$user.'\' or .=\'*\']';
-		my $xpath_user = 'autho_file/repo[@location=\''.$locationRepo.'\']/user[@perm=\''.$perm.'\' and (.=\'*\' or .=\''.$user.'\')]';
+		my $xpath_user = 'repo[@location=\''.$locationRepo.'\']/group[@perm=\''.$perm.'\']/user[@name=\''.$user.'\']';
 		
-		return $xml->exists($xpath_user) || $xml->exists($xpath_group);
+		return $xml->exists($xpath_user);
 	}
   1;

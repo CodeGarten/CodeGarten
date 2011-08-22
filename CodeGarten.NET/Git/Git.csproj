@@ -53,8 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Core\Authorization.cs" />
     <Compile Include="Core\FileSystem.cs" />
+    <Compile Include="Core\Authorization.cs" />
     <Compile Include="GitService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

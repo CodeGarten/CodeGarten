@@ -1,6 +1,7 @@
-﻿using System;
+﻿
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace Git.Core
@@ -15,205 +16,142 @@ namespace Git.Core
     {
         private readonly string _filePath;
 
-        private XElement _base;
+        private const string RepositoryType = "repo";
+        private const string GroupType = "group";
+        private const string UserType = "user";
+        private const int Window = 500;
+
+        #region PROPERTIES
+        private FileStream this[string repositoryName]
+        {
+            get
+            {
+                var repositoryPath = Path(_filePath, repositoryName);
+                return new FileStream(repositoryPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            }
+        }
+        #endregion
 
         public Authorization(string filePath)
         {
             _filePath = filePath;
-            Load();
         }
 
-        #region Repository Actions
-
-        public bool CreateRepository(string name)
+        public void CreateRepository(string name)
         {
-            if (GetRepository(name) != null)
-                return false;
+            Repository(name).Save(this[name]);
+        }
 
-            var repository = new XElement("repo");
+        public void DeleteRepository(string name)
+        {
+            File.Delete(Path(_filePath, name));
+        }
+
+        public void AddUser(string userName, string repositoryName, Privileges permission)
+        {
+            try
+            {
+                using (var stream = this[repositoryName])
+                {
+                    if(stream.Length == 0)
+                    {
+                        stream.Dispose();
+                        File.Delete(Path(_filePath, repositoryName));
+                        return;
+                    }
+                    var repository = XElement.Load(stream);
+
+                    var group =
+                        repository.Elements(GroupType).First(
+                            g => g.Attribute("perm").Value == permission.ToString());
+
+                    if (group.Elements().Any(u => u.Attribute("name").Value == userName))
+                        return;
+                    
+                    group.Add(User(userName));
+
+                    stream.SetLength(0);
+                    repository.Save(stream);
+                    stream.Flush();
+                }
+            }
+            catch (IOException)
+            {
+                Thread.Sleep(Window);
+                AddUser(userName, repositoryName, permission);
+            }
+        }
+
+        public void RemoveUser(string userName, string repositoryName)
+        {
+            try
+            {
+                using (var stream = this[repositoryName])
+                {
+                    if (stream.Length == 0)
+                    {
+                        stream.Dispose();
+                        File.Delete(Path(_filePath, repositoryName));
+                        return;
+                    }
+
+                    var repository = XElement.Load(stream);
+
+                    var users = repository.Elements(GroupType).Elements(UserType).Where(u => u.Attribute("name").Value == userName);
+
+                    var any = false;
+
+                    foreach (var user in users)
+                    {
+                        user.Remove();
+                        any = true;
+                    }
+
+                    if (!any)
+                        return;
+
+                    stream.SetLength(0);
+                    repository.Save(stream);
+                    stream.Flush();
+                }
+            }
+            catch (IOException)
+            {
+                Thread.Sleep(Window);
+                RemoveUser(userName, repositoryName);
+            }
+        }
+
+        #region HELPERS
+
+        private static XElement Repository(string name)
+        {
+            var repository = new XElement(RepositoryType);
             repository.SetAttributeValue("location", name);
 
-            _base.Add(repository);
+            repository.Add(Group(Privileges.r));
+            repository.Add(Group(Privileges.rw));
 
-            Save();
-            return true;
+            return repository;
         }
 
-        public bool DeleteRepository(string name)
+        private static XElement Group(Privileges privileges)
         {
-            var repository = GetRepository(name);
-            if (repository == null)
-                return false;
-
-            repository.Remove();
-
-            Save();
-            return true;
+            var group = new XElement(GroupType);
+            group.SetAttributeValue("perm", privileges.ToString());
+            return group;
         }
 
-        public bool AddGroupToRepository(string repositoryName, string groupName, string privilege)
+        private static XElement User(string name)
         {
-            var repository = GetRepository(repositoryName);
-
-            if (repository == null)
-                return false;
-
-            var group = GetGroup(groupName);
-
-            if (group == null)
-                return false;
-
-            repository.Add(CreatePermissionGroup(groupName, privilege));
-
-            Save();
-            return true;
+            var user = new XElement(UserType);
+            user.SetAttributeValue("name", name);
+            return user;
         }
 
-        public bool RemoveGroupFromRepository(string repositoryName, string groupName, Privileges privilege)
+        private static string Path(string path, string repositoryName)
         {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteRepositoryReferencedGroups(string repositoryName)
-        {
-            var repository = GetRepository(repositoryName);
-
-            if (repository == null) return;
-            foreach (var groupName in repository.Elements("group").Select(g => g.Value))
-            {
-                DeleteGroup(groupName);
-            }
-        }
-
-        #endregion
-
-        #region Group Actions
-
-        public bool CreateGroup(string name)
-        {
-            if (GetGroup(name) != null)
-                return false;
-
-            var group = new XElement("group");
-            group.SetAttributeValue("ID", name);
-
-            _base.Add(group);
-
-            Save();
-            return true;
-        }
-
-        public bool DeleteGroup(string name)
-        {
-            var group = GetGroup(name);
-            if (group == null)
-                return false;
-
-            group.Remove();
-
-            foreach (
-                var groupInstance in
-                    _base.Elements("repo").SelectMany(repo => repo.Elements("group").Where(g => g.Value == name)))
-            {
-                groupInstance.Remove();
-            }
-
-            Save();
-            return true;
-        }
-
-        public bool AddUserToGroup(string groupName, string userName)
-        {
-            var group = GetGroup(groupName);
-
-            if (group == null)
-                return false;
-
-            if (group.Elements("user").SingleOrDefault(u => u.Value == userName) != null)
-                return false;
-
-            group.Add(CreateUserElement(userName));
-
-            Save();
-            return true;
-        }
-
-        public bool RemoveUserFromGroup(string groupName, string userName)
-        {
-            var group = GetGroup(groupName);
-
-            if (group == null)
-                return false;
-
-            group.Elements("user").SingleOrDefault(u => u.Value == userName).Remove();
-
-            Save();
-            return true;
-        }
-
-        #endregion
-
-        #region IO
-
-        private void Load()
-        {
-            if (File.Exists(_filePath))
-                _base = XElement.Load(_filePath);
-            else
-            {
-                _base = CreateMainStructure();
-                Save();
-            }
-        }
-
-        private void Save()
-        {
-            _base.Save(_filePath);
-        }
-
-        #endregion
-
-        #region Helpers
-
-        private XElement GetRepository(string name)
-        {
-            return _base.Elements("repo").SingleOrDefault(e => e.Attribute("location").Value == name);
-        }
-
-        private XElement GetGroup(string name)
-        {
-            return _base.Elements("group").SingleOrDefault(e => e.Attribute("ID").Value == name);
-        }
-
-
-        private static XElement CreateMainStructure()
-        {
-            return new XElement("autho_file");
-        }
-
-        private static XElement CreatePermissionGroup(string group, string permission)
-        {
-            return CreatePermissionElement("group", permission, group);
-        }
-
-        private static XElement CreatePermissionUser(string user, string permission)
-        {
-            return CreatePermissionElement("user", permission, user);
-        }
-
-        private static XElement CreatePermissionElement(string type, string permission, string entity)
-        {
-            var elem = new XElement(type);
-            elem.SetAttributeValue("perm", permission);
-            elem.SetValue(entity);
-            return elem;
-        }
-
-        private static XElement CreateUserElement(string name)
-        {
-            var elem = new XElement("user");
-            elem.SetValue(name);
-            return elem;
+            return System.IO.Path.Combine(path, string.Format("{0}.xml", repositoryName));
         }
 
         #endregion

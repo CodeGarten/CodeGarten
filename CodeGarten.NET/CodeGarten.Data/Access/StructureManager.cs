@@ -6,11 +6,11 @@ namespace CodeGarten.Data.Access
 {
     public sealed class StructureManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public StructureManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public Structure Create(string name, string description, bool @public, string administrator)
@@ -24,9 +24,9 @@ namespace CodeGarten.Data.Access
                                     CreatedOn = DateTime.Now
                                 };
 
-            structure.Administrators.Add(_dbContext.Users.Find(administrator));
-            _dbContext.Structures.Add(structure);
-            _dbContext.SaveChanges();
+            structure.Administrators.Add(_dbManager.User.Get(administrator));
+            _dbManager.DbContext.Structures.Add(structure);
+            _dbManager.DbContext.SaveChanges();
 
             return structure;
         }
@@ -34,25 +34,28 @@ namespace CodeGarten.Data.Access
         public IQueryable<Structure> GetAll(string username = null)
         {
             return username == null
-                       ? _dbContext.Structures
-                       : _dbContext.Structures.Where(s => s.Administrators.Select(a => a.Name).Contains(username));
+                       ? _dbManager.DbContext.Structures
+                       : _dbManager.DbContext.Structures.Where(s => s.Administrators.Select(a => a.Name).Contains(username));
         }
 
         public Structure Get(long id)
         {
-            return _dbContext.Structures.Find(id);
+            return _dbManager.DbContext.Structures.Find(id);
         }
 
         public void Delete(long id)
         {
-            _dbContext.Structures.Remove(Get(id));
-            _dbContext.SaveChanges();
+            foreach (var instance in _dbManager.Container.GetInstances(id).ToList())
+                _dbManager.Container.Delete(instance.Id);
+
+            _dbManager.DbContext.Structures.Remove(Get(id));
+            _dbManager.DbContext.SaveChanges();
         }
 
         public void Publish(long id)
         {
             var structure = Get(id);
-            var cps = _dbContext.ContainerPrototypes.Where(cp => cp.StructureId == id);
+            var cps = _dbManager.ContainerPrototype.GetAll(id);
 
 
             if (cps.Count() == 0)
@@ -81,12 +84,12 @@ namespace CodeGarten.Data.Access
             }
 
             structure.Developing = false;
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
         }
 
         public IQueryable<Structure> Search(string query)
         {
-            return _dbContext.Structures.Where(s => s.Name.StartsWith(query.Trim()));
+            return _dbManager.DbContext.Structures.Where(s => s.Name.StartsWith(query.Trim()));
         }
 
         public bool AddAdministrator(long id, string userName)
@@ -95,8 +98,8 @@ namespace CodeGarten.Data.Access
             if (structure.Administrators.Select(a => a.Name).Contains(userName))
                 return false;
 
-            structure.Administrators.Add(UserManager.Get(_dbContext, userName));
-            _dbContext.SaveChanges();
+            structure.Administrators.Add(_dbManager.User.Get(userName));
+            _dbManager.DbContext.SaveChanges();
             return true;
         }
 
@@ -106,8 +109,8 @@ namespace CodeGarten.Data.Access
             if (!structure.Administrators.Select(a => a.Name).Contains(userName))
                 return false;
 
-            structure.Administrators.Remove(UserManager.Get(_dbContext, userName));
-            _dbContext.SaveChanges();
+            structure.Administrators.Remove(_dbManager.User.Get(userName));
+            _dbManager.DbContext.SaveChanges();
             return true;
         }
     }

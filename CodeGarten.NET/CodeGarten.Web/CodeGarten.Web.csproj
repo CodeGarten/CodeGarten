@@ -110,6 +110,7 @@
     <Content Include="Content\scripts\Workspace.js" />
     <Content Include="Content\themes\jquery.loadmask.css" />
     <Content Include="Content\themes\smoothness\images\CodeGarten.png" />
+    <Content Include="Content\themes\smoothness\images\favicon.ico" />
     <Content Include="Content\themes\smoothness\images\Help.png" />
     <Content Include="Content\themes\smoothness\images\loading.gif" />
     <Content Include="Content\themes\smoothness\images\Projects.png" />
@@ -314,7 +315,7 @@
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Error\Server.cshtml" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Structure\_ViewDesign.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -5,42 +5,37 @@ namespace CodeGarten.Data.Access
 {
     public sealed class RoleTypeManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public RoleTypeManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public RoleType Create(long structureId, string name)
         {
             var rt = new RoleType {StructureId = structureId, Name = name};
 
-            _dbContext.RoleTypes.Add(rt);
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.RoleTypes.Add(rt);
+            _dbManager.DbContext.SaveChanges();
 
             return rt;
         }
 
         public void Delete(long structureId, string name)
         {
-            _dbContext.RoleTypes.Remove(Get(structureId, name));
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.RoleTypes.Remove(Get(structureId, name));
+            _dbManager.DbContext.SaveChanges();
         }
 
         public IQueryable<RoleType> GetAll(long structureId)
         {
-            return _dbContext.RoleTypes.Where(rt => rt.StructureId == structureId);
+            return _dbManager.DbContext.RoleTypes.Where(rt => rt.StructureId == structureId);
         }
 
         public RoleType Get(long structureId, string name)
         {
-            return Get(_dbContext, structureId, name);
-        }
-
-        internal static RoleType Get(Context context, long structureId, string roleType)
-        {
-            return context.RoleTypes.Find(roleType, structureId);
+            return _dbManager.DbContext.RoleTypes.Find(name, structureId);
         }
     }
 }

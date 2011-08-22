@@ -49,10 +49,14 @@
     $(".slide").click(function () {
         currentUrl = location.href;
         var nextUrl = this.href;
-        SwitchContainer(nextUrl, function () {
+
+        try {
             history.pushState(null, $("#container #structure_path .name").first().text(), nextUrl);
             $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Prototype.Structure.Name");
-        });
+            SwitchContainer(nextUrl);
+        } catch (exception) {
+            return true;
+        }
         return false;
     });
 </script>

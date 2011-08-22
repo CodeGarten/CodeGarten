@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<repo location="CONTAINER_IDENTIFICATION">
+		<group perm="r"/>
+		<group perm="rw">
+			<user name="USER_1"/>
+		</group>
+	</repo>	

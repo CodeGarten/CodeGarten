@@ -8,11 +8,11 @@ namespace CodeGarten.Data.Access
 {
     public sealed class ServiceManager
     {
-        private readonly Context _dbContext;
+        private readonly DataBaseManager _dbManager;
 
         public ServiceManager(DataBaseManager db)
         {
-            _dbContext = db.DbContext;
+            _dbManager = db;
         }
 
         public Service Create(string name, string description)
@@ -23,9 +23,9 @@ namespace CodeGarten.Data.Access
                 Description = description
             };
 
-            _dbContext.Services.Add(service);
+            _dbManager.DbContext.Services.Add(service);
 
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.SaveChanges();
 
             return service;
         }
@@ -46,46 +46,31 @@ namespace CodeGarten.Data.Access
                                             });
 
 
-            _dbContext.Services.Add(service);
-            _dbContext.SaveChanges();
+            _dbManager.DbContext.Services.Add(service);
+            _dbManager.DbContext.SaveChanges();
 
             return service;
         }
 
-        internal static Service Get(Context db, string service)
-        {
-            return db.Services.Find(service);
-        }
-
         public Service Get(string service)
         {
-            return Get(_dbContext, service);
-        }
-
-        internal static IEnumerable<ServicePermission> GetPermissions(Context db, string service)
-        {
-            return Get(db, service).Permissions;
+            return _dbManager.DbContext.Services.Find(service);
         }
 
         public IEnumerable<String> GetPermissions(string service)
         {
-            return GetPermissions(_dbContext, service).Select(servicePermission => servicePermission.Name);
-        }
-
-        internal static ServicePermission GetPermission(Context db, string service, string permission)
-        {
-            return db.ServicePermissions.Find(permission, service);
+            return Get(service).Permissions.Select(servicePermission => servicePermission.Name);
         }
 
         public string GetPermission(string service, string permission)
         {
-            var servicePermission = GetPermission(_dbContext, service, permission);
+            var servicePermission = _dbManager.DbContext.ServicePermissions.Find(permission, service);
             return servicePermission == null ? null : servicePermission.Name;
         }
 
         public bool AddPermission(string service, string permission)
         {
-            var serviceObj = Get(_dbContext, service);
+            var serviceObj = Get(service);
 
             if (serviceObj.Permissions.Where(p => p.Name == permission).Count() != 0) return false;
 
@@ -96,14 +81,14 @@ namespace CodeGarten.Data.Access
 
             serviceObj.Permissions.Add(servicePermissionObj);
 
-            _dbContext.Entry(serviceObj).State = EntityState.Modified;
+            _dbManager.DbContext.Entry(serviceObj).State = EntityState.Modified;
 
-            return _dbContext.SaveChanges() != 0;
+            return _dbManager.DbContext.SaveChanges() != 0;
         }
 
         public IQueryable<Service> GetAll()
         {
-            return _dbContext.Services;
+            return _dbManager.DbContext.Services;
         }
     }
 }
