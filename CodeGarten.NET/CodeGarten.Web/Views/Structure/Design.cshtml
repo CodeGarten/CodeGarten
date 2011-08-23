@@ -87,7 +87,7 @@
                 $("#main").mask("Verifying and publishing...", 500);
                 $.ajax(
                     {
-                        url: "/Structure/Publish/" + @Model.Id ,
+                        url: '@Url.Action("Publish", new{id = Model.Id})' ,
                         type: 'POST',
                         dataType: 'json',
                         contentType: 'application/json; charset=utf-8',
@@ -112,7 +112,7 @@
         
         $.ajax(
         {
-            url: "/Structure/Design/" + @Model.Id,
+            url: '@Url.Action("Design", new{id = Model.Id})',
             type: 'POST',
             data: JSON.stringify({roles: roles}),
             dataType: 'json',
@@ -138,13 +138,13 @@
     $("#actions button:contains(Publish)").click(function() {
         DialogConfirmView.open("Are you sure?", "After publishing a structure you cannot go back to designing it.", function() {
             Publish(function() {
-                window.location = "/Structure/Index/" + @Model.Id ;
+                window.location = '@Url.Action("Index", new{id = Model.Id})' ;
             });
         });
     });
     
         $("#actions button:contains(Back to My Structures)").button("option", "icons", { primary: "ui-icon-arrowthick-1-w" }).click(function() {
-            document.location = '@Url.Action("Index", "Structure")' ;
+            document.location = '@Url.Action("Index")' ;
     });
 
     DialogConfirmView.init("#dialog_confirm");

@@ -35,8 +35,8 @@ namespace CodeGarten.Service
                 }catch(Exception e)
                 {
                     ServiceFactory.ServiceLogger.Log(
-                        String.Format("Call service method fail Exception from target: {0} message:{1}",
-                                                            eventDelegate.Target, e.Message));
+                        String.Format("Call service method fail Exception from target: {0}\n========\nMessage:{1}\nTrace:\n===={2}\n====\n========",
+                                                            eventDelegate.Target, e.Message, e.StackTrace));
                 }
         }
 

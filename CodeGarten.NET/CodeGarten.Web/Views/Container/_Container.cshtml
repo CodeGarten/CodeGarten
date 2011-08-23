@@ -54,9 +54,9 @@
             history.pushState(null, $("#container #structure_path .name").first().text(), nextUrl);
             $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Prototype.Structure.Name");
             SwitchContainer(nextUrl);
+            return false;
         } catch (exception) {
             return true;
         }
-        return false;
     });
 </script>

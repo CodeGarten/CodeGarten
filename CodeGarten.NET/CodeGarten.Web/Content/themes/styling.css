@@ -18,8 +18,11 @@ h1 { padding: .2em; margin: 0;}
 
 /*.ui-state-highlight { text-align:center;}*/
 .placeholder { text-align: center;}
+.placeholder a { font-size: large; }
 
 #error { width: 74%;float: left; }
+
+#service_permissions .ui-tabs-panel ul { max-height: 150px;overflow-x: hidden;}
 
 #containerPrototypeDesign { width: 74%;float: left;}
 #containerPrototypeDesign .Workspace {margin: 2em;display:inline-block;}

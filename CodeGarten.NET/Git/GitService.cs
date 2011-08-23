@@ -30,7 +30,7 @@ namespace Git
 
         public override string GetInstancePath(Container container, WorkSpaceType workSpaceType)
         {
-            return Path.Combine(Path.Combine(PathService, "repositories"), container.UniqueInstanceName(workSpaceType));
+            return Path.Combine(Path.Combine(PathService, "repositories"), container.UniqueInstanceName(workSpaceType)) + ".git";
         }
 
         public override void OnServiceCreating(ServiceBuilder serviceBuilder)

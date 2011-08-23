@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using CodeGarten.Service;
 
 namespace Trac.Core
@@ -32,10 +31,8 @@ namespace Trac.Core
 
         public void Load()
         {
-            var file = new FileStream(_xmlPath, FileMode.Open);
             var xmlDocument = new XmlDocument();
-            xmlDocument.XmlResolver = null;
-            xmlDocument.Load(file);
+            xmlDocument.Load(_xmlPath);
 
             var tracAdminNode = xmlDocument.SelectSingleNode("/configuration/tracConfig");
             TracAdmin = tracAdminNode.Attributes["tracAdmin"].Value;
@@ -50,8 +47,6 @@ namespace Trac.Core
                 Plugins.Add(service, new PluginConfig(service,
                                              pluginNode.Attributes["cfgFile"].Value));
             }
-
-            file.Close();
         }
 
         public string TracAdmin { get;private set;}
