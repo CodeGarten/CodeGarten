@@ -1,0 +1,63 @@
+﻿@using CodeGarten.Data.Model
+@{
+    ViewBag.Title = "Leave";
+
+    var safe = true;
+}
+
+<div id="delete_user_form" class="ui-widget">
+@using (Html.BeginForm()) {
+    
+    <div class="ui-widget-header ui-corner-top ui-state-default">
+        <h2>Leave CodeGarten</h2>
+    </div>
+    <div class="ui-widget-content ui-state-highlight">
+        @if (ViewBag.Structures == 0)
+        {
+        <div>
+            No structures will be erased <span class="ui-icon ui-icon-check" title="Safe to leave"></span>
+        </div>
+        }
+        else 
+        {
+        <div>
+            <strong>@ViewBag.Structures</strong> structures will be erased <span class="ui-icon ui-icon-alert" title="Unsafe to leave"></span>
+        </div>
+            safe = false;
+        }
+        @if (ViewBag.InheritedEnrolls==0 && ViewBag.DirectEnrolls==0)
+        {
+        <div>
+            Has no enrolls <span class="ui-icon ui-icon-check" title="Safe to leave"></span>
+        </div>
+        }
+        else
+        {
+        <div>
+            You have <strong>@ViewBag.DirectEnrolls</strong> direct enroll(s) and <strong>@ViewBag.InheritedEnrolls</strong> hierarchical
+            <span class="ui-icon ui-icon-alert" title="Unsafe to leave"></span>
+        </div>
+            safe = false;
+        }
+        @if (safe)
+        {
+        <div class="diagnose">
+            Diagnose: <strong>Safe to Leave</strong> <span class="ui-icon ui-icon-check" title="Safe to leave"></span>
+        </div>
+        <p>
+            <input type="submit" value="Leave" />
+        </p>
+        }
+        else
+        { 
+            <div class="diagnose">
+                Diagnose: <strong>Not safe to Leave</strong> <span class="ui-icon ui-icon-alert" title="Unsafe to Leave"></span>
+            </div>
+            <p>
+                <input type="submit" value="Leave anyway" />
+            </p>
+        }
+    </div>
+}
+</div>
+

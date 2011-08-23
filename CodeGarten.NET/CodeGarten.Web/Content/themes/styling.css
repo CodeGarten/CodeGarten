@@ -138,11 +138,12 @@ h1 { padding: .2em; margin: 0;}
 #signup_form input { text-align: center;font-size: 125%;}
 #signup_form { text-align: center;}
 
-/* Delete container form
+/* Delete container form and delete user form
 -----------------------------------------------------------*/
-#delete_container_form { text-align: center;}
-#delete_container_form .diagnose{ font-size: 150%;padding-top: 10px;}
-#delete_container_form .ui-icon { margin-bottom: 2px;}
+#delete_user_form .ui-widget-content {padding-top: 10px;}
+#delete_container_form, #delete_user_form { text-align: center;}
+#delete_container_form .diagnose, #delete_user_form .diagnose{ font-size: 150%;padding-top: 10px;}
+#delete_container_form .ui-icon, #delete_user_form.ui-icon{ margin-bottom: 2px;}
 
 /* Search form
 -----------------------------------------------------------*/
@@ -342,8 +343,11 @@ h1 { padding: .2em; margin: 0;}
 .edit .info>button
 {
     float: right;
+    min-width: 150px;
 }
 
+#leave_option {height: 25px;}
+#leave_option > .button {float:right; margin-top: 5px; min-width: 150px; margin-right:5px;}
 
 /* Styles for tables
 ----------------------------------------------------------*/

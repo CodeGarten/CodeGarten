@@ -77,3 +77,14 @@
 
     </script>
 }
+
+@if (ViewBag.isMe)
+{ 
+    <div id="leave_option">
+        @Html.ActionLink("Leave CodeGarten", "Leave", "User", new { }, new { @class="button"})
+    </div>
+    <script type="text/javascript">
+        $("#leave_option > .button").button();
+    </script>
+    
+}

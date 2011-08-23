@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using CodeGarten.Service.Interfaces;
 
 namespace Apache
 {
-    public static class PasswordManager
+    public class ApacheServer : IServer
     {
         public enum EncodeType
         {
@@ -16,16 +17,22 @@ namespace Apache
         private static readonly string Db = ConfigurationManager.AppSettings["db"];
         private static readonly string Executable = ConfigurationManager.AppSettings["htdbmExecutable"];
 
-        public static bool CreateUser(string name, string passwd, EncodeType encodeType)
+        public bool CreateUser(string user, string password)
         {
-            string response = ExecuteWith(String.Format("-cb{0} {1} {2} {3}", (char) encodeType, Db, name, passwd));
-            return response.Contains("created.");
+            string response = ExecuteWith(String.Format("-cb{0} {1} {2} {3}", (char)EncodeType.Sha1, Db, user, password));
+            return response.Contains("created."); ;
         }
 
-        public static bool DeleteUser(string name)
+        public bool DeleteUser(string user)
         {
-            string response = ExecuteWith(String.Format("-x {0} {1}", Db, name));
+            string response = ExecuteWith(String.Format("-x {0} {1}", Db, user));
             return response.Contains("modified.");
+        }
+
+        public bool ChangePassword(string user, string newPassword)
+        {
+            string response = ExecuteWith(String.Format("-cb{0} {1} {2} {3}", (char)EncodeType.Sha1, Db, user, newPassword));
+            return response.Contains("created."); ;
         }
 
         private static string ExecuteWith(string arguments)

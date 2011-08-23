@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Apache;
 using CodeGarten.Data.Access;
 using CodeGarten.Service;
 using CodeGarten.Utils;
@@ -65,6 +66,8 @@ namespace CodeGarten.Web
             ControllerBuilder.Current.SetControllerFactory(new ControllerFactory());
 
             HostingEnvironment.RegisterVirtualPathProvider(new ServiceVirtualPath());
+
+            ServiceFactory.RegisteServer(new ApacheServer());
 
             ServiceFactory.LoadServices();
 

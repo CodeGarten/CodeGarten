@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Apache;
 using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data.Access
@@ -26,7 +25,13 @@ namespace CodeGarten.Data.Access
             User = user;
         }
 
+        public UserEventArgs(User user, string passwordPlainText) : this(user)
+        {
+            PasswordPlainText = passwordPlainText;
+        }
+
         public User User { get; private set; }
+        public string PasswordPlainText { get; private set; }
     }
 
     public sealed class UserManager
@@ -41,7 +46,6 @@ namespace CodeGarten.Data.Access
         #region Events
 
         private static event EventHandler<UserEventArgs> _onCreateUser;
-
         public static event EventHandler<UserEventArgs> OnCreateUser
         {
             add { _onCreateUser += value; }
@@ -49,7 +53,6 @@ namespace CodeGarten.Data.Access
         }
 
         private static event EventHandler<UserEventArgs> _onRemoveUser;
-
         public static event EventHandler<UserEventArgs> OnRemoveUser
         {
             add { _onRemoveUser += value; }
@@ -57,19 +60,24 @@ namespace CodeGarten.Data.Access
         }
 
         private static event EventHandler<EnrollEventArgs> _onEnrollUser;
-
         public static event EventHandler<EnrollEventArgs> OnEnrollUser
         {
             add { _onEnrollUser += value; }
             remove { _onEnrollUser -= value; }
         }
 
-        public static event EventHandler<EnrollEventArgs> _onDisenrollUser;
-
+        private static event EventHandler<EnrollEventArgs> _onDisenrollUser;
         public static event EventHandler<EnrollEventArgs> OnDisenrollUser
         {
             add { _onDisenrollUser += value; }
             remove { _onDisenrollUser -= value; }
+        }
+
+        private static event EventHandler<UserEventArgs> _onUserChangePassword;
+        public static event EventHandler<UserEventArgs> OnUserChangePassword
+        {
+            add { _onUserChangePassword += value; }
+            remove { _onUserChangePassword -= value; }
         }
 
         #endregion
@@ -85,7 +93,7 @@ namespace CodeGarten.Data.Access
             _db.DbContext.Users.Add(user);
             _db.DbContext.SaveChanges();
 
-            InvokeOnCreateUser(user);
+            InvokeOnCreateUser(user, password);
 
             return user;
         }
@@ -99,19 +107,23 @@ namespace CodeGarten.Data.Access
 
         public void ChangePassword(string name, string newPassword)
         {
-            Get(name).Password = AuthenticationManager.EncryptPassword(newPassword);
+            var user = Get(name);
+            user.Password = AuthenticationManager.EncryptPassword(newPassword);
 
             _db.DbContext.SaveChanges();
+
+            InvokeOnUserChangePassword(user, newPassword);
         }
 
         public void Delete(string userName)
         {
             var user = Get(userName);
 
-            _db.DbContext.Enrolls.Where(e => e.UserName == userName).Select(
-                e => Disenroll(userName, e.RoleType.StructureId, e.ContainerId, e.RoleTypeName));
+            var enrolls = _db.DbContext.Enrolls.Where(e => e.UserName == userName && !e.Inherited).ToList();
+            foreach (var enroll in enrolls)
+                Disenroll(userName, enroll.RoleType.StructureId, enroll.ContainerId, enroll.RoleTypeName);
 
-            var structures = _db.DbContext.Structures.Where(s => s.Administrators.Count == 1 && s.Administrators.Contains(user));
+            var structures = _db.DbContext.Structures.Where(s => s.Administrators.Count == 1 && s.Administrators.Select(st=> st.Name).Contains(user.Name)).ToList();
             foreach (var structure in structures)
                 _db.Structure.Delete(structure.Id);
 
@@ -362,16 +374,31 @@ namespace CodeGarten.Data.Access
             return _db.DbContext.Users.Find(user);
         }
 
-        public IEnumerable<IGrouping<Structure, Enroll>> GetEnrolls(string userName)
+        public IQueryable<Enroll> GetEnrolls(string userName)
         {
-            return _db.DbContext.Enrolls.Where(e => e.UserName == userName).GroupBy(e => e.RoleType.Structure);
+            return _db.DbContext.Enrolls.Where(e => e.UserName == userName);
         }
 
         #region InvokeEvents
-        
-        private void InvokeOnCreateUser(User user)
+
+        private void InvokeOnUserChangePassword(User user, string passwordPlainText)
         {
             var eventArgs = new UserEventArgs(user);
+
+            if (_onUserChangePassword != null)
+                try
+                {
+                    _onUserChangePassword(this, eventArgs);
+                }
+                catch (Exception e)
+                {
+                    DataBaseManager.Logger.Log(String.Format("InvokeOnUserChangePassword fail - {0}", e.Message));
+                }
+        }
+
+        private void InvokeOnCreateUser(User user, string passwordPlainText)
+        {
+            var eventArgs = new UserEventArgs(user, passwordPlainText);
             
             if (_onCreateUser != null) 
                 try
@@ -381,10 +408,6 @@ namespace CodeGarten.Data.Access
                 {
                     DataBaseManager.Logger.Log(String.Format("InvokeOnCreateUser fail - {0}", e.Message));
                 }
-                
-
-            //TODO Better
-            PasswordManager.CreateUser(user.Name, user.Password, PasswordManager.EncodeType.PlainText);
         }
 
         private void InvokeOnRemoveUser(User user)
@@ -399,9 +422,6 @@ namespace CodeGarten.Data.Access
                 {
                     DataBaseManager.Logger.Log(String.Format("InvokeOnRemoveUser fail - {0}", e.Message));
                 }
-
-            //TODO Better
-            PasswordManager.DeleteUser(user.Name);
         }
 
         private void InvokeOnEnrollUser(Enroll enroll)

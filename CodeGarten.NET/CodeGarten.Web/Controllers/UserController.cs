@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using CodeGarten.Data.Access;
 using CodeGarten.Web.Core;
 using CodeGarten.Web.Model;
@@ -65,7 +66,7 @@ namespace CodeGarten.Web.Controllers
         {
             var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-            return View(databaseManager.User.GetEnrolls(User.Identity.Name));
+            return View(databaseManager.User.GetEnrolls(User.Identity.Name).GroupBy(e => e.RoleType.Structure));
         }
 
         public JsonResult Find(string term)
@@ -73,6 +74,32 @@ namespace CodeGarten.Web.Controllers
             var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             return Json(databaseManager.User.GetAll().Select(u => u.Name).Where(u => u.StartsWith(term)), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Leave()
+        {
+
+            var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            ViewBag.DirectEnrolls = databaseManager.User.GetEnrolls(User.Identity.Name).Where(e => !e.Inherited).Count();
+            ViewBag.InheritedEnrolls = databaseManager.User.GetEnrolls(User.Identity.Name).Where(e => e.Inherited).Count();
+            ViewBag.Structures = databaseManager.Structure.GetAll(User.Identity.Name).Where(s => s.Administrators.Count==1).Count();
+
+            return View();
+        }
+        
+        [HttpPost]
+        public ActionResult Leave(UserView userView)
+        {
+            
+            var databaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
+
+            databaseManager.User.Delete(User.Identity.Name);
+
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index", "Home");    
+            
         }
     }
 }

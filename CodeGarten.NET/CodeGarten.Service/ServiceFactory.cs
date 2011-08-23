@@ -9,7 +9,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CodeGarten.Data.Access;
 using CodeGarten.Data.Model;
+using CodeGarten.Service.Interfaces;
 using CodeGarten.Utils;
 
 namespace CodeGarten.Service
@@ -35,6 +37,14 @@ namespace CodeGarten.Service
             DirectoryCatalog = new DirectoryCatalog(ServiceConfig.ServicesDllLocation);
             CompositionContainer = new CompositionContainer(DirectoryCatalog);
             ServiceLogger.Start();
+        }
+
+        public static void RegisteServer(IServer server)
+        {
+            UserManager.OnCreateUser += (sender, user) => server.CreateUser(user.User.Name, user.PasswordPlainText);
+            UserManager.OnRemoveUser += (sender, user) => server.DeleteUser(user.User.Name);
+            UserManager.OnUserChangePassword +=
+                (sender, user) => server.ChangePassword(user.User.Name, user.PasswordPlainText);
         }
 
         public static void LoadServices()

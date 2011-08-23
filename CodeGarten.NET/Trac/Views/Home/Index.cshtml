@@ -5,7 +5,7 @@
     var user = (User)ViewBag.User;
     var enroll = (Enroll)ViewBag.Enroll;
     var permissions = (IEnumerable<ServicePermission>)ViewBag.Permissions;
-    string url = String.Format("http://{0}/trac/{1}", Request.Url.Host, ViewBag.InstanceName);
+    string url = String.Format("http://{0}:8080/{1}/{2}", Request.Url.Host, Model.Name,ViewBag.InstanceName);
 }
 <link href="@Url.Content("~/Content/themes/smoothness/jquery-ui-1.8.14.custom.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/themes/styling.css")" rel="stylesheet" type="text/css" />
