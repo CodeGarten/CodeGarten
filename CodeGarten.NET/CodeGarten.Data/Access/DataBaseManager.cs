@@ -28,7 +28,6 @@ namespace CodeGarten.Data.Access
         }
 
         public AuthenticationManager Authentication { get; private set; }
-        public AuthorizationManager Authorization { get; private set; }
         public ContainerManager Container { get; private set; }
         public ContainerPrototypeManager ContainerPrototype { get; private set; }
         public RoleManager Role { get; private set; }
@@ -44,7 +43,6 @@ namespace CodeGarten.Data.Access
 
             User = new UserManager(this);
             Authentication = new AuthenticationManager(this);
-            Authorization = new AuthorizationManager(this);
             Container = new ContainerManager(this);
             ContainerPrototype = new ContainerPrototypeManager(this);
             Role = new RoleManager(this);

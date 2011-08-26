@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using CodeGarten.Data.Interfaces;
 
 namespace CodeGarten.Data.Access
 {
@@ -12,12 +11,6 @@ namespace CodeGarten.Data.Access
         public AuthenticationManager(DataBaseManager db)
         {
             _dbManager = db;
-        }
-
-        public void CreateAuthenticationDataBase(IAuthentication authenticaton)
-        {
-            foreach (var user in _dbManager.User.GetAll())
-                authenticaton.CreateUser(user.Name, user.Password);
         }
 
         public static string EncryptPassword(string plainText)

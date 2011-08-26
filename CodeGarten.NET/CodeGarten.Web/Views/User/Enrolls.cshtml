@@ -36,7 +36,7 @@
 				    <td>@enroll.RoleTypeName</td>
                     <td>@if(enroll.Inherited) 
                         {
-                            <text>Iherited</text>
+                            <text>Inherited</text>
                         }else{
                             <a class='buttonLeave' href="javascript:ConfirmDisenroll('@enroll.Container.Name', '@Url.Action("Disenroll", "Container", new { structureId = structureEnrolls.Key.Id, containerId = enroll.ContainerId, roleTypeName = enroll.RoleTypeName })')">Disenroll</a>
                         }

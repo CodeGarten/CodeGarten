@@ -6,7 +6,10 @@
 
     var users = dbMan.User.GetAll().Where(u => u.Enrolls.Any(e => e.ContainerId == Model.Id));
 
-    var enrolled = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
+    var enrolled = dbMan.User.Get(User.Identity.Name).Enrolls.Where(e => e.ContainerId == Model.Id);
+
+    var enrolledExplicitly = enrolled.SingleOrDefault(e => !e.Inherited);
+    var enrolledImplicit = enrolled.Where(e => e.Inherited);
 
     var description = Model.Description ?? "No description";
 }
@@ -26,9 +29,18 @@
                 <label>
                     <a class="counter" href="javascript:Users()">@users.Count()</a></label>
                 enrolled user(s)
-                @if (enrolled != null)
+                @if (enrolledExplicitly != null)
                 {
-                    <text>Including you as </text><label>@enrolled.RoleTypeName</label>
+                    <text>Including you as </text><label>@enrolledExplicitly.RoleTypeName</label>
+                }
+                @if (enrolledImplicit.Any())
+                {
+                    <br />
+                    <text>You have inherited this container as </text>
+                    foreach (var inheritedEnroll in enrolledImplicit)
+                    {
+                        <label>@inheritedEnroll.RoleTypeName</label>   
+                    }
                 }
             </div>
             @Html.Partial("_Childs", Model)

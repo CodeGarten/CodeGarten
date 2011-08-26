@@ -1,13 +1,13 @@
-#main, #foot, #top
+#content, #foot, #top
 {
     margin: 0 auto;
-    width: 920px;
+    width: 970px;
 }
 
 a { text-decoration: none; }
 a:hover { text-decoration: underline;}
 
-body{ font: 0.6em "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;margin: 0px;}
+body{ font: 0.63em "Trebuchet MS", sans-serif;line-height: 1.4; word-wrap: break-word;margin: 0px;}
 		
 h1 { padding: .2em; margin: 0;}
 
@@ -44,16 +44,32 @@ h1 { padding: .2em; margin: 0;}
 
 .ui-accordion .ui-accordion-content{ overflow:hidden !important; }
 
+#content 
+{
+    background: url('smoothness/images/background-white.png') no-repeat scroll center 0 transparent;
+    margin-top: -32px;
+    min-height: 300px;
+}
+
+#main { padding: 20px 25px 20px 25px;}
+
 #foot 
 {
-    border-top: 1px solid #CCCCCC;
-    padding-bottom: 10px;
-    padding-top: 20px;
+    background: url('smoothness/images/background-white_foot.png') no-repeat scroll center 0 transparent;
     text-align: center;
-    line-height:normal;
-    background-color: #F1F1F1;
-    width: 100%;
-    margin-top: 20px;
+    font-size: medium;
+    min-height: 52px;
+    padding-top: 15px;
+}
+
+#foot a, #foot a:visited
+{
+    color: black;
+}
+
+#foot a:hover
+{
+    text-decoration: underline;
 }
 
 #foot > p
@@ -65,9 +81,8 @@ h1 { padding: .2em; margin: 0;}
 #top 
 {
     border-bottom: 1px solid #CCCCCC;
-    height: 70px;
-    background-color: #F1F1F1;
-    margin-bottom: 20px;
+    height: 130px;
+    background-color: #e6e6e6;
     width: 100%;
     background-image: url('smoothness/images/TopImage.png');
     background-repeat: repeat-x;
@@ -76,7 +91,13 @@ h1 { padding: .2em; margin: 0;}
 
 #top .logo > img
 {
-   margin-top:15px;
+   margin-top:13px;
+    width: 320px;
+}
+
+#top .logo
+{
+    color: transparent;
 }
 
 #top > div
@@ -178,7 +199,7 @@ h1 { padding: .2em; margin: 0;}
 /* item
 -----------------------------------------------------------*/
 .item { border-bottom:1px solid #CCCCCC; border-top:1px solid #CCCCCC;}
-.item:hover { background-color:#e8e8e8;}
+.item:hover { background: url('smoothness/images/degradet.png') repeat-x, url('smoothness/images/degradet_bottom.png') bottom right repeat-x;}
 .item .info, .item .name { padding-left: 5px;}
 .item .actions { padding-left: 5px;padding-top: 3px; float: right;}
 
@@ -244,6 +265,17 @@ h1 { padding: .2em; margin: 0;}
 :-moz-placeholder {
     font-style: italic;
 }
+
+.highlight_blue
+{
+    border: 1px solid #cccccc; background: #FCFCFF ; color: #363636;
+}
+
+/*.highlight_blue
+{
+    background: url('smoothness/images/degradet.png') repeat-x, url('smoothness/images/degradet_bottom.png') bottom right repeat-x;
+    border-color: white;
+}*/
 
 #management .administrators {border-bottom: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC;margin-top: -10px;}
 #management .actions{ padding-top: 5px;}

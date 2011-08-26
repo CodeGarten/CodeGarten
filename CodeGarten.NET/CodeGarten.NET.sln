@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Data", "CodeGarten.Data\CodeGarten.Data.csproj", "{94BADD45-89F4-4D17-B970-A70C16BE768C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Web", "CodeGarten.Web\CodeGarten.Web.csproj", "{83CEEE5F-216F-4427-96CB-CB42AFC8A8A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Data.Tests", "CodeGarten.Data.Tests\CodeGarten.Data.Tests.csproj", "{EE35E780-B9EE-4DD9-9194-0D693B3024EE}"
@@ -25,16 +23,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Utils", "CodeGar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git", "Git\Git.csproj", "{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git.Tests", "Git.Tests\Git.Tests.csproj", "{FAC5C913-0356-48FB-8AEF-0B061BDAA0D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGarten.Data", "CodeGarten.Data\CodeGarten.Data.csproj", "{94BADD45-89F4-4D17-B970-A70C16BE768C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83CEEE5F-216F-4427-96CB-CB42AFC8A8A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83CEEE5F-216F-4427-96CB-CB42AFC8A8A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83CEEE5F-216F-4427-96CB-CB42AFC8A8A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -79,6 +77,14 @@ Global
 		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF170D8C-FD9C-46D5-9D33-9C774BDF18F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC5C913-0356-48FB-8AEF-0B061BDAA0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC5C913-0356-48FB-8AEF-0B061BDAA0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC5C913-0356-48FB-8AEF-0B061BDAA0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC5C913-0356-48FB-8AEF-0B061BDAA0D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94BADD45-89F4-4D17-B970-A70C16BE768C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

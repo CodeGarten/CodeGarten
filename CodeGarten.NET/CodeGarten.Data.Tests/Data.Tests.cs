@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CodeGarten.Data.Access;
-using CodeGarten.Data.Tests.ClassTests;
 using NUnit.Framework;
 
 namespace CodeGarten.Data.Tests

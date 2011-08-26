@@ -22,22 +22,28 @@ var ComponentsView = new (function () {
             $(content).append(pageTag);
         }
         $(content).accordion({ 'clearStyle': true, autoHeight: false });
-
+        
         ComponentsView.Sync();
     };
 
     this.AddItem = function (page, item) {
         var pageTag = $(content).find(".page_link:contains('" + page + "s')");
 
-        var itemTag = $("<div class='" + page + " components_item'>" + item + "<span class='item_options'/></div>");
+        var itemTag = $("<div class='" + page + " components_item'>" + item + "<div class='item_options'/></div>");
         $(itemTag).hide();
 
         var buttonEdit = $("<button onclick='javascript:" + page + "Controller.Edit(\"" + item + "\");' title='Edit'/>").button({ icons: { primary: "ui-icon-gear" }, text: false });
         var buttonDelete = $("<button title='Delete' onclick='javascript:" + page + "Controller.Delete(\"" + item + "\");'/>").button({ icons: { primary: "ui-icon-trash" }, text: false });
 
+        $(itemTag).children(".item_options").append(buttonDelete);
         if (page !== "RoleType")
             $(itemTag).children(".item_options").append(buttonEdit);
-        $(itemTag).children(".item_options").append(buttonDelete);
+
+        $(itemTag).children(".item_options").buttonset();
+
+        $(buttonEdit).toggleClass("ui-corner-left").toggleClass("ui-corner-right");
+        $(buttonDelete).toggleClass("ui-corner-left").toggleClass("ui-corner-right");
+
         $(pageTag).parent().next().children(".ui-state-highlight").hide();
         $(pageTag).parent().next().children(".page_content").append(itemTag);
         $(itemTag).draggable({

@@ -71,6 +71,7 @@
     <Compile Include="Controllers\ContainerController.cs" />
     <Compile Include="Controllers\ContainerPrototypeController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SignupController.cs" />
@@ -109,7 +110,11 @@
     <Content Include="Content\scripts\Tree.js" />
     <Content Include="Content\scripts\Workspace.js" />
     <Content Include="Content\themes\jquery.loadmask.css" />
+    <Content Include="Content\themes\smoothness\images\background-white.png" />
+    <Content Include="Content\themes\smoothness\images\background-white_foot.png" />
     <Content Include="Content\themes\smoothness\images\CodeGarten.png" />
+    <Content Include="Content\themes\smoothness\images\degradet.png" />
+    <Content Include="Content\themes\smoothness\images\degradet_bottom.png" />
     <Content Include="Content\themes\smoothness\images\favicon.ico" />
     <Content Include="Content\themes\smoothness\images\Help.png" />
     <Content Include="Content\themes\smoothness\images\loading.gif" />
@@ -320,6 +325,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Structure\_Prototype.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Help\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\Leave.cshtml" />

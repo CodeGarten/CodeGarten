@@ -11,6 +11,7 @@
     <div class="ui-widget-content">
         <div id="child_tabs">
             <div class="type">
+                Prototype:
                 @if (Model.Prototype.Childs.Count != 1)
                 {
                     @Html.RadioButton("type", "all", new { id = "all", onclick = "javascript:SwitchWS('.all','.results');" })

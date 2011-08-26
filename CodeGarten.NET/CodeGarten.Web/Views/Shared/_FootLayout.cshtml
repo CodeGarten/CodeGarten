@@ -1,12 +1,25 @@
-﻿CodeGarten 2011
-<div class="actions">
-    <a href="mailto:codegarten.1011@gmail.com">Contact Us</a>
-    <a href="#">About Us</a>
+﻿&copy; 2011 CodeGarten -
+<span class="actions">
+    <a href="mailto:codegarten.1011@gmail.com">Contact Us</a> |
+    <a href="#">About Us</a> |
     @Html.ActionLink("Help", "Index", "Help", null, new{target = "_blank"})
-</div>
+</span>
 
 <script type="text/javascript">
     $("input[type=submit], input[type=button]").button();
     $("#user_actions").buttonset();
-    $("#foot .actions").buttonset();
+//    $("#foot .actions").buttonset();
+    
+    @if(User.Identity.IsAuthenticated)
+    {
+        <text>
+            $("#user_actions a").first().button( "option", "icons", {primary:'ui-icon-person'} ).next().button( "option", "icons", {primary:'ui-icon-power'} );
+        </text>
+    }
+    else
+    {
+        <text>
+            $("#user_actions a").first().button( "option", "icons", {primary:'ui-icon-key'} ).next().button( "option", "icons", {primary:'ui-icon-contact'} );
+        </text>
+    }
 </script>
