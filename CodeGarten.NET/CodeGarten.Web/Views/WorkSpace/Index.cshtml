@@ -56,10 +56,16 @@
             window.location = push;
         }
     }
-
+    
     function OnLoadIframe() {
         var iframe = $("#main_service>.iframe>iframe");
-        iframe.height($(iframe[0].contentWindow.document).height());
+        try
+        {
+            iframe.height($(iframe[0].contentWindow.document).height());
+        }catch(e)
+        {   
+            iframe.height(1000);
+        }
         $("#main_service>#main>.loading>img").remove();
     }
 

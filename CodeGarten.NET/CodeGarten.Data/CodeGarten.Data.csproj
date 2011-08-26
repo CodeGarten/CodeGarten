@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Access\AuthenticationManager.cs" />
-    <Compile Include="Access\AuthorizationManager.cs" />
     <Compile Include="Access\ContainerManager.cs" />
     <Compile Include="Access\ContainerPrototypeManager.cs" />
     <Compile Include="Access\DataBaseManager.cs" />
@@ -58,8 +57,6 @@
     <Compile Include="Access\WorkSpaceTypeManager.cs" />
     <Compile Include="CodeGartenInitializer.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="Interfaces\IAuthentication.cs" />
-    <Compile Include="Interfaces\IAuthorization.cs" />
     <Compile Include="Model\Container.cs" />
     <Compile Include="Model\Enroll.cs" />
     <Compile Include="Model\Role.cs" />

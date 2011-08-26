@@ -105,6 +105,7 @@ namespace Trac
                 }
 
                 var tracPermissions = new TracPermissionManager(tracEnvironment.EnvironmentPath);
+                tracPermissions.RemoveAll(PermissionUser.Authenticated);
                 foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);

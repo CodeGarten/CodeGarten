@@ -22,8 +22,7 @@ namespace CodeGarten.Data
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_cp ON dbo.ContainerPrototypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
                                                "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
-                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId " +
-                                               "DELETE dbo.Containers FROM deleted, dbo.Containers WHERE deleted.Name = dbo.Containers.Prototype_Name AND deleted.StructureId = dbo.Containers.Prototype_StructureId; " +
+                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId; " +
                                                "WITH q AS " +
                                                "(SELECT  Name, StructureId " +
                                                "FROM    deleted UNION ALL " +
@@ -42,12 +41,6 @@ namespace CodeGarten.Data
                                                "DELETE dbo.RoleTypes FROM deleted WHERE deleted.Name = dbo.RoleTypes.Name AND deleted.StructureId = dbo.RoleTypes.StructureId"
                 );
 
-            //context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_rule ON dbo.Rules " +
-            //                                   "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-            //                                   "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.RuleName AND deleted.StructureId = dbo.Roles.ContainerPrototypeStructureId " +
-            //                                   "DELETE dbo.Rules FROM deleted WHERE deleted.Name = dbo.Rules.Name AND deleted.StructureId = dbo.Rules.StructureId"
-            //    );
-
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_wst ON dbo.WorkSpaceTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
                                                "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.WorkSpaceTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
@@ -61,19 +54,6 @@ namespace CodeGarten.Data
                                                "DELETE dbo.Bindings FROM deleted WHERE deleted.WorkSpaceTypeName = dbo.Bindings.WorkSpaceTypeName AND deleted.ContainerPrototypeName = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId"
                 );
 
-            context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_container on dbo.Containers " +
-                                               "INSTEAD OF DELETE AS SET NOCOUNT ON; " +
-                                               "WITH q AS " +
-                                               "(SELECT  Id " +
-                                               "FROM    deleted " +
-                                               "UNION ALL " +
-                                               "SELECT  c.Id " +
-                                               "FROM    q " +
-                                               "JOIN    dbo.Containers c " +
-                                               "ON      c.Parent_Id = q.Id) " +
-                                               "DELETE FROM    dbo.Containers " +
-                                               "WHERE   EXISTS ( SELECT  Id INTERSECT SELECT  Id FROM    q )"
-                );
         }
     }
 }
