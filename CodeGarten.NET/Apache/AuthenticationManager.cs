@@ -2,10 +2,12 @@
 using System.Configuration;
 using System.Diagnostics;
 using CodeGarten.Service.Interfaces;
+using System.IO;
+using CodeGarten.Service;
 
 namespace Apache
 {
-    public class ApacheServer : IServer
+    public static class AuthenticationManager
     {
         public enum EncodeType
         {
@@ -14,22 +16,32 @@ namespace Apache
             PlainText = 'p'
         }
 
-        private static readonly string Db = ConfigurationManager.AppSettings["db"];
-        private static readonly string Executable = ConfigurationManager.AppSettings["htdbmExecutable"];
+        private static readonly string Db;
+        private static readonly string Executable;
 
-        public bool CreateUser(string user, string password)
+        static AuthenticationManager()
+        {
+            var assemblyConfig =
+                ConfigurationManager.OpenExeConfiguration(Path.Combine(ServiceConfig.ServicesDllLocation, "Apache.dll"));
+
+            Db = assemblyConfig.AppSettings.Settings["db"].Value;
+            Executable = assemblyConfig.AppSettings.Settings["htdbmExecutable"].Value;
+        
+        }
+
+        public static bool CreateUser(string user, string password)
         {
             string response = ExecuteWith(String.Format("-cb{0} {1} {2} {3}", (char)EncodeType.Sha1, Db, user, password));
             return response.Contains("created."); ;
         }
 
-        public bool DeleteUser(string user)
+        public static bool DeleteUser(string user)
         {
             string response = ExecuteWith(String.Format("-x {0} {1}", Db, user));
             return response.Contains("modified.");
         }
 
-        public bool ChangePassword(string user, string newPassword)
+        public static bool ChangePassword(string user, string newPassword)
         {
             string response = ExecuteWith(String.Format("-cb{0} {1} {2} {3}", (char)EncodeType.Sha1, Db, user, newPassword));
             return response.Contains("created."); ;

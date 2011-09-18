@@ -67,8 +67,6 @@ namespace CodeGarten.Web
 
             HostingEnvironment.RegisterVirtualPathProvider(new ServiceVirtualPath());
 
-            ServiceFactory.RegisteServer(new ApacheServer());
-
             ServiceFactory.LoadServices();
 
             Logger.Start();

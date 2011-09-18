@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,16 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApacheServer.cs" />
+    <Compile Include="ApacheService.cs" />
+    <Compile Include="AuthenticationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeGarten.Data\CodeGarten.Data.csproj">
+      <Project>{94BADD45-89F4-4D17-B970-A70C16BE768C}</Project>
+      <Name>CodeGarten.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeGarten.Service\CodeGarten.Service.csproj">
       <Project>{52AC5E24-7D95-457F-B900-2E5AC5644490}</Project>
       <Name>CodeGarten.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeGarten.Utils\CodeGarten.Utils.csproj">
+      <Project>{A5BDB75D-3719-4E3B-AF57-74CDB0767171}</Project>
+      <Name>CodeGarten.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

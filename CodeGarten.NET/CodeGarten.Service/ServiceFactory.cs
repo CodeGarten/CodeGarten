@@ -39,14 +39,6 @@ namespace CodeGarten.Service
             ServiceLogger.Start();
         }
 
-        public static void RegisteServer(IServer server)
-        {
-            UserManager.OnCreateUser += (sender, user) => server.CreateUser(user.User.Name, user.PasswordPlainText);
-            UserManager.OnRemoveUser += (sender, user) => server.DeleteUser(user.User.Name);
-            UserManager.OnUserChangePassword +=
-                (sender, user) => server.ChangePassword(user.User.Name, user.PasswordPlainText);
-        }
-
         public static void LoadServices()
         {
             var serviceEngine = new ServiceEngine();

@@ -20,20 +20,29 @@ namespace SVN.Core
         {
             _instance = new StringBuilder(String.Format("[{0}:/]\n", instanceName));
         }
-
+        
         public void AddGroupPermission(string groupName, string privilege)
         {
-            _instance.AppendFormat("@{0} = {1}\n", groupName, privilege);
+            lock (this)
+            {
+                _instance.AppendFormat("@{0} = {1}\n", groupName, privilege);
+            }
         }
-
+        
         public void AddUserPermission(string userName, string privilege)
         {
-            _instance.AppendFormat("{0} = {1}\n", userName, privilege);
+            lock (this)
+            {
+                _instance.AppendFormat("{0} = {1}\n", userName, privilege);
+            }
         }
-
+        
         public override string ToString()
         {
-            return _instance.ToString();
+            lock (this)
+            {
+                return _instance.ToString();
+            }
         }
     }
 
@@ -47,37 +56,48 @@ namespace SVN.Core
             _users = new LinkedList<string>();
             _group = String.Format("{0} = ", groupName);
         }
-
+        
         public void AddUser(IEnumerable<string> users)
         {
-            foreach (var user in users)
-                _users.Add(user);
+            lock (this)
+            {
+                foreach (var user in users)
+                    _users.Add(user);
+            }
         }
-
+        
         public void AddUser(string userName)
         {
-            _users.Add(userName);
+            lock (this)
+            {
+                _users.Add(userName);
+            }
         }
 
         public void RemoveUser(string userName)
         {
-            _users.Remove(userName);
+            lock (this)
+            {
+                _users.Remove(userName);
+            }
         }
-
+        
         public override string ToString()
         {
-            var returnString = new StringBuilder(_group);
+            lock (this)
+            {
+                var returnString = new StringBuilder(_group);
 
-            foreach (var user in _users)
-                returnString.AppendFormat(" {0},", user);
+                foreach (var user in _users)
+                    returnString.AppendFormat(" {0},", user);
 
-            returnString[returnString.Length - 1] = '\n';
+                returnString[returnString.Length - 1] = '\n';
 
-            return returnString.ToString();
+                return returnString.ToString();
+            }
         }
     }
 
-    //TODO thread-safe
     public sealed class SVNAuthorization : IDisposable
     {
         private readonly WeakReference _wkGroups, _wkInstances;
@@ -183,66 +203,84 @@ namespace SVN.Core
             else
                 _wkGroups.Target = _anchorGroups = ParseFileGroups();
         }
-
+        
         public SvnInstance CreateInstance(string instanceName)
         {
-            if(_anchorInstances==null)
-                _anchorInstances = new Dictionary<string, SvnInstance>();
-
-            if (!_anchorInstances.ContainsKey(instanceName))
+            lock (this)
             {
-                var returnInstance = new SvnInstance(instanceName);
-                _anchorInstances.Add(instanceName, returnInstance);
+                if (_anchorInstances == null)
+                    _anchorInstances = new Dictionary<string, SvnInstance>();
 
-                return returnInstance;
+                if (!_anchorInstances.ContainsKey(instanceName))
+                {
+                    var returnInstance = new SvnInstance(instanceName);
+                    _anchorInstances.Add(instanceName, returnInstance);
+
+                    return returnInstance;
+                }
+
+                return _anchorInstances[instanceName];
             }
-
-            return _anchorInstances[instanceName];
         }
 
-
+        
         public SvnGroup CreateGroup(string groupName)
         {
-            if(_anchorGroups==null)
-                _anchorGroups = new Dictionary<string, SvnGroup>();
-
-            if (!_anchorGroups.ContainsKey(groupName))
+            lock (this)
             {
-                var returnGroup = new SvnGroup(groupName);
-                _anchorGroups.Add(groupName, returnGroup);
+                if (_anchorGroups == null)
+                    _anchorGroups = new Dictionary<string, SvnGroup>();
 
-                return returnGroup;
+                if (!_anchorGroups.ContainsKey(groupName))
+                {
+                    var returnGroup = new SvnGroup(groupName);
+                    _anchorGroups.Add(groupName, returnGroup);
+
+                    return returnGroup;
+                }
+
+                return _anchorGroups[groupName];
             }
-
-            return _anchorGroups[groupName];
         }
-
+        
         public bool RemoveInstance(string instanceName)
         {
-            AnchorInstances();
+            lock (this)
+            {
+                AnchorInstances();
 
-            return _anchorInstances.Remove(instanceName);
+                return _anchorInstances.Remove(instanceName);
+            }
         }
-
+        
         public bool RemoveGroups(string groupName)
         {
-            AnchorGroups();
+            lock (this)
+            {
+                AnchorGroups();
 
-            return _anchorGroups.Remove(groupName);
+                return _anchorGroups.Remove(groupName);
+            }
         }
-
+        
         public SvnGroup GetGroup(string groupName)
         {
-            AnchorGroups();
+            lock (this)
+            {
+                AnchorGroups();
 
-            return _anchorGroups[groupName];
+                return _anchorGroups[groupName];
+            }
         }
-
+        
         public SvnInstance GetInstance(string instanceName)
         {
-            AnchorInstances();
+            lock (this)
+            {
+                AnchorInstances();
 
-            return _anchorInstances[instanceName];
+                return _anchorInstances[instanceName];
+            }
         }
 
         private void SaveGroups()
@@ -276,34 +314,36 @@ namespace SVN.Core
             
             textWriter.Dispose();
         }
-
+        
         public void Save()
         {
+            lock (this)
+            {
+                SaveGroups();
+                SaveInstances();
 
-            SaveGroups();
-            SaveInstances();
+                if (_anchorGroups != null && _wkGroups.IsAlive)
+                    using (TextWriter textWriter = File.CreateText(_fileOverride))
+                    {
+                        textWriter.WriteLine("[groups]");
+                        foreach (var svnGroup in _anchorGroups)
+                            textWriter.Write(svnGroup.Value.ToString());
+                    }
+                else
+                    File.Copy(_fileGroup, _fileOverride);
 
-            if (_anchorGroups != null && _wkGroups.IsAlive)
-                using (TextWriter textWriter = File.CreateText(_fileOverride))
-                {
-                    textWriter.WriteLine("[groups]");
-                    foreach (var svnGroup in _anchorGroups)
-                        textWriter.Write(svnGroup.Value.ToString());
-                }
-            else
-                File.Copy(_fileGroup, _fileOverride);
+                if (_anchorInstances != null && _wkInstances.IsAlive)
+                    using (TextWriter textWriter = File.AppendText(_fileOverride))
+                        foreach (var svnInstance in _anchorInstances)
+                            textWriter.WriteLine(svnInstance.Value.ToString());
+                else
+                    File.AppendAllText(_fileOverride, File.ReadAllText(_fileInstance));
 
-            if (_anchorInstances != null && _wkInstances.IsAlive)
-                using (TextWriter textWriter = File.AppendText(_fileOverride))
-                    foreach (var svnInstance in _anchorInstances)
-                        textWriter.WriteLine(svnInstance.Value.ToString());
-            else
-                File.AppendAllText(_fileOverride, File.ReadAllText(_fileInstance));
+                _anchorInstances = null;
+                _anchorGroups = null;
 
-            _anchorInstances = null;
-            _anchorGroups = null;
-
-            OverrideFile(_fileOverride, _file);
+                OverrideFile(_fileOverride, _file);
+            }
         }
 
         public void Dispose()

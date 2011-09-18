@@ -16,6 +16,9 @@ namespace CodeGarten.Service
             ContainerManager.OnDeleteContainer += DeleteServiceInstance;
             UserManager.OnEnrollUser += EnrollUser;
             UserManager.OnDisenrollUser += DisenrollUser;
+            UserManager.OnCreateUser += CreateUser;
+            UserManager.OnRemoveUser += RemoveUser;
+            UserManager.OnUserChangePassword += UserChangePassword;
         }
 
         public void UnregisterEvents()
@@ -24,6 +27,9 @@ namespace CodeGarten.Service
             ContainerManager.OnDeleteContainer -= DeleteServiceInstance;
             UserManager.OnEnrollUser -= EnrollUser;
             UserManager.OnDisenrollUser -= DisenrollUser;
+            UserManager.OnCreateUser -= CreateUser;
+            UserManager.OnRemoveUser -= RemoveUser;
+            UserManager.OnUserChangePassword -= UserChangePassword;
         }
 
         private static void InvokeEvent<T>(object sender, T eventArgs, EventHandler<T> eventHandler) where T : EventArgs
@@ -38,6 +44,21 @@ namespace CodeGarten.Service
                         String.Format("Call service method fail Exception from target: {0}\n========\nMessage:{1}\nTrace:\n===={2}\n====\n========",
                                                             eventDelegate.Target, e.Message, e.StackTrace));
                 }
+        }
+
+        public void CreateUser(object sender, UserEventArgs eventArgs)
+        {
+            InvokeEvent(sender, eventArgs, _onCreateUser);
+        }
+
+        public void RemoveUser(object sender, UserEventArgs eventArgs)
+        {
+            InvokeEvent(sender, eventArgs, _onRemoveUser);
+        }
+
+        public void UserChangePassword(object sender, UserEventArgs eventArgs)
+        {
+            InvokeEvent(sender, eventArgs, _onUserChangePassword);
         }
 
         public void CreateServiceInstances(object sender, ContainerEventArgs eventArgs)
@@ -60,6 +81,26 @@ namespace CodeGarten.Service
             InvokeEvent(sender, eventArgs, _onDisenrollUser);
         }
 
+        private event EventHandler<UserEventArgs> _onCreateUser;
+        public event EventHandler<UserEventArgs> OnCreateUser
+        {
+            add { _onCreateUser += value; }
+            remove { _onCreateUser -= value; }
+        }
+
+        private event EventHandler<UserEventArgs> _onRemoveUser;
+        public event EventHandler<UserEventArgs> OnRemoveUser
+        {
+            add { _onRemoveUser += value; }
+            remove { _onRemoveUser -= value; }
+        }
+        
+        private event EventHandler<UserEventArgs> _onUserChangePassword;
+        public event EventHandler<UserEventArgs> OnUserChangePassword
+        {
+            add { _onUserChangePassword += value; }
+            remove { _onUserChangePassword -= value; }
+        }
 
         private event EventHandler<ContainerEventArgs> _onCreateContainer;
         public event EventHandler<ContainerEventArgs> OnCreateContainer
