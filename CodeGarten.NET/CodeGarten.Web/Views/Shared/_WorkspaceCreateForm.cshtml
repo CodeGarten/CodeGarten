@@ -22,7 +22,7 @@
             Services</h3>
         @if (ViewBag.Services != null)
         {
-            foreach (var service in (IEnumerable<Service>)ViewBag.Services)
+            foreach (var service in (IEnumerable<ServiceType>)ViewBag.Services)
             {
             <label for="@service.Name">@service.Name</label>
             <input id="@service.Name" name="services" type="checkbox" value="@service.Name" />

@@ -41,7 +41,7 @@ namespace CodeGarten.Data.Tests
         public void DeleteContainerPrototype()
         {
             using (var dbman = new DataBaseManager())
-                dbman.ContainerPrototype.Delete(1, "Course");
+                dbman.ContainerType.Delete(1, "Course");
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace CodeGarten.Data.Tests
             {
                 #region CREATE_SERVICES
 
-                var serviceManager = dataBaseManager.Service;
+                var serviceManager = dataBaseManager.ServiceType;
 
                 var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
 
@@ -119,7 +119,7 @@ namespace CodeGarten.Data.Tests
 
                 #region CREATE_CONTAINER_PROTOTYPE
 
-                var containerPrototype = dataBaseManager.ContainerPrototype;
+                var containerPrototype = dataBaseManager.ContainerType;
 
                 var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
@@ -377,7 +377,7 @@ namespace CodeGarten.Data.Tests
 
                 #region CREATE_SERVICES
 
-                var serviceManager = dataBaseManager.Service;
+                var serviceManager = dataBaseManager.ServiceType;
 
                 var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
 
@@ -425,7 +425,7 @@ namespace CodeGarten.Data.Tests
 
                 #region CREATE_CONTAINER_PROTOTYPE
 
-                var containerPrototype = dataBaseManager.ContainerPrototype;
+                var containerPrototype = dataBaseManager.ContainerType;
 
                 var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
@@ -669,7 +669,7 @@ namespace CodeGarten.Data.Tests
             {
                 #region CREATE_SERVICES
 
-                var serviceManager = dataBaseManager.Service;
+                var serviceManager = dataBaseManager.ServiceType;
 
                 var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)",
                                                        new[] {"r", "rw"});
@@ -722,7 +722,7 @@ namespace CodeGarten.Data.Tests
 
                 #region CREATE_CONTAINER_PROTOTYPE
 
-                var containerPrototype = dataBaseManager.ContainerPrototype;
+                var containerPrototype = dataBaseManager.ContainerType;
 
                 var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 
@@ -960,7 +960,7 @@ namespace CodeGarten.Data.Tests
 
             #region CREATE_SERVICES
 
-            var serviceManager = dataBaseManager.Service;
+            var serviceManager = dataBaseManager.ServiceType;
 
             var serviceGit = serviceManager.Create("Git", "System Version Control (decentralized)", new[] { "r", "rw" });
 
@@ -1020,7 +1020,7 @@ namespace CodeGarten.Data.Tests
 
             #region CREATE_CONTAINER_PROTOTYPE
 
-            var containerPrototype = dataBaseManager.ContainerPrototype;
+            var containerPrototype = dataBaseManager.ContainerType;
 
             var prototypeGraduation = containerPrototype.Create(structure.Id, "Graduation", null);
 

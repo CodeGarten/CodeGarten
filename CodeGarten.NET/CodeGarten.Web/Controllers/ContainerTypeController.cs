@@ -7,11 +7,11 @@ using CodeGarten.Web.Model;
 namespace CodeGarten.Web.Controllers
 {
     [Authorize]
-    public sealed class ContainerPrototypeController : Controller
+    public sealed class ContainerTypeController : Controller
     {
         [HttpPost]
         [StructureOwner("structureId")]
-        public JsonResult Create(long structureId, ContainerPrototypeView containerPrototype, string parent)
+        public JsonResult Create(long structureId, ContainerTypeView containerType, string parent)
         {
             if (!ModelState.IsValid)
                 return FormValidationResponse.Error(ModelState);
@@ -19,7 +19,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-                dataBaseManager.ContainerPrototype.Create(structureId, containerPrototype.Name, parent);
+                dataBaseManager.ContainerType.Create(structureId, containerType.Name, parent);
 
                 return FormValidationResponse.Ok();
             }
@@ -38,7 +38,7 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-                dataBaseManager.ContainerPrototype.Delete(structureId, name);
+                dataBaseManager.ContainerType.Delete(structureId, name);
 
                 return FormValidationResponse.Ok();
             }

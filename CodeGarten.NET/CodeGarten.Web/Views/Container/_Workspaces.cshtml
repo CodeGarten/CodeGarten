@@ -2,20 +2,20 @@
 @model Container
 
 <div class="ui-widget" id="workspaces_widget">
-    <div class="ui-widget-header">
+    <div class="ui-widget-header ui-state-default">
         <h3>
             Workspaces</h3>
     </div>
     <div class="ui-widget-content">
         <div class="accordion">
-            @foreach (var binding in Model.Prototype.Bindings)
+            @foreach (var binding in Model.Type.Bindings)
             {
                 <h3>
                     <a href="#">@binding.WorkSpaceTypeName</a></h3>
                 <div>
                     @foreach (var service in binding.WorkSpaceType.Services)
                     {
-                        @Html.ActionLink(service.Name, "Index", "WorkSpace", new { structureId = Model.Prototype.StructureId, containerId = Model.Id, workSpaceTypeName = binding.WorkSpaceTypeName, serviceName = service.Name }, new { @class = "button" });
+                        @Html.ActionLink(service.Name, "Index", "WorkSpace", new { structureId = Model.Type.StructureId, containerId = Model.Id, workSpaceTypeName = binding.WorkSpaceTypeName, serviceName = service.Name }, new { @class = "button" });
                     }
                 </div>   
             }

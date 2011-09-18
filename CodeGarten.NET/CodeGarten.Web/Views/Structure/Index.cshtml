@@ -6,13 +6,20 @@
     var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 
     var description = Model.Description ?? "No Description";
+
+    var createdSpan = DateTime.Now - Model.CreatedOn;
+    var createdSpanString = createdSpan.Days == 0 ? 
+                            createdSpan.Hours == 0 ? 
+                            string.Format("{0} minutes ago", createdSpan.Minutes) :
+                            string.Format("{0} hours ago", createdSpan.Hours) :
+                            string.Format("{0} days ago", createdSpan.Days);
 }
 <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
 <h1>@Model.Name</h1>
 <h3>@description</h3>
 <h4>
-    Created on: @Model.CreatedOn</h4>
+    Created @createdSpanString (@Model.CreatedOn)</h4>
 <div id="structure_tabs" class="tabs">
     <ul>
         <li><a href="#all">Instances</a></li>

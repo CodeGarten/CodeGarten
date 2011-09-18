@@ -25,7 +25,7 @@ namespace CodeGarten.Data.Access
             var userObj = _dbManager.User.Get(user);
             if (user == null) throw new Exception();
 
-            return userObj.Password == EncryptPassword(passwordPlainText);
+            return userObj.Credential == EncryptPassword(passwordPlainText);
         }
     }
 }

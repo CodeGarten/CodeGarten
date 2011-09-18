@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodeGarten.Data.Model
 {
-    public class Service
+    public class ServiceType
     {
         [Key]
         [RegularExpression(@"[a-zA-Z0-9_]*")]
@@ -15,16 +15,16 @@ namespace CodeGarten.Data.Model
         public string Description { get; internal set; }
 
 
-        public virtual ICollection<ServicePermission> Permissions { get; internal set; }
+        public virtual ICollection<ServiceTypePermission> Permissions { get; internal set; }
 
 
-        public Service()
+        public ServiceType()
         {
-            Permissions = new LinkedList<ServicePermission>();
+            Permissions = new LinkedList<ServiceTypePermission>();
         }
     }
 
-    public class ServicePermission
+    public class ServiceTypePermission
     {
         public string Name { get; internal set; }
 
@@ -32,6 +32,6 @@ namespace CodeGarten.Data.Model
 
 
         [ForeignKey("ServiceName")]
-        public virtual Service Service { get; internal set; }
+        public virtual ServiceType ServiceType { get; internal set; }
     }
 }

@@ -6,7 +6,6 @@ function ContainerPrototype(name, parentContainer)
 
 	if (this.parent != null)
 	    this.parent.AddChild(this);
-        //this.parent.childs.push(this);
 
 	this.AddChild = function (containerPrototype) {
 	    this.childs.push(containerPrototype);
@@ -169,7 +168,7 @@ var ContainerPrototypeModel = new (function () {
 
         $.ajax({
             type: "POST",
-            url: "/ContainerPrototype/Delete",
+            url: "/ContainerType/Delete",
             data: ({ structureId: _structureId, name: containerPrototypeName }),
             cache: false,
             async: false

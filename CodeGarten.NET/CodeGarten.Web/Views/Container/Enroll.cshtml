@@ -5,7 +5,7 @@
     ViewBag.Title = string.Format("Enroll in {0}", Model.Name);
 
     var dbMan = (DataBaseManager)Context.Items["DataBaseManager"];
-    var distinctRoleTypeNames = Model.Prototype.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct();
+    var distinctRoleTypeNames = Model.Type.Bindings.SelectMany(b => b.Roles).Select(r => r.RoleTypeName).Distinct();
 }
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
@@ -25,7 +25,7 @@
             {
                 @Html.ValidationSummary(true)
                 <input name="roleTypeName" value="@roleTypeName" type="hidden"/>
-                if (dbMan.Container.HasPassword(Model.Prototype.StructureId, Model.Id, roleTypeName))
+                if (dbMan.Container.HasPassword(Model.Type.StructureId, Model.Id, roleTypeName))
                 {
                 @Html.Label("password", "This roletype requires a password")
                 @Html.Password("password")

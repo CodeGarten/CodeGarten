@@ -23,12 +23,12 @@
     {
     <div id='service_permissions'>
         <ul>
-            @foreach (var service in (IEnumerable<Service>) ViewBag.Services)
+            @foreach (var service in (IEnumerable<ServiceType>) ViewBag.Services)
             {
                 <li><a href="#@service.Name">@service.Name</a></li>
             }
         </ul>
-        @foreach (var service in (IEnumerable<Service>) ViewBag.Services)
+        @foreach (var service in (IEnumerable<ServiceType>) ViewBag.Services)
         {
             <div id="@service.Name">
                 <ul>

@@ -15,7 +15,7 @@
         <img src="@Url.Content("~/Content/themes/smoothness/images/loading.gif")" alt="Loading"/>
     </span>
     <div class="services">
-        @foreach (Service service in ViewBag.WorkSpaceType.Services)
+        @foreach (ServiceType service in ViewBag.WorkSpaceType.Services)
         { 
             bool isChecked = service.Name == ViewBag.ServiceName;
             @Html.RadioButton("service", service.Name, isChecked, new { id = service.Name, onclick = "javascript:ReloadIframe('"+service.Name+"', '" + Url.Action("Index", "Home", new { workspaceTypeName = ViewBag.WorkSpaceType.Name, structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, service = service.Name }) + "', '" + Url.Action("Index", "WorkSpace", new { structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, workSpaceTypeName = ViewBag.WorkSpaceType.Name, serviceName = service.Name }) + "')" })

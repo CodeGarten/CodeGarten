@@ -55,30 +55,29 @@ namespace CodeGarten.Data.Access
         public void Publish(long id)
         {
             var structure = Get(id);
-            var cps = _dbManager.ContainerPrototype.GetAll(id);
+            var cps = _dbManager.ContainerType.GetAll(id);
 
 
             if (cps.Count() == 0)
-                throw new InvalidOperationException("A structure must contain at least one container prototype.");
+                throw new InvalidOperationException("A structure must contain at least one container type.");
 
             foreach (var cp in cps)
             {
                 if (cp.Bindings.Count == 0)
                     throw new InvalidOperationException(
                         String.Format(
-                            "A container prototype must contain at least one workspace. Error occured at container prototype '{0}'.", cp.Name));
+                            "A container type must contain at least one workspace. Error occured at container type '{0}'.", cp.Name));
                 foreach (var binding in cp.Bindings)
                 {
                     if (binding.Roles.Count == 0)
                         throw new InvalidOperationException(
                             String.Format(
-                                "A workspace must contain at least one role type. Error occured at container prototype '{0}', workspace '{1}'.",
+                                "A workspace must contain at least one role type. Error occured at container type '{0}', workspace '{1}'.",
                                 binding.ContainerPrototypeName, binding.WorkSpaceTypeName));
-                    foreach (var role in binding.Roles)
-                        if (role.Rules.Count == 0)
-                            throw new InvalidOperationException(
+                    foreach (var role in binding.Roles.Where(role => role.Rules.Count == 0))
+                        throw new InvalidOperationException(
                             String.Format(
-                                "A role type must contain at least one rule. Error occured at container prototype '{0}', workspace '{1}', role type '{2}'.",
+                                "A role type must contain at least one rule. Error occured at container type '{0}', workspace '{1}', role type '{2}'.",
                                 binding.ContainerPrototypeName, binding.WorkSpaceTypeName, role.RoleTypeName));
                 }
             }

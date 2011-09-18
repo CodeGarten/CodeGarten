@@ -14,7 +14,7 @@ var StructureHtml = new (function () {
     };
 
     this.FirstContainerPrototype = function () {
-        return EventController.Placeholder("Create your first container prototype <a href='javascript:StructureController.AddChild(null)'>here</a>.","h2");
+        return EventController.Placeholder("Create your first container type <a href='javascript:StructureController.AddChild(null)'>here</a>.","h2");
     };
 
 })();
@@ -31,7 +31,7 @@ var StructureView = new (function () {
         _structure = $(structure);
         _structure.html(StructureHtml.FirstContainerPrototype());
         _formContainerPrototype = $(formContainerPrototype);
-        _formParent = $(formContainerPrototype + " input[name=\"parent\"]")
+        _formParent = $(formContainerPrototype + " input[name=\"parent\"]");
 
         this.ContainerPrototypeFormDialog.init(formContainerPrototype);
     };
@@ -42,17 +42,6 @@ var StructureView = new (function () {
 
         toggle.toggleClass("ui-icon-carat-1-n").toggleClass("ui-icon-carat-1-se");
         container.slideToggle("slow");
-
-//        if (toggle.hasClass("ui-icon-carat-1-n")) {
-//            container.slideUp("slow", function () {
-//                toggle.removeClass("ui-icon-carat-1-n").addClass("ui-icon-carat-1-se");
-//            });
-//        } else {
-//            container.slideDown("slow", function () {
-//                toggle.removeClass("ui-icon-carat-1-se").addClass("ui-icon-carat-1-n");
-//            });
-//        }
-
     };
 
     this.RemoveAll = function () {
@@ -100,7 +89,7 @@ var StructureView = new (function () {
 
         _formParent.val(obj.ParentName);
 
-        this.ContainerPrototypeFormDialog.Open("Create Container Prototype", obj, callback);
+        this.ContainerPrototypeFormDialog.Open("Create Container Type", obj, callback);
     };
 
     this.Error = function (msg) {

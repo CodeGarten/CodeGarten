@@ -3,10 +3,10 @@ function ErrorPlaceholder() {
     var _block;
     var htmlContent = function (title, msg, icon) {
         var iconHtml = "";
-        if(icon)
+        if (icon)
             iconHtml = "<span class='ui-icon ui-icon-alert' />";
-        return "<p>"+iconHtml+"<strong>"+title+": </strong>"+msg+"</p>"
-    
+        return "<p>" + iconHtml + "<strong>" + title + ": </strong>" + msg + "</p>";
+
     };
 
     this.init = function (block) {
@@ -21,7 +21,7 @@ function ErrorPlaceholder() {
     };
 
     this.Error = function (title, msg) {
-        _blockError.empty()
+        _blockError.empty();
         _blockError.append(htmlContent(title, msg, true));
         _block.show();
     };

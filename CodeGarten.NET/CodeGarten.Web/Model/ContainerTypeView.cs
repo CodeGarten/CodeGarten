@@ -4,7 +4,7 @@ using CodeGarten.Data.Access;
 
 namespace CodeGarten.Web.Model
 {
-    public sealed class ContainerPrototypeView : IValidatableObject
+    public sealed class ContainerTypeView : IValidatableObject
     {
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"[a-zA-Z0-9_]*", ErrorMessage = "Must only contain letters, numbers and the character '_' (no spaces)")]
@@ -17,8 +17,8 @@ namespace CodeGarten.Web.Model
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var context = new DataBaseManager();
-            if (context.ContainerPrototype.Get(StructureId, Name) != null)
-                yield return new ValidationResult("This container prototype already exists", new[] { "Name" });
+            if (context.ContainerType.Get(StructureId, Name) != null)
+                yield return new ValidationResult("This container type already exists", new[] { "Name" });
         }
     }
 }

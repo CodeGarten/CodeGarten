@@ -46,7 +46,7 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-            ViewBag.Services = dataBaseManager.Service.GetAll();
+            ViewBag.Services = dataBaseManager.ServiceType.GetAll();
             return PartialView(dataBaseManager.WorkSpaceType.Get(structureId, name));
         }
 

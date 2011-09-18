@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodeGarten.Data.Model
 {
-    public class ContainerPrototype
+    public class ContainerType
     {
         [MinLength(2)]
         [MaxLength(64)]
@@ -14,9 +14,9 @@ namespace CodeGarten.Data.Model
         public string ParentName { get; internal set; }
 
         [ForeignKey("ParentName, StructureId")]
-        public virtual ContainerPrototype Parent { get; internal set; }
+        public virtual ContainerType Parent { get; internal set; }
 
-        public virtual ICollection<ContainerPrototype> Childs { get; internal set; }
+        public virtual ICollection<ContainerType> Childs { get; internal set; }
 
         public virtual ICollection<Binding> Bindings { get; internal set; }
 
@@ -24,9 +24,9 @@ namespace CodeGarten.Data.Model
         public virtual Structure Structure { get; internal set; }
 
 
-        public ContainerPrototype()
+        public ContainerType()
         {
-            Childs = new LinkedList<ContainerPrototype>();
+            Childs = new LinkedList<ContainerType>();
 
             Bindings = new LinkedList<Binding>();
         }
@@ -50,7 +50,7 @@ namespace CodeGarten.Data.Model
         public virtual ICollection<Container> Childs { get; internal set; }
 
         [Required]
-        public virtual ContainerPrototype Prototype { get; internal set; }
+        public virtual ContainerType Type { get; internal set; }
 
 
         public Container()

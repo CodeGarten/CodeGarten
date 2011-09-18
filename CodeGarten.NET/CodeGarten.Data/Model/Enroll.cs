@@ -30,7 +30,7 @@ namespace CodeGarten.Data.Model
         public virtual RoleType RoleType { get; internal set; }
     }
 
-    public class EnrollPassword
+    public class EnrollKey
     {
         public long ContainerId { get; internal set; }
 
@@ -40,7 +40,7 @@ namespace CodeGarten.Data.Model
 
         [Required]
         [MinLength(8)]
-        public string Password { get; internal set; }
+        public string Credential { get; internal set; }
 
         [ForeignKey("ContainerId")]
         public Container Container { get; internal set; }

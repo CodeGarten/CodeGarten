@@ -2,6 +2,13 @@
 @model Structure
 @{
     var owner = Model.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+
+    var createdSpan = DateTime.Now - Model.CreatedOn;
+    var createdSpanString = createdSpan.Days == 0 ?
+                            createdSpan.Hours == 0 ?
+                            string.Format("{0} minutes ago", createdSpan.Minutes) :
+                            string.Format("{0} hours ago", createdSpan.Hours) :
+                            string.Format("{0} days ago", createdSpan.Days);
 }
 <div class="item">
     @{
@@ -19,7 +26,7 @@
         <p>
             Description: @description</p>
         <p>
-            Created on: @Model.CreatedOn</p>
+            Created @createdSpanString (@Model.CreatedOn)</p>
         <p>
             Visibility: @visibility</p>
     </div>

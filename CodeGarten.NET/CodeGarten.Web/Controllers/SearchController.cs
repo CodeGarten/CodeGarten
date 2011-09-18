@@ -32,7 +32,7 @@ namespace CodeGarten.Web.Controllers
                     {
                         ViewBag.Users = dataBaseManager.User.Search(search);
                         ViewBag.Structures = dataBaseManager.Structure.Search(search).Where(s => s.Public && !s.Developing);
-                        ViewBag.Projects = dataBaseManager.Container.Search(search).Where(c => c.Prototype.Structure.Public);
+                        ViewBag.Projects = dataBaseManager.Container.Search(search).Where(c => c.Type.Structure.Public);
                         ViewBag.MixedSearch = true;
                         var ajax = Request.IsAjaxRequest();
                         return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchAllResults") : View();
@@ -63,7 +63,7 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-            var results = dataBaseManager.Container.Search(search).Where(c => c.Prototype.Structure.Public);
+            var results = dataBaseManager.Container.Search(search).Where(c => c.Type.Structure.Public);
             return Request.IsAjaxRequest() ? (ActionResult)PartialView("_SearchResults", results) : View("Index", results);
         }
     }

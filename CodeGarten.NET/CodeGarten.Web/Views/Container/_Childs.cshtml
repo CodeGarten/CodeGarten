@@ -1,44 +1,49 @@
 ﻿@using CodeGarten.Data.Model
 @model Container
 @{
-    var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+    var owner = Model.Type.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 }
 <div id="child_widget" class="ui-widget">
-    <div class="ui-widget-header">
+    <div class="ui-widget-header ui-state-default">
         <h3>
             Childs</h3>
     </div>
     <div class="ui-widget-content">
         <div id="child_tabs">
             <div class="type">
-                Prototype:
-                @if (Model.Prototype.Childs.Count != 1)
+                Type:
+                @if (Model.Type.Childs.Count != 1)
                 {
                     @Html.RadioButton("type", "all", new { id = "all", onclick = "javascript:SwitchWS('.all','.results');" })
                     @Html.Label("all", "All")
                 }
-                @foreach (var cp in Model.Prototype.Childs)
+                @foreach (var cp in Model.Type.Childs)
                 {
                     @Html.RadioButton("type", cp.Name, new { id = cp.Name, onclick = "javascript:SwitchWS('." + cp.Name + "','.results');" })
                     @Html.Label(cp.Name, cp.Name)
                 }
             </div>
             <div class="results">
-                @foreach (var cp in Model.Prototype.Childs)
+                @foreach (var cp in Model.Type.Childs)
                 {
                     <div class="child @cp.Name">
                         @{ var cp1 = cp; }
-                        @foreach (var container in Model.Childs.Where(c => c.Prototype.Name == cp1.Name))
+                        @foreach (var container in Model.Childs.Where(c => c.Type.Name == cp1.Name))
                         {
                             @Html.ActionLink(container.Name, "Index", "Container", new { id = container.Id }, new { @class = "child_item slide ui-corner-all ui-widget-header ui-state-default" })
                         }
+                        @if (!Model.Childs.Any(c => c.Type.Name == cp1.Name))
+                        {
+                            <h3>
+                                There are no childs.</h3>
+                        }
                         @if (owner)
                         {
-                            @Html.ActionLink("Create new", "Create", new { structureId = Model.Prototype.StructureId, prototypeName = cp1.Name, parent = Model.Id }, new { @class = "create_button" })
+                            @Html.ActionLink("Create new", "Create", new { structureId = Model.Type.StructureId, prototypeName = cp1.Name, parent = Model.Id }, new { @class = "create_button" })
                         }
                     </div>
                 }
-                @if (Model.Prototype.Childs.Count != 1)
+                @if (Model.Type.Childs.Count != 1)
                 {
                     <div class="child all">
                         @foreach (var container in Model.Childs)
@@ -47,7 +52,8 @@
                         }
                         @if (Model.Childs.Count == 0)
                         {
-                                <h3>There are no childs.</h3>
+                            <h3>
+                                There are no childs.</h3>
                         }
                     </div>
                 }

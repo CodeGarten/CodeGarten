@@ -50,7 +50,7 @@ var RoleTypeView = new (function () {
 
     this.GetWidget = function (roleType) {
         var widget = $("<div class = 'RoleType'/>");
-        var header = $("<h1 class='ui-widget-header'/>");
+        var header = $("<h1 class='ui-widget-header ui-state-default'/>");
 
         var stopTop = $("<a href='#' title='Block inheritance from above' class='ui-icon ui-icon-arrowthickstop-1-s ui-state-disabled'/>");
         var stopBottom = $("<a href='#' title='Block inheritance from below' class='ui-icon ui-icon-arrowthickstop-1-n ui-state-disabled'/>");

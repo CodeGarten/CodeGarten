@@ -3,29 +3,29 @@ using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data.Access
 {
-    public sealed class ContainerPrototypeManager
+    public sealed class ContainerTypeManager
     {
         private readonly DataBaseManager _dbManager;
 
-        public ContainerPrototypeManager(DataBaseManager db)
+        public ContainerTypeManager(DataBaseManager db)
         {
             _dbManager = db;
         }
 
-        public IQueryable<ContainerPrototype> GetAll(long structureId)
+        public IQueryable<ContainerType> GetAll(long structureId)
         {
             return _dbManager.DbContext.ContainerPrototypes.Where(cp => cp.StructureId == structureId);
         }
 
-        public ContainerPrototype Get(long structureId, string name)
+        public ContainerType Get(long structureId, string name)
         {
             return _dbManager.DbContext.ContainerPrototypes.Find(name, structureId);
         }
 
-        public ContainerPrototype Create(long structureId, string name, string parent)
+        public ContainerType Create(long structureId, string name, string parent)
         {
-            ContainerPrototype parentCp = null;
-            var cp = new ContainerPrototype {StructureId = structureId, Name = name};
+            ContainerType parentCp = null;
+            var cp = new ContainerType {StructureId = structureId, Name = name};
 
             if (!string.IsNullOrEmpty(parent))
                 parentCp = Get(structureId, parent);
@@ -46,7 +46,7 @@ namespace CodeGarten.Data.Access
             _dbManager.DbContext.SaveChanges();
         }
 
-        public ContainerPrototype AddWorkSpaceType(long structureId, string name, string workSpaceName)
+        public ContainerType AddWorkSpaceType(long structureId, string name, string workSpaceName)
         {
             var cp = Get(structureId, name);
 
@@ -65,7 +65,7 @@ namespace CodeGarten.Data.Access
             _dbManager.DbContext.SaveChanges();
         }
 
-        public ContainerPrototype Bind(long structureId, string containerPrototypeName, string workSpaceTypeName)
+        public ContainerType Bind(long structureId, string containerPrototypeName, string workSpaceTypeName)
         {
             var cp = Get(structureId, containerPrototypeName);
             var binding = _dbManager.DbContext.Bindings.Find(structureId, containerPrototypeName, workSpaceTypeName) ??

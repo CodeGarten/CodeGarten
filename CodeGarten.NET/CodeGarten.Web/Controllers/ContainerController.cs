@@ -35,7 +35,7 @@ namespace CodeGarten.Web.Controllers
 
             var container = new ContainerView();
 
-            var prototype = dataBaseManager.ContainerPrototype.Get(structureId, prototypeName);
+            var prototype = dataBaseManager.ContainerType.Get(structureId, prototypeName);
 
             if (prototype == null)
                 throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());
@@ -53,7 +53,7 @@ namespace CodeGarten.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                var prototype = dataBaseManager.ContainerPrototype.Get(structureId, prototypeName);
+                var prototype = dataBaseManager.ContainerType.Get(structureId, prototypeName);
 
                 if (prototype == null)
                     throw new HttpException((int)HttpStatusCode.NotFound, HttpStatusCode.NotFound.ToString());

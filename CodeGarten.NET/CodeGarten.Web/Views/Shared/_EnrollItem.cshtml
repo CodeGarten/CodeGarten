@@ -2,7 +2,7 @@
 @model Enroll
 <div class="item">
     <div class="actions">
-        @Html.ActionLink(String.Format("@{0}", @Model.Container.Prototype.Structure.Name), "Index", "Structure", new { id = Model.StructureId }, null)
+        @Html.ActionLink(String.Format("@{0}", @Model.Container.Type.Structure.Name), "Index", "Structure", new { id = Model.StructureId }, null)
         @if (!@Model.Inherited)
         {
             @Html.ActionLink("Disenroll", "Disenroll", "Container", new { id = Model.ContainerId }, null)

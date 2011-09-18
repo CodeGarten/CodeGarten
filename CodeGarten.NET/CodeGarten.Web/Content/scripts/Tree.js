@@ -53,7 +53,7 @@ var TreeController = new (function () {
         if (workspace)
             TreeView.AddWorkspace(WorkspaceView.GetWidget(workspace));
         else
-            EventController.GlobalError("the container prototype '" + editing.Name + "' already contains the workspace '" + workspaceName + "'");
+            EventController.GlobalError("the container type '" + editing.Name + "' already contains the workspace '" + workspaceName + "'");
     };
 
     this.RemoveWorkspace = function (workspaceName) {
@@ -394,7 +394,7 @@ var TreeView = new (function () {
 
     var Prepare = function () {
         $(view).empty();
-        $(view).append(EventController.Placeholder("Choose a container prototype from the structure to start editing.", "h2"));
+        $(view).append(EventController.Placeholder("Choose a container type from the structure to start editing.", "h2"));
         $(view).append("<div class='ContainerPrototype'/>");
         containerPrototypeTag = $(view).children(".ContainerPrototype");
     };
@@ -404,13 +404,13 @@ var TreeView = new (function () {
             $(view).children(".ui-state-highlight").hide();
             $(containerPrototypeTag).empty();
 
-            var cpHeader = $("<h1 class='ui-widget-header'/>");
+            var cpHeader = $("<h1 class='ui-widget-header ui-state-default'/>");
             var cpContent = $("<div class='ui-widget-content'/>");
 
             $(cpHeader).text(containerPrototype.Name);
 
             $(containerPrototypeTag).append(cpHeader);
-            $(containerPrototypeTag).append(EventController.Placeholder("Drag workspaces from the components into this container prototype.  Or add a <a href='javascript:TreeController.CreateAddWorkspace();'>new one.</a>", "h3"));
+            $(containerPrototypeTag).append(EventController.Placeholder("Drag workspaces from the components into this container type.  Or add a <a href='javascript:TreeController.CreateAddWorkspace();'>new one.</a>", "h3"));
             $(containerPrototypeTag).append(cpContent);
 
             $(containerPrototypeTag).droppable({

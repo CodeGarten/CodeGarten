@@ -23,8 +23,8 @@
                 @description
                 <br />
                 <label>
-                    Prototype:</label>
-                @Model.Prototype.Name
+                    Type:</label>
+                @Model.Type.Name
                 <br />
                 <label>
                     <a class="counter" href="javascript:Users()">@users.Count()</a></label>
@@ -36,11 +36,11 @@
                 @if (enrolledImplicit.Any())
                 {
                     <br />
-                    <text>You have inherited this container as </text>
-                    foreach (var inheritedEnroll in enrolledImplicit)
-                    {
-                        <label>@inheritedEnroll.RoleTypeName</label>   
-                    }
+                    <text>You have inherited this container as: </text>
+                    foreach (var inherited in enrolledImplicit)
+                     {
+                         <label>@inherited.RoleTypeName</label>
+                     }
                 }
             </div>
             @Html.Partial("_Childs", Model)
@@ -64,7 +64,7 @@
 
         try {
             history.pushState(null, $("#container #structure_path .name").first().text(), nextUrl);
-            $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Prototype.Structure.Name");
+            $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Type.Structure.Name");
             SwitchContainer(nextUrl);
             return false;
         } catch (exception) {

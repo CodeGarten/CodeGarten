@@ -28,12 +28,12 @@ namespace CodeGarten.Data.Model
         public virtual Structure Structure { get; internal set; }
 
 
-        public virtual ICollection<ServicePermission> Permissions { get; internal set; }
+        public virtual ICollection<ServiceTypePermission> Permissions { get; internal set; }
 
 
         public Rule()
         {
-            Permissions = new LinkedList<ServicePermission>();
+            Permissions = new LinkedList<ServiceTypePermission>();
         }
     }
 

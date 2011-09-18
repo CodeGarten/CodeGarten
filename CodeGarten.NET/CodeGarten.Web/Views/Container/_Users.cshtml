@@ -7,11 +7,11 @@
     var users = dbMan.User.GetAll().Where(u => u.Enrolls.Any(e => e.ContainerId == Model.Id));
 }
 <div class="ui-widget" id="users_widget">
-    <div class="ui-widget-header">
+    <div class="ui-widget-header ui-state-default">
         <h3>
             Enrolled users</h3>
     </div>
-    <div class="ui-widget-content child">
+    <div id="enrolled_users" class="ui-widget-content child">
         @foreach (var user in users)
         {
             @Html.ActionLink(user.Name, "Index", "User", new { name = user.Name }, new { @class = "child_item ui-corner-all ui-widget-header ui-state-default" })

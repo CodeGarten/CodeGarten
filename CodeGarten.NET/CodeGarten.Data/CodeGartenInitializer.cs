@@ -12,25 +12,25 @@ namespace CodeGarten.Data
         {
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_structure ON dbo.Structures " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.ContainerPrototypes FROM deleted, dbo.ContainerPrototypes WHERE deleted.Id = dbo.ContainerPrototypes.StructureId " +
+                                               "DELETE dbo.ContainerTypes FROM deleted, dbo.ContainerTypes WHERE deleted.Id = dbo.ContainerTypes.StructureId " +
                                                "DELETE dbo.RoleTypes FROM deleted, dbo.RoleTypes WHERE deleted.Id = dbo.RoleTypes.StructureId " +
                                                "DELETE dbo.Rules FROM deleted, dbo.Rules WHERE deleted.Id = dbo.Rules.StructureId " +
                                                "DELETE dbo.WorkSpaceTypes FROM deleted, dbo.WorkSpaceTypes WHERE deleted.Id = dbo.WorkSpaceTypes.StructureId " +
                                                "DELETE dbo.Structures FROM deleted WHERE deleted.Id = dbo.Structures.Id"
                 );
 
-            context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_cp ON dbo.ContainerPrototypes " +
+            context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_cp ON dbo.ContainerTypes " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
-                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId; " +
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.Name = dbo.Roles.ContainerTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Bindings FROM deleted, dbo.Bindings WHERE deleted.Name = dbo.Bindings.ContainerTypeName AND deleted.StructureId = dbo.Bindings.StructureId; " +
                                                "WITH q AS " +
                                                "(SELECT  Name, StructureId " +
                                                "FROM    deleted UNION ALL " +
                                                "SELECT  c.Name, c.StructureId " +
                                                "FROM    q " +
-                                               "JOIN    dbo.ContainerPrototypes c " +
+                                               "JOIN    dbo.ContainerTypes c " +
                                                "ON      c.ParentName = q.Name AND c.StructureId = q.StructureId) " +
-                                               "DELETE dbo.ContainerPrototypes " +
+                                               "DELETE dbo.ContainerTypes " +
                                                "WHERE EXISTS ( SELECT  Name, StructureId INTERSECT SELECT  Name, StructureId FROM    q )"
                 );
 

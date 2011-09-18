@@ -1,10 +1,10 @@
-﻿@model CodeGarten.Web.Model.ContainerPrototypeView
+﻿@model CodeGarten.Web.Model.ContainerTypeView
 @using (Ajax.BeginRouteForm("Default",
-                            new { controller = "ContainerPrototype", action = "Create", structureId = Request.RequestContext.RouteData.Values["id"] },
-                            new AjaxOptions() { OnSuccess = "StructureView.ContainerPrototypeFormDialog.OnSuccessCallBack" }))
+                                              new { controller = "ContainerType", action = "Create", structureId = Request.RequestContext.RouteData.Values["id"] },
+                                              new AjaxOptions() { OnSuccess = "StructureView.ContainerPrototypeFormDialog.OnSuccessCallBack" }))
 {
     <h2>
-        Create container prototype
+        Create container type
     </h2>
     <div class="editor-hidden">
         <input type="hidden" name="parent" />

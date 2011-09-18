@@ -87,7 +87,7 @@ namespace CodeGarten.Data.Access
             var user = new User
             {
                 Name = name,
-                Password = AuthenticationManager.EncryptPassword(password),
+                Credential = AuthenticationManager.EncryptPassword(password),
                 Email = email
             };
             _db.DbContext.Users.Add(user);
@@ -108,7 +108,7 @@ namespace CodeGarten.Data.Access
         public void ChangePassword(string name, string newPassword)
         {
             var user = Get(name);
-            user.Password = AuthenticationManager.EncryptPassword(newPassword);
+            user.Credential = AuthenticationManager.EncryptPassword(newPassword);
 
             _db.DbContext.SaveChanges();
 
@@ -138,7 +138,7 @@ namespace CodeGarten.Data.Access
             var barrier = (int) roleBarrier;
 
             return _db.DbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.Prototype.Name &&
+                                          r.ContainerPrototypeName == container.Type.Name &&
                                           r.RoleTypeName == roleType.Name &&
                                           r.Barrier != barrier
                 ).Any();
@@ -147,7 +147,7 @@ namespace CodeGarten.Data.Access
         private bool ExisteRole(Container container, RoleType roleType)
         {
             return _db.DbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.Prototype.Name &&
+                                          r.ContainerPrototypeName == container.Type.Name &&
                                           r.RoleTypeName == roleType.Name
                 ).Any();
         }
@@ -156,7 +156,7 @@ namespace CodeGarten.Data.Access
 
         private bool EnrollInherited(User user, Container container, RoleType roleType)
         {
-            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
+            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Type.StructureId);
 
             if (enroll != null)
             {
@@ -215,7 +215,7 @@ namespace CodeGarten.Data.Access
 
         private bool InheritedDisenroll(User user, Container container, RoleType roleType)
         {
-            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Prototype.StructureId);
+            var enroll = _db.DbContext.Enrolls.Find(user.Name, container.Id, roleType.Name, container.Type.StructureId);
 
             if (enroll == null)
                 return false;
@@ -306,7 +306,7 @@ namespace CodeGarten.Data.Access
 
             var pass = _db.DbContext.EnrollPassWords.Find(container, roleType, structure);
             if (pass != null)
-                if (password == null || pass.Password != AuthenticationManager.EncryptPassword(password))
+                if (password == null || pass.Credential != AuthenticationManager.EncryptPassword(password))
                     return false;
 
             var enroll = _db.DbContext.Enrolls.Find(user, container, roleType, structure);
@@ -342,7 +342,7 @@ namespace CodeGarten.Data.Access
         internal void SyncronizeEnrolls(Container container)
         {
 
-            var roles = _db.DbContext.Roles.Where(r => r.ContainerPrototypeName == container.Prototype.Name && r.Barrier != (int)RoleBarrier.Top);
+            var roles = _db.DbContext.Roles.Where(r => r.ContainerPrototypeName == container.Type.Name && r.Barrier != (int)RoleBarrier.Top);
             if (roles.Count() == 0)
                 return;
 

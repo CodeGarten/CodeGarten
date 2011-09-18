@@ -59,16 +59,6 @@ var EventController = new (function () {
         });
     };
 
-//    this.Show = function (message, option) {
-//        var icon = option.Type == "error" ? "ui-icon-alert" : "ui-icon-check";
-//        var state = option.Type == "error" ? "ui-state-error" : "ui-state-highlight";
-//        var nearObj = option.NearObj 
-
-//        var widget = $("<div class='ui-widget event'><div class='ui-state-highlight ui-corner-all'> <div onclick='#' title='Close' class='ui-icon ui-icon-close'>Close</div> <p><span class='ui-icon ui-icon-check'></span><strong>Success:</strong> " + message + "</p></div></div>").click(function () {
-//            $(widget).fadeOut(function () { $(widget).remove(); });
-//        }).hide();
-//    }
-
     this.Close = function (callback) {
         clearTimeout(timer);
         $(errorField).fadeOut(callback);

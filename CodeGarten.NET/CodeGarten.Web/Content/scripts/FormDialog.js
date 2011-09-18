@@ -15,7 +15,6 @@ function FormDialog() {
             if (error.Field == "form")
                 _formError.Error("Error", error.Error);
             else {
-//                $.validator(showLabel(error.Field, error.Error), _form);
                 var field = _form.find("input[name=\"" + error.Field + "\"]");
                 $(field).removeClass("valid").addClass("input-validation-error");
                 $(field).next().html("<span for='" + error.Field + "' generated='true' class>" + error.Error + "</span>");

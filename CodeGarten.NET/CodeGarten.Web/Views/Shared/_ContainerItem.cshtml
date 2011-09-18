@@ -1,17 +1,17 @@
 ﻿@using CodeGarten.Data.Model
 @model Container
 @{
-    var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+    var owner = Model.Type.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 }
 <div class="item">
     <div class="actions">
         @if (owner)
         {
-            @Html.ActionLink("Delete", "Delete", "Container", new { id = Model.Id, structureId = Model.Prototype.StructureId }, new { @class = "delete_button" })
+            @Html.ActionLink("Delete", "Delete", "Container", new { id = Model.Id, structureId = Model.Type.StructureId }, new { @class = "delete_button" })
         }
     </div>
     <h3 class="name">@Html.ActionLink(Model.Name, "Index", "Container", new { id = Model.Id }, new{@class = "fader_right"})</h3>
-    <div class="info">
+    <div>
         @{var description = Model.Description ?? "No description";}
         <p>
             Description: @description</p>

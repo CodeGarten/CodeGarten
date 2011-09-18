@@ -4,12 +4,12 @@
 @{
     var dbMan = (DataBaseManager)Context.Items["DataBaseManager"];
 
-    var owner = Model.Prototype.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
+    var owner = Model.Type.Structure.Administrators.Select(a => a.Name).Contains(User.Identity.Name);
 
     var enrolled = dbMan.User.Get(User.Identity.Name).Enrolls.SingleOrDefault(e => e.ContainerId == Model.Id && !e.Inherited);
 }
 <div class="ui-widget" id="actions_widget">
-    <div class="ui-widget-header">
+    <div class="ui-widget-header ui-state-default">
         <h3>
             Actions</h3>
     </div>
@@ -17,13 +17,13 @@
         @if (owner)
         {
             <div>
-                @Html.ActionLink("Delete", "Delete", new { id = Model.Id, structureId = Model.Prototype.StructureId }, new { @class = "delete_button" })
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id, structureId = Model.Type.StructureId }, new { @class = "delete_button" })
             </div>
         }
         <div>
             @if(enrolled == null)
             {
-                @Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id }, new { @class = "button" })
+                @Html.ActionLink("Enroll", "Enroll", new { structureId = Model.Type.StructureId, containerId = Model.Id }, new { @class = "button" })
             }else{
                 <a href="javascript:ConfirmDisenroll()" class="button">Disenroll</a>
             }
@@ -34,11 +34,11 @@
 @if(enrolled != null)
 {
 <div id="disenrollDialogConfirm" title="Disenroll @@ @Model.Name">
-    Are you sure?
+    Are you sure? You will loose any explicitly earned permissions.
 </div>
     
 <script type="text/javascript">
-    var url = '@Url.Action("Disenroll", new { structureId = Model.Prototype.StructureId, containerId = Model.Id, roleTypeName = enrolled.RoleTypeName })';
+    var url = '@Url.Action("Disenroll", new { structureId = Model.Type.StructureId, containerId = Model.Id, roleTypeName = enrolled.RoleTypeName })';
     url = url.replace(/amp;/g, "");
     $("#disenrollDialogConfirm").dialog({
         autoOpen: false,

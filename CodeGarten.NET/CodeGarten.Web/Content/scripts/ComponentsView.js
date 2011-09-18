@@ -7,7 +7,7 @@ var ComponentsView = new (function () {
         divId = id;
 
         $(divId).empty();
-        $(divId).append("<h1 class='ui-widget-header'/>");
+        $(divId).append("<h1 class='ui-widget-header ui-state-default'/>");
         $(divId).append("<div/>");
 
         var header = $(divId).children(".ui-widget-header");

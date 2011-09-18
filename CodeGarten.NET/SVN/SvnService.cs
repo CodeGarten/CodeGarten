@@ -54,13 +54,13 @@ namespace SVN
 
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Type.WorkSpaceTypeWithService(Name))
             {
                 var instanceName = e.Container.UniqueInstanceName(workSpaceType);
                 SVNRepositoryManager.Delete(_repoPath, instanceName);
                 _svnAuthorization.RemoveInstance(instanceName);
 
-                foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))                
+                foreach (var role in e.Type.Bindings.SelectMany(binding => binding.Roles))                
                     _svnAuthorization.RemoveGroups(e.Container.UniqueGroupName(role.RoleTypeName));
 
             }
@@ -70,7 +70,7 @@ namespace SVN
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
             //If the event is not suppose to come to this service, continuing would be bad
-            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+            if (!e.Container.Type.WorkSpaceTypeWithService(Name).Any())
                 return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.RemoveUser(e.Enroll.UserName);
@@ -80,7 +80,7 @@ namespace SVN
         private void OnUserEnroll(object sender, EnrollEventArgs e)
         {
             //If the event is not suppose to come to this service, continuing would be bad
-            if (!e.Container.Prototype.WorkSpaceTypeWithService(Name).Any())
+            if (!e.Container.Type.WorkSpaceTypeWithService(Name).Any())
                 return;
             var group = _svnAuthorization.GetGroup(e.Container.UniqueGroupName(e.Enroll.RoleTypeName));
             group.AddUser(e.Enroll.UserName);
@@ -89,7 +89,7 @@ namespace SVN
 
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Type.WorkSpaceTypeWithService(Name))
             {
                 var instanceName = e.Container.UniqueInstanceName(workSpaceType);
 
@@ -106,7 +106,7 @@ namespace SVN
                 }
 
                 var instance = _svnAuthorization.CreateInstance(instanceName);
-                foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
+                foreach (var role in e.Type.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                     _svnAuthorization.CreateGroup(groupName);

@@ -61,7 +61,7 @@ var WorkspaceView = new (function () {
 
     this.GetWidget = function (workspace) {
         var widget = $("<div class = 'Workspace'/>");
-        var header = $("<h1 class='ui-widget-header'/>");
+        var header = $("<h1 class='ui-widget-header ui-state-default'/>");
         var deleteButton = $("<a href='javascript:TreeController.RemoveWorkspace(\"" + workspace.Name + "\")' title='Delete' class='ui-icon ui-icon-trash'/>");
         var content = $("<div class='ui-widget-content'/>");
         var placeholder = $(EventController.Placeholder("Drag role types from the components into this workspace. Or add a <a href='javascript:TreeController.CreateAddRoleType(\"" + workspace.Name + "\");'>new one.</a>", "h3"));

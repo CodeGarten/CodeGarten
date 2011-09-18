@@ -20,11 +20,11 @@ namespace CodeGarten.Web.Controllers
         {
             var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-            var ContainerPrototypes = dataBaseManager.ContainerPrototype.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
+            var ContainerPrototypes = dataBaseManager.ContainerType.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
             var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name), rl.RoleBarrier });
 
             var Bindings =
-                dataBaseManager.ContainerPrototype.GetAll(id).SelectMany(cp => cp.Bindings).Select(
+                dataBaseManager.ContainerType.GetAll(id).SelectMany(cp => cp.Bindings).Select(
                     b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName });
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
@@ -53,7 +53,7 @@ namespace CodeGarten.Web.Controllers
             if (!structure.Developing)
                 return RedirectToAction("Index", new { id });
 
-            ViewBag.Services = dataBaseManager.Service.GetAll();
+            ViewBag.Services = dataBaseManager.ServiceType.GetAll();
 
             return View(structure);
         }
@@ -66,12 +66,12 @@ namespace CodeGarten.Web.Controllers
             {
                 var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
-                dataBaseManager.ContainerPrototype.ClearAllBindings(id);
+                dataBaseManager.ContainerType.ClearAllBindings(id);
 
                 if (roles != null)
                     foreach (var role in roles.Where(r => !string.IsNullOrEmpty(r.WorkSpaceTypeName)))
                     {
-                        dataBaseManager.ContainerPrototype.Bind(id, role.ContainerPrototypeName, role.WorkSpaceTypeName);
+                        dataBaseManager.ContainerType.Bind(id, role.ContainerPrototypeName, role.WorkSpaceTypeName);
 
                         if (!string.IsNullOrEmpty(role.RoleTypeName))
                             dataBaseManager.Role.Create(id, role.ContainerPrototypeName, role.WorkSpaceTypeName,
@@ -108,7 +108,7 @@ namespace CodeGarten.Web.Controllers
                 return RedirectToAction("Design", new { id });
 
             ViewBag.Instances = dataBaseManager.Container.GetInstances(id.Value).Where(c => c.Parent == null);
-            ViewBag.TopInstanceName = dataBaseManager.ContainerPrototype.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
+            ViewBag.TopInstanceName = dataBaseManager.ContainerType.GetAll(id.Value).Single(cp => cp.Parent == null).Name;
 
             return View(structure);
         }

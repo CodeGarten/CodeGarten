@@ -6,18 +6,18 @@ using CodeGarten.Data.Model;
 
 namespace CodeGarten.Data.Access
 {
-    public sealed class ServiceManager
+    public sealed class ServiceTypeManager
     {
         private readonly DataBaseManager _dbManager;
 
-        public ServiceManager(DataBaseManager db)
+        public ServiceTypeManager(DataBaseManager db)
         {
             _dbManager = db;
         }
 
-        public Service Create(string name, string description)
+        public ServiceType Create(string name, string description)
         {
-            var service = new Service
+            var service = new ServiceType
                               {
                 Name = name,
                 Description = description
@@ -30,19 +30,19 @@ namespace CodeGarten.Data.Access
             return service;
         }
 
-        public Service Create(string name, string description, IEnumerable<string> permissions)
+        public ServiceType Create(string name, string description, IEnumerable<string> permissions)
         {
-            var service = new Service
+            var service = new ServiceType
                               {
                                   Name = name,
                                   Description = description
                               };
 
             foreach (var permission in permissions)
-                service.Permissions.Add(new ServicePermission
+                service.Permissions.Add(new ServiceTypePermission
                                             {
                                                 Name = permission,
-                                                Service = service
+                                                ServiceType = service
                                             });
 
 
@@ -52,7 +52,7 @@ namespace CodeGarten.Data.Access
             return service;
         }
 
-        public Service Get(string service)
+        public ServiceType Get(string service)
         {
             return _dbManager.DbContext.Services.Find(service);
         }
@@ -74,7 +74,7 @@ namespace CodeGarten.Data.Access
 
             if (serviceObj.Permissions.Where(p => p.Name == permission).Count() != 0) return false;
 
-            var servicePermissionObj = new ServicePermission
+            var servicePermissionObj = new ServiceTypePermission
                                            {
                                                Name = permission,
                                            };
@@ -86,7 +86,7 @@ namespace CodeGarten.Data.Access
             return _dbManager.DbContext.SaveChanges() != 0;
         }
 
-        public IQueryable<Service> GetAll()
+        public IQueryable<ServiceType> GetAll()
         {
             return _dbManager.DbContext.Services;
         }

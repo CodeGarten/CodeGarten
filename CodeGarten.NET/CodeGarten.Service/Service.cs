@@ -49,7 +49,7 @@ namespace CodeGarten.Service
         {
             using (var databaseManager = new DataBaseManager())
             {
-                databaseManager.Service.Create(ServiceModel.Name, ServiceModel.Description, ServiceModel.Permissions);
+                databaseManager.ServiceType.Create(ServiceModel.Name, ServiceModel.Description, ServiceModel.Permissions);
 
                 _isInstaled = true;
             }
@@ -61,7 +61,7 @@ namespace CodeGarten.Service
             {
                 if (_isInstaled) return true;
                 using (var dataBaseManager = new DataBaseManager())
-                    return (_isInstaled = dataBaseManager.Service.Get(Name) != null);
+                    return (_isInstaled = dataBaseManager.ServiceType.Get(Name) != null);
             }
         }
 

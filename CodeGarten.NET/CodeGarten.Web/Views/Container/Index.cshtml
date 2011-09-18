@@ -1,7 +1,7 @@
 ﻿@using CodeGarten.Data.Model
 @model Container
 @{
-    ViewBag.Title = string.Format("{0} @ {1}", Model.Name, Model.Prototype.Structure.Name);
+    ViewBag.Title = string.Format("{0} @ {1}", Model.Name, Model.Type.Structure.Name);
 }
 @Html.Partial("_Container", Model)
 <script type="text/javascript">
@@ -13,7 +13,7 @@
         if (!ignore) {
             SwitchContainer(location.href, function () {
                 currentUrl = location.href;
-                $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Prototype.Structure.Name");
+                $("head title").text("CodeGarten - " + $("#container #structure_path .name").first().text() + " @@ @Model.Type.Structure.Name");
             });
         }
         else

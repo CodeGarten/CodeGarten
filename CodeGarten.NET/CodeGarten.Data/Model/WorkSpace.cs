@@ -12,7 +12,7 @@ namespace CodeGarten.Data.Model
         public long StructureId { get; internal set; }
 
 
-        public virtual ICollection<Service> Services { get; internal set; }
+        public virtual ICollection<ServiceType> Services { get; internal set; }
 
 
         [ForeignKey("StructureId")]
@@ -21,7 +21,7 @@ namespace CodeGarten.Data.Model
 
         public WorkSpaceType()
         {
-            Services = new LinkedList<Service>();
+            Services = new LinkedList<ServiceType>();
         }
     }
 
@@ -40,7 +40,7 @@ namespace CodeGarten.Data.Model
         public virtual Structure Structure { get; internal set; }
 
         [ForeignKey("ContainerPrototypeName, StructureId")]
-        public virtual ContainerPrototype ContainerPrototype { get; internal set; }
+        public virtual ContainerType ContainerType { get; internal set; }
 
         [ForeignKey("WorkSpaceTypeName, StructureId")]
         public virtual WorkSpaceType WorkSpaceType { get; internal set; }

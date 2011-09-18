@@ -38,7 +38,7 @@ namespace Trac
 
         private void OnDeleteContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Type.WorkSpaceTypeWithService(Name))
             {
                 var envName = e.Container.UniqueInstanceName(workSpaceType);
                 if (!TracEnvironmentManager.Delete(_envPath, envName))
@@ -54,7 +54,7 @@ namespace Trac
         private void OnDisenrollUser(object sender, EnrollEventArgs e)
         {
 
-            foreach (var workSpaceType in e.Container.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Container.Type.WorkSpaceTypeWithService(Name))
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
@@ -69,7 +69,7 @@ namespace Trac
 
         private void OnEnrollUser(object sender, EnrollEventArgs e)
         {
-            foreach (var workSpaceType in e.Container.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Container.Type.WorkSpaceTypeWithService(Name))
             {
                 var tracPermissions =
                     new TracPermissionManager(TracEnvironmentManager.FormatEnvironmentPath(_envPath,
@@ -83,7 +83,7 @@ namespace Trac
 
         private void OnCreateContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var workSpaceType in e.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workSpaceType in e.Type.WorkSpaceTypeWithService(Name))
             {
                 var contextType = workSpaceType;
                 var envName = e.Container.UniqueInstanceName(workSpaceType);
@@ -105,8 +105,8 @@ namespace Trac
                 }
 
                 var tracPermissions = new TracPermissionManager(tracEnvironment.EnvironmentPath);
-                tracPermissions.RemoveAll(PermissionUser.Authenticated);
-                foreach (var role in e.Prototype.Bindings.SelectMany(binding => binding.Roles))
+                tracPermissions.RemoveAll();
+                foreach (var role in e.Type.Bindings.SelectMany(binding => binding.Roles))
                 {
                     var groupName = e.Container.UniqueGroupName(role.RoleTypeName);
                     foreach (var rule in role.Rules)

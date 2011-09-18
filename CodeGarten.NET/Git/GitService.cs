@@ -43,20 +43,20 @@ namespace Git
 
         private void DisenrollUser(object sender, EnrollEventArgs e)
         {
-            foreach (var workspace in e.Container.Prototype.WorkSpaceTypeWithService(Name))
+            foreach (var workspace in e.Container.Type.WorkSpaceTypeWithService(Name))
                 Authorization.RemoveUser(e.Enroll.UserName, e.Container.UniqueInstanceName(workspace));
         }
 
         private void EnrollUser(object sender, EnrollEventArgs e)
         {
-            foreach (var binding in e.Container.Prototype.Bindings.Where(b => e.Container.Prototype.WorkSpaceTypeWithService(Name).Select(w => w.Name).Contains(b.WorkSpaceTypeName)))
-                foreach (var permission in binding.Roles.SelectMany(r => r.Rules).SelectMany(r => r.Permissions).Where(p => p.Service.Name == Name))
+            foreach (var binding in e.Container.Type.Bindings.Where(b => e.Container.Type.WorkSpaceTypeWithService(Name).Select(w => w.Name).Contains(b.WorkSpaceTypeName)))
+                foreach (var permission in binding.Roles.SelectMany(r => r.Rules).SelectMany(r => r.Permissions).Where(p => p.ServiceType.Name == Name))
                     Authorization.AddUser(e.Enroll.UserName, e.Container.UniqueInstanceName(binding.WorkSpaceType), (Privileges)Enum.Parse(typeof(Privileges), permission.Name));
         }
 
         private void Deletecontainer(object sender, ContainerEventArgs e)
         {
-            foreach (var repositoryName in e.Prototype.WorkSpaceTypeWithService(Name).Select(workSpaceType => e.Container.UniqueInstanceName(workSpaceType)))
+            foreach (var repositoryName in e.Type.WorkSpaceTypeWithService(Name).Select(workSpaceType => e.Container.UniqueInstanceName(workSpaceType)))
             {
                 FileSystem.DeleteRepository(repositoryName);
                 Authorization.DeleteRepository(repositoryName);
@@ -65,7 +65,7 @@ namespace Git
 
         private void CreateContainer(object sender, ContainerEventArgs e)
         {
-            foreach (var repositoryName in e.Prototype.WorkSpaceTypeWithService(Name).Select(workspaceType => e.Container.UniqueInstanceName(workspaceType)))
+            foreach (var repositoryName in e.Type.WorkSpaceTypeWithService(Name).Select(workspaceType => e.Container.UniqueInstanceName(workspaceType)))
             {
                 FileSystem.CreateRepository(repositoryName);
                 Authorization.CreateRepository(repositoryName);

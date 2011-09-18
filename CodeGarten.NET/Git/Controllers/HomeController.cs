@@ -33,7 +33,7 @@ namespace Git.Controllers
             if(enroll != null)
             {
                 ViewBag.Permissions =
-                    container.Prototype.Bindings.Single(b => b.WorkSpaceTypeName == workspaceTypeName).Roles.Where(
+                    container.Type.Bindings.Single(b => b.WorkSpaceTypeName == workspaceTypeName).Roles.Where(
                         r => r.RoleTypeName == enroll.RoleTypeName).SelectMany(r => r.Rules).SelectMany(
                             ru => ru.Permissions).Where(p => p.ServiceName == Service.ServiceModel.Name);
             }

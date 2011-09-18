@@ -16,7 +16,7 @@ var StructureController = new (function () {
     };
 
     this.Delete = function (containerName) {
-        DialogConfirmView.open("Delete a container prototype", "Are you sure you want to delete the container: " + containerName, function () {
+        DialogConfirmView.open("Delete a container type", "Are you sure you want to delete the container: " + containerName, function () {
             $("#main").mask("Deleting...", 500);
             if (ContainerPrototypeModel.Remove(containerName)) {
                 $("#main").unmask();
@@ -24,7 +24,7 @@ var StructureController = new (function () {
                 TreeController.Delete(containerName);
             }
             else
-                StructureView.Error("Can't delete the Container Prototype \"" + conainerName + "\"");
+                StructureView.Error("Cannot delete the Container Type \"" + containerName + "\"");
 
         });
 
@@ -37,7 +37,7 @@ var StructureController = new (function () {
             var container = ContainerPrototypeModel.CreateContainerPrototype(obj.Name, obj.ParentName);
 
             if (container == null) {
-                StructureView.Error("The Container Prototype \"" + containerName + "\" already exist");
+                StructureView.Error("The Container Type \"" + obj.Name + "\" already exist");
                 return;
             }
 

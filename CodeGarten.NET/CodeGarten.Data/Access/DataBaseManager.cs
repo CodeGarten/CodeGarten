@@ -29,11 +29,11 @@ namespace CodeGarten.Data.Access
 
         public AuthenticationManager Authentication { get; private set; }
         public ContainerManager Container { get; private set; }
-        public ContainerPrototypeManager ContainerPrototype { get; private set; }
+        public ContainerTypeManager ContainerType { get; private set; }
         public RoleManager Role { get; private set; }
         public RoleTypeManager RoleType { get; private set; }
         public RuleManager Rule { get; private set; }
-        public ServiceManager Service { get; private set; }
+        public ServiceTypeManager ServiceType { get; private set; }
         public StructureManager Structure { get; private set; }
         public WorkSpaceTypeManager WorkSpaceType { get; private set; }
 
@@ -44,11 +44,11 @@ namespace CodeGarten.Data.Access
             User = new UserManager(this);
             Authentication = new AuthenticationManager(this);
             Container = new ContainerManager(this);
-            ContainerPrototype = new ContainerPrototypeManager(this);
+            ContainerType = new ContainerTypeManager(this);
             Role = new RoleManager(this);
             RoleType = new RoleTypeManager(this);
             Rule = new RuleManager(this);
-            Service = new ServiceManager(this);
+            ServiceType = new ServiceTypeManager(this);
             Structure = new StructureManager(this);
             WorkSpaceType = new WorkSpaceTypeManager(this);
         }

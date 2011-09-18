@@ -3,7 +3,7 @@
 @using CodeGarten.Data.Model
 @{
     var dataBaseManager = (DataBaseManager)Context.Items["DataBaseManager"];
-    var prototypes = dataBaseManager.ContainerPrototype.GetAll(Model.Id);
+    var prototypes = dataBaseManager.ContainerType.GetAll(Model.Id);
     var fatherPrototype = prototypes.Where(cp => cp.Parent == null).FirstOrDefault();
     var roles = dataBaseManager.Role.GetAll(Model.Id);
     var rules = dataBaseManager.Rule.GetAll(Model.Id);
@@ -15,7 +15,7 @@
 </div>
 <div class="clear"></div>
 <div id="container_structure_design">
-    <h2>Prototype Design</h2>
+    <h2>Container type Design</h2>
     <div class="ui-state-highlight ui-corner-all">
         <p>
             <span class="ui-icon ui-icon-info"></span>
@@ -23,7 +23,7 @@
         </p>
     </div>
 
-    @foreach (ContainerPrototype prototype in prototypes)
+    @foreach (ContainerType prototype in prototypes)
     {
         <div id='@prototype.Name' class='ui-widget'>
             <div class='ui-widget-header'>
@@ -102,13 +102,13 @@
     <div id="rule-@rule.Name" class="rule" title="Rule @rule.Name">
         <div class="tabs">
             <ul>
-                @foreach (var service in rule.Permissions.Select(p => p.Service).Distinct())
+                @foreach (var service in rule.Permissions.Select(p => p.ServiceType).Distinct())
                 { 
                     <li><a href="#@rule.Name-@service.Name">@service.Name</a></li>
                 }
             </ul>
 
-            @foreach (var serviceGroup in rule.Permissions.GroupBy(p => p.Service))
+            @foreach (var serviceGroup in rule.Permissions.GroupBy(p => p.ServiceType))
             {
                 <div id="@rule.Name-@serviceGroup.Key.Name">
                     <h3>Permissions</h3>

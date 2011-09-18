@@ -7,14 +7,14 @@ namespace CodeGarten.Data.Access
 
     public class ContainerEventArgs : EventArgs
     {
-        public ContainerEventArgs(Container container, ContainerPrototype containerPrototype)
+        public ContainerEventArgs(Container container, ContainerType containerType)
         {
             Container = container;
-            Prototype = containerPrototype;
+            Type = containerType;
         }
 
         public Container Container { get; private set; }
-        public ContainerPrototype Prototype { get; set; }
+        public ContainerType Type { get; set; }
     }
 
     public sealed class ContainerManager
@@ -58,13 +58,13 @@ namespace CodeGarten.Data.Access
             {
                 var parentobj = _dbManager.Container.Get(parent.Value);
 
-                container.Prototype = parentobj.Prototype.Childs.First();
+                container.Type = parentobj.Type.Childs.First();
                 container.Parent = parentobj;
             }
             else
             {
-                container.Prototype =
-                    _dbManager.ContainerPrototype.GetAll(structure).Where(
+                container.Type =
+                    _dbManager.ContainerType.GetAll(structure).Where(
                         cp => cp.StructureId == structure && cp.Parent == null).SingleOrDefault();
             }
 
@@ -85,7 +85,7 @@ namespace CodeGarten.Data.Access
         {
             var container = new Container
                                 {
-                                    Prototype = _dbManager.ContainerPrototype.Get(structure, prototypeName),
+                                    Type = _dbManager.ContainerType.Get(structure, prototypeName),
                                     Description = description,
                                     Name = containerName,
                                     Parent = parent == null ? null : Get(parent.Value)
@@ -106,7 +106,7 @@ namespace CodeGarten.Data.Access
         public Container Delete(long containerId)
         {
             var container = Get(containerId);
-            var prototype = container.Prototype;
+            var prototype = container.Type;
 
             var parent = container.Parent;
 
@@ -126,12 +126,12 @@ namespace CodeGarten.Data.Access
 
         public void AddPassword(long structure, long container, string roletype, string password)
         {
-            var enrollPassword = new EnrollPassword()
+            var enrollPassword = new EnrollKey()
                                      {
                                          ContainerId = container,
                                          RoleTypeName = roletype,
                                          StructureId = structure,
-                                         Password = AuthenticationManager.EncryptPassword(password)
+                                         Credential = AuthenticationManager.EncryptPassword(password)
                                      };
 
             _dbManager.DbContext.EnrollPassWords.Add(enrollPassword);
@@ -153,7 +153,7 @@ namespace CodeGarten.Data.Access
 
         private void InvokeOnCreateContainer(Container container)
         {
-            var eventArgs = new ContainerEventArgs(container, container.Prototype);
+            var eventArgs = new ContainerEventArgs(container, container.Type);
 
             if (_onCreateContainer != null) 
                 try
@@ -166,9 +166,9 @@ namespace CodeGarten.Data.Access
         }
 
         
-        private void InvokeOnDeleteContainer(Container container, ContainerPrototype containerPrototype)
+        private void InvokeOnDeleteContainer(Container container, ContainerType containerType)
         {
-            var eventArgs = new ContainerEventArgs(container, containerPrototype);
+            var eventArgs = new ContainerEventArgs(container, containerType);
 
             if (_onDeleteContainer != null) 
                 try
@@ -190,7 +190,7 @@ namespace CodeGarten.Data.Access
 
         public IQueryable<Container> GetInstances(long structureId)
         {
-            return _dbManager.DbContext.Containers.Where(c => c.Prototype.StructureId == structureId && c.Parent == null);
+            return _dbManager.DbContext.Containers.Where(c => c.Type.StructureId == structureId && c.Parent == null);
         }
     }
 }

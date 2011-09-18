@@ -18,7 +18,7 @@ namespace CodeGarten.Data.Access
             var workspace = new WorkSpaceType { StructureId = structureId, Name = name };
 
             foreach (var service in services)
-                workspace.Services.Add(_dbManager.Service.Get(service));
+                workspace.Services.Add(_dbManager.ServiceType.Get(service));
 
             _dbManager.DbContext.WorkSpaceTypes.Add(workspace);
             _dbManager.DbContext.SaveChanges();
@@ -38,7 +38,7 @@ namespace CodeGarten.Data.Access
             workspace.Services.Clear();
 
             foreach (var service in services)
-                workspace.Services.Add(_dbManager.Service.Get(service));
+                workspace.Services.Add(_dbManager.ServiceType.Get(service));
 
             _dbManager.DbContext.SaveChanges();
 

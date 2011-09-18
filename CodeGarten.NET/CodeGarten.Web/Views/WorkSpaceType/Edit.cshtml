@@ -11,7 +11,7 @@
     <label for="@service.Name">@service.Name</label>
     <input id="@service.Name" name="services" type="checkbox" value="@service.Name" checked="checked"/>
     }
-    foreach (var service in (ViewBag.Services as IEnumerable<Service>).Except(Model.Services))
+    foreach (var service in (ViewBag.Services as IEnumerable<ServiceType>).Except(Model.Services))
     {
     <label for="@service.Name">@service.Name</label>
     <input id="@service.Name" name="services" type="checkbox" value="@service.Name"/>
