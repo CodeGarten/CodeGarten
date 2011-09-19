@@ -433,7 +433,7 @@ table td, table th
       border-style: none;
 }
 
-#main_service > #main > h1
+#main_service > h1
 {
     display: inline;    
 }
@@ -441,6 +441,7 @@ table td, table th
 #main_service .services
 {
     float: right;
+    margin-bottom: 40px;
 }
 
 /* Styles for View Design

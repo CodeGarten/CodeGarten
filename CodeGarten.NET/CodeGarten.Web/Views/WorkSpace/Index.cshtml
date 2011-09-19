@@ -4,7 +4,7 @@
     string Src = Url.Action("Index", "Home", new { workspaceTypeName = ViewBag.WorkSpaceType.Name, structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, service = ViewBag.ServiceName });
 }
 
-<div id="main">
+<div id="main_service">
     <h1>
         @Html.ActionLink((string)ViewBag.Container.Name, "Index", "Container", new { id = ViewBag.Container.Id}, null)
         <text> /</text>
@@ -13,6 +13,7 @@
     <span class="loading">
         <img src="@Url.Content("~/Content/themes/smoothness/images/loading.gif")" alt="Loading"/>
     </span>
+
     <div class="services">
         @foreach (ServiceType service in ViewBag.WorkSpaceType.Services)
         { 
@@ -22,20 +23,21 @@
             @Html.Label(service.Name, service.Name)
         }
     </div>
-</div>
-<div class="iframe">
-    <iframe src="@Src" onload="javascript:OnLoadIframe()" >
-    </iframe>
+
+    <div class="iframe">
+        <iframe src="@Src" onload="javascript:OnLoadIframe()" >
+        </iframe>
+    </div>
 </div>
 <script type="text/javascript">
     $(".services").buttonset();
 
-    onpopstate = function (event) {
+    onpopstate = function(event) {
         if (event.state != null) {
             Refreash(event.state.service, event.state.url);
             $(".services").buttonset();
         }
-    }
+    };
 
     function Refreash(service, url) {
         $("#main_service>#main>.loading").append("<img src='@Url.Content("~/Content/themes/smoothness/images/loading.gif")' alt='Loading'/>");
