@@ -50,7 +50,7 @@ namespace Git
         private void EnrollUser(object sender, EnrollEventArgs e)
         {
             foreach (var binding in e.Container.Type.Bindings.Where(b => e.Container.Type.WorkSpaceTypeWithService(Name).Select(w => w.Name).Contains(b.WorkSpaceTypeName)))
-                foreach (var permission in binding.Roles.SelectMany(r => r.Rules).SelectMany(r => r.Permissions).Where(p => p.ServiceType.Name == Name))
+                foreach (var permission in binding.Roles.Where(r => r.RoleType.Name == e.Enroll.RoleTypeName).SelectMany(r => r.Rules).SelectMany(r => r.Permissions).Where(p => p.ServiceType.Name == Name))
                     Authorization.AddUser(e.Enroll.UserName, e.Container.UniqueInstanceName(binding.WorkSpaceType), (Privileges)Enum.Parse(typeof(Privileges), permission.Name));
         }
 
