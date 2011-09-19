@@ -29,7 +29,7 @@ namespace CodeGarten.Data.Model
     {
         public long StructureId { get; internal set; }
 
-        public string ContainerPrototypeName { get; internal set; }
+        public string ContainerTypeName { get; internal set; }
 
         public string WorkSpaceTypeName { get; internal set; }
 
@@ -39,7 +39,7 @@ namespace CodeGarten.Data.Model
         [ForeignKey("StructureId")]
         public virtual Structure Structure { get; internal set; }
 
-        [ForeignKey("ContainerPrototypeName, StructureId")]
+        [ForeignKey("ContainerTypeName, StructureId")]
         public virtual ContainerType ContainerType { get; internal set; }
 
         [ForeignKey("WorkSpaceTypeName, StructureId")]

@@ -313,9 +313,6 @@
     <Content Include="Views\Shared\_FootLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\WorkSpace\_Layout.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Error\Error403.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Error\Server.cshtml" />

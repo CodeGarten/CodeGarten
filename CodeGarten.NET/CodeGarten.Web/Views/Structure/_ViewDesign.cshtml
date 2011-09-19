@@ -39,7 +39,7 @@
             }
             </div>
             <h3>Roles</h3>
-            @foreach (var group in roles.Where(r => r.ContainerPrototypeName == prototype.Name).GroupBy(r => r.Binding.WorkSpaceType))
+            @foreach (var group in roles.Where(r => r.ContainerTypeName == prototype.Name).GroupBy(r => r.Binding.WorkSpaceType))
             {
                 <div id='info-@prototype.Name-@group.Key.Name' class="ProtoInfo-@prototype.Name">
                     <table class="ui-widget ui-widget-content">

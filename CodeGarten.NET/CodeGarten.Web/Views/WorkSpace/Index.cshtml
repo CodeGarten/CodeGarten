@@ -1,6 +1,5 @@
 ﻿@using CodeGarten.Data.Model
 @{
-    Layout = "_Layout.cshtml";
     ViewBag.Title = "WorkSpace";
     string Src = Url.Action("Index", "Home", new { workspaceTypeName = ViewBag.WorkSpaceType.Name, structureId = ViewBag.StructureId, containerId = ViewBag.Container.Id, service = ViewBag.ServiceName });
 }
@@ -61,7 +60,9 @@
         var iframe = $("#main_service>.iframe>iframe");
         try
         {
-            iframe.height($(iframe[0].contentWindow.document).height());
+           var height = $(iframe[0].contentWindow.document).height();
+           // bug chrome -> not catch exception authorization denied
+           iframe.height(height==null ? 1000 : height);
         }catch(e)
         {   
             iframe.height(1000);

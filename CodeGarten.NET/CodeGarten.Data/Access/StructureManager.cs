@@ -73,12 +73,12 @@ namespace CodeGarten.Data.Access
                         throw new InvalidOperationException(
                             String.Format(
                                 "A workspace must contain at least one role type. Error occured at container type '{0}', workspace '{1}'.",
-                                binding.ContainerPrototypeName, binding.WorkSpaceTypeName));
+                                binding.ContainerTypeName, binding.WorkSpaceTypeName));
                     foreach (var role in binding.Roles.Where(role => role.Rules.Count == 0))
                         throw new InvalidOperationException(
                             String.Format(
                                 "A role type must contain at least one rule. Error occured at container type '{0}', workspace '{1}', role type '{2}'.",
-                                binding.ContainerPrototypeName, binding.WorkSpaceTypeName, role.RoleTypeName));
+                                binding.ContainerTypeName, binding.WorkSpaceTypeName, role.RoleTypeName));
                 }
             }
 

@@ -138,7 +138,7 @@ namespace CodeGarten.Data.Access
             var barrier = (int) roleBarrier;
 
             return _db.DbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.Type.Name &&
+                                          r.ContainerTypeName == container.Type.Name &&
                                           r.RoleTypeName == roleType.Name &&
                                           r.Barrier != barrier
                 ).Any();
@@ -147,7 +147,7 @@ namespace CodeGarten.Data.Access
         private bool ExisteRole(Container container, RoleType roleType)
         {
             return _db.DbContext.Roles.Where(r =>
-                                          r.ContainerPrototypeName == container.Type.Name &&
+                                          r.ContainerTypeName == container.Type.Name &&
                                           r.RoleTypeName == roleType.Name
                 ).Any();
         }
@@ -342,7 +342,7 @@ namespace CodeGarten.Data.Access
         internal void SyncronizeEnrolls(Container container)
         {
 
-            var roles = _db.DbContext.Roles.Where(r => r.ContainerPrototypeName == container.Type.Name && r.Barrier != (int)RoleBarrier.Top);
+            var roles = _db.DbContext.Roles.Where(r => r.ContainerTypeName == container.Type.Name && r.Barrier != (int)RoleBarrier.Top);
             if (roles.Count() == 0)
                 return;
 
@@ -351,7 +351,7 @@ namespace CodeGarten.Data.Access
             {
                 var currentContext = currentContainer;
                 var currentRoles = _db.DbContext.Roles.Where(
-                    r => r.ContainerPrototypeName == currentContext.Name && r.Barrier == (int)RoleBarrier.Top);
+                    r => r.ContainerTypeName == currentContext.Name && r.Barrier == (int)RoleBarrier.Top);
 
                 var rolesContext = roles = roles.Where(r => !currentRoles.Where(cr => cr.RoleTypeName == r.RoleTypeName).Any());
                 if (roles.Count() == 0)

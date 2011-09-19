@@ -21,11 +21,11 @@ namespace CodeGarten.Web.Controllers
             var dataBaseManager = (DataBaseManager)HttpContext.Items["DataBaseManager"];
 
             var ContainerPrototypes = dataBaseManager.ContainerType.GetAll(id).Select(cp => new { cp.Name, ParentName = cp.Parent == null ? null : cp.Parent.Name });
-            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerPrototypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name), rl.RoleBarrier });
+            var Roles = dataBaseManager.Role.GetAll(id).Select(rl => new { rl.ContainerTypeName, rl.RoleTypeName, rl.WorkSpaceTypeName, Rules = rl.Rules.Select(rule => rule.Name), rl.RoleBarrier });
 
             var Bindings =
                 dataBaseManager.ContainerType.GetAll(id).SelectMany(cp => cp.Bindings).Select(
-                    b => new { b.ContainerPrototypeName, b.WorkSpaceTypeName });
+                    b => new { b.ContainerTypeName, b.WorkSpaceTypeName });
             var RoleTypes = dataBaseManager.RoleType.GetAll(id).Select(rt => new { rt.Name });
             var WorkSpaceTypes = dataBaseManager.WorkSpaceType.GetAll(id).Select(wk => new { wk.Name });
             var Rules = dataBaseManager.Rule.GetAll(id).Select(rl => new { rl.Name });

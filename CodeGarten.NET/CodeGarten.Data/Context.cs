@@ -49,7 +49,7 @@ namespace CodeGarten.Data
                 new
                     {
                         r.StructureId,
-                        r.ContainerPrototypeName,
+                        r.ContainerTypeName,
                         r.RoleTypeName,
                         r.WorkSpaceTypeName
                     });
@@ -82,7 +82,7 @@ namespace CodeGarten.Data
                 r => r.Binding).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Binding>().HasKey(
-                cpwst => new {cpwst.StructureId, cpwst.ContainerPrototypeName, cpwst.WorkSpaceTypeName});
+                cpwst => new { cpwst.StructureId, cpwst.ContainerTypeName, cpwst.WorkSpaceTypeName });
 
             modelBuilder.Entity<Binding>().HasRequired(b => b.ContainerType).WithMany(cp => cp.Bindings).WillCascadeOnDelete(false);
             modelBuilder.Entity<Binding>().HasRequired(b => b.WorkSpaceType).WithMany().WillCascadeOnDelete(false);

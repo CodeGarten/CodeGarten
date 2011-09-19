@@ -21,7 +21,7 @@ namespace CodeGarten.Data.Access
                            {
                                RoleTypeName = roleType,
                                StructureId = structure,
-                               ContainerPrototypeName = containerPrototype,
+                               ContainerTypeName = containerPrototype,
                                WorkSpaceTypeName = workspaceType,
                                RoleBarrier = roleBarrier
                            };
