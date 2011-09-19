@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Help (Structures)";
+}
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/Help.png")" alt="Structures" />
+    <h2>
+        Help - Structures</h2>
+    <div class="clear">
+    </div>
+</div>
+<div class="help_body">
+
+
+
+
+
+
+
+
+
+
+
+
+<p>Click the <strong>My Structures</strong> button from the instruments panel:</p>
+<img src="@Url.Content("~/Content/themes/help/11-MainScreen.png")" alt="Structures" />
+<p><strong>Ilustration 11: Main screen</strong></p>
+<p>From this page you can see the published (<strong>Active</strong>) and unpublished(<strong>Developing</strong>) structures:</p>
+<ul>
+    <li>If the structure is publish you will be taken to the it's index page</li>
+    <li>If the structure is not published you will be taken to the design page</li>
+</ul>
+<p>The <strong>create</strong> button allows you to create a new structure.</p>
+ 
+<h3>Create a new structure</h3>
+<p>Click <strong>Create new</strong>:</p>
+ <img src="@Url.Content("~/Content/themes/help/12-CreateForm.png")" alt="Structures" />
+<p><strong>Illustration 12: Create form</strong></p>
+<p>After creating the structure you have to configure it.</p>
+ 
+<h3>Configuring a structure</h3>
+<p>The structure configuration is where you define the types and detais of a prototype. You can save your progress anytime with the <strong>Save</strong> button.</p>
+ <img src="@Url.Content("~/Content/themes/help/13-InitialConfig.png")" alt="Structures" />
+<p><strong>Illustration 13: Initial configuration screen</strong></p>
+<h4>Defining a hierarchy</h4> 
+<img src="@Url.Content("~/Content/themes/help/14-CreateForm.png")" alt="Structures" />
+<p><strong>illustration 14: Create form</strong></p>
+<p>Pick a name for the type and click <strong>Create</strong></p>
+ <img src="@Url.Content("~/Content/themes/help/15-ContainerTypeTop.png")" alt="Structures" />
+<p><strong>illustration 15: Top container type</strong></p>
+ 
+<p>Look closely at this container type</p>
+ <img src="@Url.Content("~/Content/themes/help/16-Analisys.png")" alt="Structures" />
+<p><strong>Illustration 16: Container type in analysis</strong></p>
+<p>Watch the two buttons on the left:</p>
+<ul>
+    <li>Add a child to this container type (<strong>plus sign</strong>)</li>
+    <li>Delete this container type (<strong>garbage sign</strong>)</li>
+</ul>
+<p>Remember you can save this process anytime you want. Good luck.</p>
+ 
+<h4>Container type details</h4> 
+<img src="@Url.Content("~/Content/themes/help/18-Details.png")" alt="Structures" />
+<p><strong>Illustration 18: Container type details</strong></p>
+
+<h5>Components - Left side of Illustration 17</h5>
+<ul>
+    <li>Workspaces: Allocate services and go inside a container type</li>
+    <li>RoleTypes: Allocate rules and go inside a workspace</li>
+    <li>Rules: Allocate service type permissions and go inside a role type</li>
+</ul>
+
+<h4>Associating the components</h4>
+<p>This association is done by dragging the components into the respective receptors.</p>
+<p>Try draggin a workspace into a container type</p> 
+<img src="@Url.Content("~/Content/themes/help/23-Details.png")" alt="Structures" />
+<p><strong>Illustration 23: Container type with a workspace</strong></p>
+	
+ 
+<h4>Propagation barriers</h4>
+<p>Notice the two arrows in the corner of a role type association:</p> 
+<img src="@Url.Content("~/Content/themes/help/25-Barriers.png")" alt="Structures" />
+<p><strong>Illustration 25: Roletype propagation barriers</strong></p>
+<p>When a user becomes a member of a container, he also becomes a member of the containers attached to this. Someimes this features in unwanted:</p>
+<ul>
+    <li>The down arrow block propagation from container types above</li>
+    <li>The up arrow block propagation from container types below</li>
+</ul>
+
+<p>As a rule of thunb uld use this barriers when we do not want the user to inherit membership in related containers.</p>
+<p>Remeber, you can save this process anytime you want</p>
+
+<h3>Publishing a structure</h3>
+<p>We publish a structure when we complete it's design and want to start working on it (at this point other user may interact with it).</p>
+
+<h3>Structure</h3>
+<p>Click a structure under the <strong>Active</strong> tab:</p> 
+<img src="@Url.Content("~/Content/themes/help/28-MainScreen.png")" alt="Structures" />
+<p><strong>Illustration 28: Structure main screen</strong></p>
+<h4>Management</h4>
+<p>This panel will allow you to add new administrator, delete the structure or leave the structure administration (providing that you'r the only one).</p>
+ 
+<h4>Deleting</h4> 
+<img src="@Url.Content("~/Content/themes/help/30-DestructionForm.png")" alt="Structures" />
+<p><strong>Illustration 30: Destruction form</strong></p>
+<p>This form provides basic check for containers and user this structure is supporting informing the user if it is safe to be deleted.</p>
+ 
+<h4>Design</h4> 
+<p>Allow to check the design of this structure (it is read-only).</p>
+
+<h4>Instances</h4>
+<p>The instances represent container that implement the top container type on the structure (they do not depend on any other container).</p>
+</div>

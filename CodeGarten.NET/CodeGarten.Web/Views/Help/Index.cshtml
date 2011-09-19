@@ -1,6 +1,27 @@
 ﻿@{
     ViewBag.Title = "Help";
 }
-
-<h2>Help</h2>
-<h3>Under Construction...</h3>
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/Help.png")" alt="Structures" />
+    <h2>
+        Help</h2>
+    <div class="clear">
+    </div>
+</div>
+<dl id="help_index">
+    <dt>@Html.ActionLink("Main Screen", "MainScreen")</dt>
+    <dd>
+        - How to Login or Register in CodeGarten</dd>
+    <dt>@Html.ActionLink("Instruments Panel", "Instruments")</dt>
+    <dd>
+        - The navigation panel you see after login</dd>
+    <dt>@Html.ActionLink("User Profile", "Profile")</dt>
+    <dd>
+        - Manage your profile by changing your email or password</dd>
+    <dt>@Html.ActionLink("Structures", "MyStructures")</dt>
+    <dd>
+        - What are structures? How do you create, design and manage one</dd>
+    <dt>@Html.ActionLink("Containers", "Container")</dt>
+    <dd>
+        - What are containers? How to interact with them</dd>
+</dl>

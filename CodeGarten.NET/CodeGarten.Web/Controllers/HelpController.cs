@@ -9,5 +9,29 @@ namespace CodeGarten.Web.Controllers
             return View();
         }
 
+        public ActionResult MainScreen()
+        {
+            return View();
+        }
+
+        public ActionResult Instruments()
+        {
+            return View();
+        }
+
+        public ActionResult Profile()
+        {
+            return View();
+        }
+
+        public ActionResult MyStructures()
+        {
+            return View();
+        }
+
+        public ActionResult Container()
+        {
+            return View();
+        }
     }
 }

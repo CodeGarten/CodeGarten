@@ -11,7 +11,7 @@
     <div class="ui-widget-content">
         <div id="child_tabs">
             <div class="type">
-                Type:
+                Container Type:
                 @if (Model.Type.Childs.Count != 1)
                 {
                     @Html.RadioButton("type", "all", new { id = "all", onclick = "javascript:SwitchWS('.all','.results');" })

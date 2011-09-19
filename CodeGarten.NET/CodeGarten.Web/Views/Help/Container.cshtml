@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Help (Container)";
+}
+<div class="title">
+    <img src="@Url.Content("~/Content/themes/smoothness/images/Help.png")" alt="Structures" />
+    <h2>
+        Help - Container</h2>
+    <div class="clear">
+    </div>
+</div>
+<div class="help_body">
+    <p>
+        There are five areas that allow you to navigate and manage a container:</p>
+    <ul>
+        <li>Navigation</li>
+        <li>Information</li>
+        <li>Child containers</li>
+        <li>Actions</li>
+        <li>Workspaces</li>
+    </ul>
+    <img src="@Url.Content("~/Content/themes/help/33-MainScreen.png")" alt="Structures" />
+    <p><strong>Illustration 33: Container page</strong></p>
+    <h3>Navigation</h3>
+    <p>In here, you can travel throught the structure by clicking a container name in the path.</p>
+    <h3>Information</h3>
+    <p>Check container information relative to Description, Container type and enrolls.</p>
+    <h3>Child containers</h3>
+    <p>See the container childs by type. Administrators can  even create a new child if the prototype permits it.</p>
+    <h3>Actions</h3>
+    <p>Actions to delete (administrators only) a container or enroll/disenroll (depending on your current state).</p>
+    <h4>Destructing a container</h4>
+    <p>If you choose to destroy a container a validation check is performed on the containers and user that this container supports. This will determin if it's safe to delete this container.</p>
+    <img src="@Url.Content("~/Content/themes/help/34-Destroy.png")" alt="Structures" />
+    <p><strong>Illustration 34: Destroying an instance</strong></p>
+    <h4>Enrolling</h4>
+    <p>A screen is displayed showing the possible role types of the container (and respective passwords).</p>
+    <img src="@Url.Content("~/Content/themes/help/35-EnrollPanel.png")" alt="Structures" />
+    <p><strong>Illustration 35: Enroll panel</strong></p>
+    <h3>Workspaces</h3>
+    <p>In here you can see all the workspaces of a container along with it's services (<strong>illustration 35</strong>)</p>
+    <img src="@Url.Content("~/Content/themes/help/36-Workspaces.png")" alt="Structures" />
+    <p><strong>Illustration 36: Workspace and respective services</strong></p>
+    <p>By clicking a service you can access it.</p>
+    <h3>Workspace area</h3>
+    <p>In here you can navigate in the service pages. You can switch services via the upper right corner.</p>
+    <img src="@Url.Content("~/Content/themes/help/37-WorkspaceArea.png")" alt="Structures" />
+    <p><strong>Illustration 37: Example of a workspace displaying a Trac service instance</strong></p>
+</div>

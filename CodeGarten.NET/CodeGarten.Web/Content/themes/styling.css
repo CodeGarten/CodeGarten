@@ -286,6 +286,12 @@ h1 { padding: .2em; margin: 0;}
 .multi-line { width: 400px;}
 .clear { clear: both;padding-bottom: 5px;}
 
+/* Help
+-----------------------------------------------------------*/
+#help_index dt { font-size: large;}
+.help_body { text-align: center;}
+.help_body img { max-width: 900px;}
+.help_body h2 { border-top: 1px solid #CCCCCC;margin-top: 30px;}
 
 /* Styles for validation helpers
 -----------------------------------------------------------*/
