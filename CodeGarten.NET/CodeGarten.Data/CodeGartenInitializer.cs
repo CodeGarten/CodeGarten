@@ -50,8 +50,8 @@ namespace CodeGarten.Data
 
             context.Database.ExecuteSqlCommand("CREATE TRIGGER delete_binding ON dbo.Bindings " +
                                                "INSTEAD OF DELETE AS SET NOCOUNT ON " +
-                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.WorkSpaceTypeName = dbo.Roles.WorkSpaceTypeName AND deleted.ContainerPrototypeName = dbo.Roles.ContainerPrototypeName AND deleted.StructureId = dbo.Roles.StructureId " +
-                                               "DELETE dbo.Bindings FROM deleted WHERE deleted.WorkSpaceTypeName = dbo.Bindings.WorkSpaceTypeName AND deleted.ContainerPrototypeName = dbo.Bindings.ContainerPrototypeName AND deleted.StructureId = dbo.Bindings.StructureId"
+                                               "DELETE dbo.Roles FROM deleted, dbo.Roles WHERE deleted.WorkSpaceTypeName = dbo.Roles.WorkSpaceTypeName AND deleted.ContainerTypeName = dbo.Roles.ContainerTypeName AND deleted.StructureId = dbo.Roles.StructureId " +
+                                               "DELETE dbo.Bindings FROM deleted WHERE deleted.WorkSpaceTypeName = dbo.Bindings.WorkSpaceTypeName AND deleted.ContainerTypeName = dbo.Bindings.ContainerTypeName AND deleted.StructureId = dbo.Bindings.StructureId"
                 );
 
         }
